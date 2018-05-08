@@ -30,5 +30,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/soft/apache-tomcat-8.5.23/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="/scframework/target/scframework.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

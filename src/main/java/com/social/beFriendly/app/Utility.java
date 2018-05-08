@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
 import com.github.jknack.handlebars.io.FileTemplateLoader;
 import com.github.jknack.handlebars.io.TemplateLoader;
+import com.social.beFriendly.model.User;
+import com.social.beFriendly.service.UserService;
 
 public class Utility {
 	String uid;
@@ -22,7 +26,7 @@ public class Utility {
 		TemplateLoader loader = new FileTemplateLoader("C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib",".hbs");
 		Handlebars handlebars = new Handlebars(loader);
 		Template template = handlebars.compile(file);
-		/*if(hmap==null){
+		if(hmap==null){
 
 			hmap  = new HashMap<String, Object>();}
 		if(uid==null){
@@ -40,7 +44,7 @@ public class Utility {
 				hmap.put("admin", true);
 			hmap.put("login",false);
 		}
-		System.out.println("I am here in hbs...");*/
+		
 		out.print(template.apply(hmap));
 	}
 
@@ -60,7 +64,7 @@ public class Utility {
 	}
 
 
-	/*public Map<String, Object> checkSession(HttpServletRequest request){
+	public Map<String, Object> checkSession(HttpServletRequest request){
 
 		Cookie[] cookies = request.getCookies();
 		if(cookies !=null){
@@ -82,5 +86,5 @@ public class Utility {
 		hmap.put("uid", uid);
 		hmap.put("loggedInUser", user);
 		return hmap;
-	}*/
+	}
 }
