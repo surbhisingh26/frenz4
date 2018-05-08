@@ -24,10 +24,11 @@
 						<li class="nav-item"><a class="nav-link" href="#">Cabs</a></li>
                         <li class="nav-item"><a class="nav-link" href="contact-us.html">Contact</a></li>
 						{{#if login}}
-						<li class="nav-item"><img src = "{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"></li>
+						<li class="nav-item"><a href="#"><img src = "{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" width="30" height="25" class="img-rounded" style="margin-right:5px;"></a></li>
 						{{else}}
 						<li class="nav-item"><a class="nav-link" href="login">Login</a></li>
 						{{/if}}
+						<li>{{#loggedInUser}}{{name}}{{/loggedInUser}}</li>
                     </ul>
 					
                     <ul class="navbar-nav justify-content-end">

@@ -34,7 +34,7 @@ public class Utility {
 
 			String bgcolor = "#000000";
 			hmap.put("bgcolor", bgcolor);
-			hmap.put("login",true);
+			hmap.put("login",false);
 		}
 
 		else{
@@ -42,7 +42,7 @@ public class Utility {
 			//User user = userservice.findOneById(uid);
 			//if(user.getuType().equalsIgnoreCase("Admin"))
 				hmap.put("admin", true);
-			hmap.put("login",false);
+			hmap.put("login",true);
 		}
 		
 		out.print(template.apply(hmap));
@@ -84,7 +84,9 @@ public class Utility {
 		User user = userservice.findOneById(uid);
 		Map<String, Object> hmap  = new HashMap<String, Object>();
 		hmap.put("uid", uid);
+		System.out.println(uid);
 		hmap.put("loggedInUser", user);
+		System.out.println("...................." + user.getName());
 		return hmap;
 	}
 }

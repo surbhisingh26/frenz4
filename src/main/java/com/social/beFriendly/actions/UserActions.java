@@ -52,7 +52,7 @@ public class UserActions extends HttpServlet {
 
 		if(path==null||path.equals("/")){
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
+			//hmap = utility.checkSession(request);
 			utility.getHbs(response,"home",hmap);
 		}
 
@@ -117,7 +117,7 @@ public class UserActions extends HttpServlet {
 			String gender = request.getParameter("gender");
 			String bgcolor = "#000000";
 			String rootPath = System.getProperty("catalina.home");
-			String savePath = rootPath + File.separator + "webapps/beFriendlyimages";
+			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages";
 			File fileSaveDir=new File(savePath);
 			//File file = new File(rootPath + File.separator + "images");
 			//File fileSaveDir=new File(file);
@@ -130,7 +130,7 @@ public class UserActions extends HttpServlet {
 				filePath = request.getParameter("picUrl");
 			}
 			else
-				filePath = File.separator +"images" + File.separator + "default.jpg";
+				filePath = File.separator +"images/beFriendlyimages" + File.separator + "default.jpg";
 
 			UserService rs = new UserService();
 			Boolean result = rs.registerUser(fname, lname, mname,country,city,mobile,password,gender,dob,bgcolor,filePath,email,reference,referenceId);
@@ -169,10 +169,11 @@ public class UserActions extends HttpServlet {
 
 		try {
 			String email = request.getParameter("email");
-			//System.out.println("username "+uname);
+			System.out.println("username "+email);
 			if(email==null)
 				email="";
 			String password = request.getParameter("pass");
+			System.out.println("password "+password);
 			if(password==null)
 				password="";
 			String reference = request.getParameter("reference");
@@ -195,13 +196,13 @@ public class UserActions extends HttpServlet {
 
 				hmap.put("message", msg);
 				
-				utility.getHbs(response,"login",hmap);
+				utility.getHbs(response,"login_page",hmap);
 
 			}
 			else if(result.equals(password)){
 				msg = "Wrong password entered";
 				hmap.put("message", msg);
-				utility.getHbs(response,"login",hmap);
+				utility.getHbs(response,"login_page",hmap);
 			}
 
 			else if(result.equals("Register First")){

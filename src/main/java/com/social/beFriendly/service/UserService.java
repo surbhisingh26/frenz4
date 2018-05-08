@@ -121,12 +121,12 @@ public class UserService {
 			DBCursor<User> cursor = coll.find(query);
 			String result = null;
 			if (cursor.hasNext()) {
-				User registration = cursor.next();
-				String pass = registration.getPassword();
-
+				User user = cursor.next();
+				String pass = user.getPassword();
+				System.out.println("pass "+user.getPassword());
 				if(pass.equals(password)){
 
-					result = registration.getId();
+					result = user.getId();
 					System.out.println("uid is ... "+result);
 
 					return result;

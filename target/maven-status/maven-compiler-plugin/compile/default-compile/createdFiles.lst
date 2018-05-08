@@ -1,0 +1,5 @@
+com\social\beFriendly\actions\Filters.class
+com\social\beFriendly\model\User.class
+com\social\beFriendly\service\UserService.class
+com\social\beFriendly\actions\UserActions.class
+com\social\beFriendly\app\Utility.class
