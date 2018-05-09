@@ -10,44 +10,53 @@
 						Create New Account
 					</span>
 
-					<div class="wrap-input100 validate-input m-b-23" data-validate = "Fisrt name is required">						
+					<div class="wrap-input100 validate-input m-b-23" data-validate = "Fisrt name is required">	
+						<span class="label-input100">First Name</span>					
 						<input class="input100" type="text" name="fname" id="fname" placeholder="First Name" onkeyup="fnames()">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
-					<div class="wrap-input100 " >						
+					<div class="wrap-input100 m-b-23" >	
+				<span class="label-input100">Middle Name</span>					
 						<input class="input100" type="text" name="mname" id="mname" placeholder="Middle Name" onkeyup="mnames()">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
-					<div class="wrap-input100 validate-input m-b-23" data-validate = "Last name is required">						
+					<div class="wrap-input100 validate-input m-b-23" data-validate = "Last name is required">	
+					<span class="label-input100">Last Name</span>
+					
 						<input class="input100" type="text" name="lname" id="lname" placeholder="Last Name" onkeyup="lnames()">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
-					<div class="wrap-input100 validate-input " data-validate = "Email is required">						
+					<div class="wrap-input100 validate-input m-b-23" data-validate = "Email is required">		
+				<span class="label-input100">Email</span>					
 						<input class="input100" type="email" name="email" placeholder="Email">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
 				<p id="len" style="color:green"></p>
-					<div class="wrap-input100 validate-input" data-validate="Password is required">
+					<div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
+					<span class="label-input100">Password</span>
 						<input class="input100" type="password" name="pass" id="pass" placeholder="Password" onkeydown="passLength()">
-						<span class="focus-input100" ></span>
+						<span class="focus-input100" data-symbol="&#xf190;"></span>
 					</div>
 					
 					<p id="wrong" style="color: red;"></p>
-					<div class="wrap-input100 validate-input" data-validate="Please confirm your password">
+					<div class="wrap-input100 validate-input m-b-23" data-validate="Please confirm your password">
+					<span class="label-input100">Confirm Password</span>
 							<input
 								type="password" class="input100" name="passConfirm"
-								placeholder="Re-Type Your Password" id="passConfirm"><span class="focus-input100" data-symbol="&#xf206;"></span>
+								placeholder="Re-Type Your Password" id="passConfirm"><span class="focus-input100" data-symbol="&#xf190;"></span>
 							
 					</div>
 					
 					
-					<div class="wrap-input100 validate-input" ">
+					<div class="wrap-input100 validate-input m-b-23" >
+					<span class="label-input100">D.O.B.</span>
 						<input class="input100" type="date" name="dob" data-format="DD/MM/YY">
-						<span class="focus-input100" data-symbol="&#xf190;"></span>
+						
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
 						
 					</div>
 					
@@ -58,32 +67,35 @@
 								placeholder="D.O.B"> 
 
 						</div>-->
-					
-					<div class="radio input100" required>					
-						<label><input type="radio"  id="gender" name="gender" value="female"
-							>Female</label>			
+						
+						<form>
+					<span class="label-input100">Gender</span>
+					<div class="radio" >					
+						<label><input class="input100" type="radio" id="gender" name="gender">Female</label>			
 					</div>
-					<div class="radio input100">
-						<label><input type="radio"  id="gender" name="gender" value="male"
-							>Male</label>							
+					<div class="radio">
+						<label><input class="input100" type="radio" id="gender" name="gender" >Male</label>							
 					</div>
-
+						</form>
 							<p id="nan" style="color:red"></p>			
-					<div class="wrap-input100 validate-input" data-validate="Mobile number is required">
+					<div class="wrap-input100 validate-input m-b-23" data-validate="Mobile number is required">
+					<span class="label-input100">Mobile</span>
 						<input class="input100" type="text" name="mobile" id="mobile" placeholder="Mobile Number">
-						<span class="focus-input100" data-symbol="&#xf190;"></span>
+						<span class="focus-input100" data-symbol="&#x260F;"></span>
 					</div>
 					
 					
-					<div class="wrap-input100 validate-input" data-validate="Country is required">
+					<div class="wrap-input100 validate-input m-b-23" data-validate="Country is required">
+					<span class="label-input100">Country</span>
 						<input class="input100" type="text" name="country" placeholder="Country">
 						
-						<span class="focus-input100" data-symbol="&#xf190;"></span>
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
-					<div class="wrap-input100 validate-input" data-validate="City is required">
+					<div class="wrap-input100 validate-input m-b-23" data-validate="City is required">
+					<span class="label-input100">City</span>
 						<input class="input100" type="text" name="city" placeholder="City">
-						<span class="focus-input100" data-symbol="&#xf190;"></span>
+						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
 					

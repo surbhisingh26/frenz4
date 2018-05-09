@@ -231,7 +231,7 @@ public class UserActions extends HttpServlet {
 				response.getWriter().write(new Gson().toJson(hmap));
 				if(referenceId.equals("null")){
 					
-					response.sendRedirect("home");
+					response.sendRedirect("dashboard");
 				}
 
 			}
@@ -246,12 +246,26 @@ public class UserActions extends HttpServlet {
 		}
 	}
 	
-	public void home(HttpServletRequest request,HttpServletResponse response){
+	public void dashboard(HttpServletRequest request,HttpServletResponse response){
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap = utility.checkSession(request);
-			utility.getHbs(response,"beFriendly",hmap);
+			utility.getHbs(response,"dashboard",hmap);
+		} catch (ServletException e) {
+
+			e.printStackTrace();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+	}
+	public void profile(HttpServletRequest request,HttpServletResponse response){
+
+		try {
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			utility.getHbs(response,"profile",hmap);
 		} catch (ServletException e) {
 
 			e.printStackTrace();
