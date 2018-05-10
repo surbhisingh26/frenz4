@@ -174,6 +174,19 @@ public class UserService {
 		User user = coll.findOneById(uid);
 		return user;
 	}
+	
+	public void logout(String uid){
+
+		DBCollection collec = mongo.getCollection("user");
+		JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
+		Date date = new Date();		
+
+		//System.out.println("Date is "+now);
+		User user = coll.findOneById(uid);
+		user.setLoggedIn(false);
+		user.setLastLoggedInAt(date);
+		coll.updateById(uid, user);
+	}
 }
 
 

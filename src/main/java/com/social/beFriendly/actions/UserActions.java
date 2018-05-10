@@ -24,6 +24,7 @@ import com.social.beFriendly.service.UserService;
 public class UserActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
+	String uid;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -195,7 +196,7 @@ public class UserActions extends HttpServlet {
 						+ " Register or login with another username";
 
 				hmap.put("message", msg);
-				
+
 				utility.getHbs(response,"login_page",hmap);
 
 			}
@@ -230,7 +231,7 @@ public class UserActions extends HttpServlet {
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().write(new Gson().toJson(hmap));
 				if(referenceId.equals("null")){
-					
+
 					response.sendRedirect("dashboard");
 				}
 
@@ -245,7 +246,7 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void dashboard(HttpServletRequest request,HttpServletResponse response){
 
 		try {
@@ -274,7 +275,56 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	public void logout(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			uid = (String) hmap.get("uid");
+			String reference = request.getParameter("reference");
 
+
+
+			Cookie loginCookie=new Cookie("uid","");  
+			loginCookie.setMaxAge(0);  
+			response.addCookie(loginCookie); 
+
+			UserService userservice = new UserService();
+			userservice.logout(uid);
+
+			//System.out.println(request.getContextPath());
+			//request.getRequestDispatcher("").forward(request, response);
+			if(reference==null)
+				response.sendRedirect("/beFriendly");
+			return;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void gallery(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			uid = (String) hmap.get("uid");
+			utility.getHbs(response,"picture_gallery",hmap);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void friends(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			uid = (String) hmap.get("uid");
+			utility.getHbs(response,"friends",hmap);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
 
 
