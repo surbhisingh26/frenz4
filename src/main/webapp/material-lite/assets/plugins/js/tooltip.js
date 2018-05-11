@@ -15,7 +15,6 @@ const Tooltip = (($) => {
    * Constants
    * ------------------------------------------------------------------------
    */
-
   const NAME                = 'tooltip'
   const VERSION             = '4.0.0'
   const DATA_KEY            = 'bs.tooltip'

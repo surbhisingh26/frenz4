@@ -14,7 +14,6 @@ const Alert = (($) => {
    * Constants
    * ------------------------------------------------------------------------
    */
-
   const NAME                = 'alert'
   const VERSION             = '4.0.0'
   const DATA_KEY            = 'bs.alert'

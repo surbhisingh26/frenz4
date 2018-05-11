@@ -2,7 +2,10 @@ package com.social.beFriendly.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
@@ -11,7 +14,6 @@ import org.mongojack.WriteResult;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-
 import com.social.beFriendly.model.User;
 import com.social.scframework.service.DBConnection;
 
@@ -19,13 +21,13 @@ import com.social.scframework.service.DBConnection;
 public class UserService {
 	DBConnection db = new DBConnection();
 	DB mongo = db.getDB("BeFriendly");
+	DBCollection collec = mongo.getCollection("user");
+	JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
 	public Boolean registerUser(String fname, String lname, String mname, String country, String city, String mobile,
 			String password, String gender, String dob, String bgcolor, String filePath, String email, String reference,
 			String referenceId) {
-		
-
-		DBCollection collec = mongo.getCollection("user");
-		JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
+		if(!mname.equals(""))
+			mname = mname + " ";
 		User registration = new User();
 		Date date = null;
 		try {	
@@ -112,9 +114,7 @@ public class UserService {
 		return true;
 	}
 	public String checkValid(String email, String password, String reference, String referenceId) {
-		
-		DBCollection collec = mongo.getCollection("user");
-		JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
+
 		if(email!=""){
 			BasicDBObject query = new BasicDBObject();
 			query.put("email", email);
@@ -156,9 +156,7 @@ public class UserService {
 
 	}
 	public Boolean login(String uid){
-		
-		DBCollection collec = mongo.getCollection("user");
-		JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
+
 		User user = coll.findOneById(uid);
 		System.out.println(uid);
 		System.out.println(user.getName());
@@ -168,17 +166,13 @@ public class UserService {
 
 	}
 	public User findOneById(String uid) {
-		
-		DBCollection collec = mongo.getCollection("user");
-		JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
+
 		User user = coll.findOneById(uid);
 		return user;
 	}
-	
+
 	public void logout(String uid){
 
-		DBCollection collec = mongo.getCollection("user");
-		JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
 		Date date = new Date();		
 
 		//System.out.println("Date is "+now);
@@ -187,6 +181,51 @@ public class UserService {
 		user.setLastLoggedInAt(date);
 		coll.updateById(uid, user);
 	}
+	public List<User> searchUser(String search) {
+		
+		BasicDBObject query = new BasicDBObject();
+		query.put("name", new BasicDBObject("$regex" , "(?i).*"+search+".*"));
+		List<User> searchedUser = new ArrayList<User>();
+		DBCursor<User> cursor = coll.find(query);
+		User user = new User();
+		while(cursor.hasNext()){
+			user = cursor.next();
+			searchedUser.add(user);
+			System.out.println("name " + user.getName());
+		}
+		query.clear();
+		query.put("email", new BasicDBObject("$regex" , "(?i).*"+search+".*"));
+		DBCursor<User> EmailCursor = coll.find(query);
+		while(EmailCursor.hasNext()){
+			user = EmailCursor.next();
+			Boolean flag = true;
+				for(User u:searchedUser){
+					
+					if(u.getEmail().equals(user.getEmail())){
+						flag = false;
+						break;
+					}
+				}
+				if(flag==true)
+				searchedUser.add(user);		
+				
+			
+			System.out.println("email " + user.getName());
+		}
+		
+		return searchedUser;
+	}
+	public User updatePic(String filePath, String uid) {
+		User user = coll.findOneById(uid);
+
+		System.out.println("uid is ..."+uid);
+		user.setImagepath(filePath);
+		System.out.println("path is ..."+user.getImagepath());
+
+		coll.updateById(uid, user);
+
+		return user;
+	}	
 }
 
 

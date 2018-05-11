@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,9 +12,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
 import com.social.beFriendly.app.Utility;
+import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.UserService;
 
 
@@ -320,6 +323,91 @@ public class UserActions extends HttpServlet {
 			hmap = utility.checkSession(request);
 			uid = (String) hmap.get("uid");
 			utility.getHbs(response,"friends",hmap);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void search(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			uid = (String) hmap.get("uid");
+			String search = request.getParameter("search");
+			UserService userservice = new UserService();
+			System.out.println(search);
+			List<User> searchedUser = userservice.searchUser(search);
+			hmap.put("search",search);
+			hmap.put("searchedUser", searchedUser);
+			utility.getHbs(response,"search",hmap);
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void image(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			uid = (String) hmap.get("uid");
+			System.out.println("profile pic "+uid);
+			//String rootPath = System.getProperty("catalina.home");
+			//String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages";
+			//File fileSaveDir=new File(savePath);
+
+			String fileName = request.getParameter("filename");
+			System.out.println("File is ................ " + fileName);
+			Part file = request.getPart("file");
+			System.out.println("File is ................ " + file);
+			
+			hmap.put("file", file);
+			hmap.put("filename",fileName);
+			//file.write(fileSaveDir + File.separator + fileName);
+			//String filePath= File.separator +"images/beFriendlyimages" + File.separator + fileName;
+			//UserService userService = new UserService();
+			//User user = userService.updatePic(filePath,uid);
+
+			//hmap.put("loggedInUser",user);
+			//System.out.println("filepath  ...  "+filePath);
+			//String path = request.getPathInfo();
+			//String ur = path.replace("/", "");
+			//response.sendRedirect(ur);
+
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void profilepic(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap = utility.checkSession(request);
+			uid = (String) hmap.get("uid");
+			System.out.println("profile pic "+uid);
+			String rootPath = System.getProperty("catalina.home");
+			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages";
+			File fileSaveDir=new File(savePath);
+
+			String fileName = request.getParameter("filename");
+			System.out.println("File is ................ " + fileName);
+			Part file = request.getPart("file");
+			System.out.println("File is ................ " + file);
+			
+			hmap.put("file", file);
+			hmap.put("filename",fileName);
+			file.write(fileSaveDir + File.separator + fileName);
+			String filePath= File.separator +"images/beFriendlyimages" + File.separator + fileName;
+			UserService userService = new UserService();
+			User user = userService.updatePic(filePath,uid);
+
+			hmap.put("loggedInUser",user);
+			System.out.println("filepath  ...  "+filePath);
+			String path = request.getPathInfo();
+			String ur = path.replace("/", "");
+			response.sendRedirect(ur);
+
 		}
 		catch(Exception e){
 			e.printStackTrace();

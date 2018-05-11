@@ -1,0 +1,57 @@
+   
+                                <!-- sample modal content -->
+ <div class="modal fade changePic" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myLargeModalLabel">Change Display Picture</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            </div>
+            <div class="modal-body text-center">
+			<div class = "row">
+			<div class="col-md-6">
+					<div class="tab-pane" id="settings" role="tabpanel" >
+					<div class="card-block"> 
+						<div class="card-body" >
+							<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" class="img-circle" width="200px" height="200px" style="margin-top:30px">
+							
+						</div>
+					</div>						
+					</div>
+					</div>
+			<div class="col-md-6">
+                <div class="tab-pane" id="settings1" role="tabpanel" >
+					<div class="card-block"> 
+						<div class="card-body" >
+							<h4 class="card-title">Dropzone</h4>
+							<h6 class="card-subtitle">Click below to change</h6>
+							<form action="profilepic" class="dropzone dz-clickable dz-form">
+								<div class="dz-default dz-message" style="width=100px;height:100px" >
+									<span>Drop files here to upload</span>
+								</div>
+							</form>
+							<form action="profilepic" >
+							
+							<button class="btn btn-primary" type="submit">Change<button>
+							</form>
+							
+							</div>
+						</div>  
+					</div>
+					</div>
+					</div>
+
+				</div>
+            </div>
+            <div class="modal-footer">
+			<form action = "profilepic">
+                <button type="button" class="btn btn-danger waves-effect text-left">Change</button>
+				</form>
+            </div>
+        </div>
+                                        <!-- /.modal-content -->
+    </div>
+</div>
+                                <!-- /.modal -->
+                            
+					

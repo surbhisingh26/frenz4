@@ -14,7 +14,6 @@ const Tab = (($) => {
    * Constants
    * ------------------------------------------------------------------------
    */
-
   const NAME                = 'tab'
   const VERSION             = '4.0.0'
   const DATA_KEY            = 'bs.tab'

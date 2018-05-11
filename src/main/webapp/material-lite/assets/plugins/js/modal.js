@@ -14,7 +14,6 @@ const Modal = (($) => {
    * Constants
    * ------------------------------------------------------------------------
    */
-
   const NAME                         = 'modal'
   const VERSION                      = '4.0.0'
   const DATA_KEY                     = 'bs.modal'

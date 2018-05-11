@@ -32,7 +32,7 @@ public class User extends BaseObject{
 	}
 	
 	public void setName(String fname,String mname,String lname) {
-		this.name = fname+" "+mname +" "+lname;
+		this.name = fname+" "+mname + lname;
 	}
 	
 	public String getGender() {

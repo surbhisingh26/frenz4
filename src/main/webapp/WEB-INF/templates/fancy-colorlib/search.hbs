@@ -1,0 +1,48 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+
+
+<div class="page-wrapper">
+<div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-8 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Following list matches your search "{{search}}"</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Search</li>
+                        </ol>
+                    </div>
+                </div>
+<div class="row">
+                    <!-- .col -->
+					{{#searchedUser}}
+                    <div class="col-md-6 col-lg-6 col-xlg-4">
+                        <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 text-center">
+                                    <a href="app-contact-detail.html"><img src="img/users/1.jpg" alt="user" class="img-circle img-responsive"></a>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <h3 class="box-title m-b-0">{{name}}</h3> <small>Web Developer</small>
+                                    <address>
+                                        795 Folsom Ave, Suite 600 San Francisco, CADGE 94107
+                                        <br/>
+                                        <br/>
+                                        <abbr title="Phone">P:</abbr> (123) 456-7890
+                                    </address>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+					{{/searchedUser}}
+					</div>
+					</div>
+					</div>
+{{>right_sidebar}}
+{{>foot}}
+
+{{>end}}

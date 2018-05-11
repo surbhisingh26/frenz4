@@ -1,6 +1,8 @@
 
 /*
  *
+ 
+ 
  * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
  *
  * Copyright (c) 2012, Matias Meno
@@ -151,6 +153,7 @@
       dictRemoveFileConfirmation: null,
       dictMaxFilesExceeded: "You can not upload any more files.",
       accept: function(file, done) {
+		 
         return done();
       },
       init: function() {
@@ -174,10 +177,12 @@
           this.element.appendChild(messageElement);
         }
         span = messageElement.getElementsByTagName("span")[0];
+		
         if (span) {
           if (span.textContent != null) {
             span.textContent = this.options.dictFallbackMessage;
           } else if (span.innerText != null) {
+			
             span.innerText = this.options.dictFallbackMessage;
           }
         }
@@ -249,6 +254,7 @@
         return this.element.classList.remove("dz-started");
       },
       addedfile: function(file) {
+		 
         var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
         if (this.element === this.previewsContainer) {
           this.element.classList.add("dz-started");
@@ -256,17 +262,23 @@
         if (this.previewsContainer) {
           file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
           file.previewTemplate = file.previewElement;
+		  
           this.previewsContainer.appendChild(file.previewElement);
           _ref = file.previewElement.querySelectorAll("[data-dz-name]");
+		 
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             node = _ref[_i];
+			 
             node.textContent = this._renameFilename(file.name);
+			$('.dz-form').append('<input type="hidden" name="filename" value="'+file.name+'">');
+			
           }
           _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
             node = _ref1[_j];
             node.innerHTML = this.filesize(file.size);
           }
+		  
           if (this.options.addRemoveLinks) {
             file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
             file.previewElement.appendChild(file._removeLink);
@@ -317,6 +329,7 @@
             thumbnailElement = _ref[_i];
             thumbnailElement.alt = file.name;
             thumbnailElement.src = dataUrl;
+		
           }
           return setTimeout(((function(_this) {
             return function() {

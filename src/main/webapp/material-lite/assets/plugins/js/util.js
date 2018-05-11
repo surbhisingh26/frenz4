@@ -17,7 +17,6 @@ const Util = (($) => {
   let transition = false
 
   const MAX_UID = 1000000
-
   // Shoutout AngusCroll (https://goo.gl/pxwQGp)
   function toType(obj) {
     return {}.toString.call(obj).match(/\s([a-zA-Z]+)/)[1].toLowerCase()

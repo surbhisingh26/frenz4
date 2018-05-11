@@ -18,7 +18,6 @@ File: js
   }
 })(this, function (_jquery) {
   'use strict';
-
   var _jquery2 = _interopRequireDefault(_jquery);
 
   function _interopRequireDefault(obj) {
