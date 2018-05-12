@@ -14,6 +14,8 @@ import org.mongojack.WriteResult;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.social.beFriendly.model.ProfilePic;
+import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
 import com.social.scframework.service.DBConnection;
 
@@ -217,14 +219,54 @@ public class UserService {
 	}
 	public User updatePic(String filePath, String uid) {
 		User user = coll.findOneById(uid);
-
 		System.out.println("uid is ..."+uid);
 		user.setImagepath(filePath);
 		System.out.println("path is ..."+user.getImagepath());
-
 		coll.updateById(uid, user);
 
+		DBCollection collection = mongo.getCollection("profilepic");
+		JacksonDBCollection<ProfilePic, String> coll1 = JacksonDBCollection.wrap(collection,ProfilePic.class, String.class);
+		
+		BasicDBObject query = new BasicDBObject();
+		query.put("current", true);
+		DBCursor<ProfilePic> cursor = coll1.find(query);
+		ProfilePic profilepic = new ProfilePic();
+		if(cursor.hasNext()){
+			profilepic = cursor.next();
+			profilepic.setCurrent(false);			
+		}
+		coll1.updateById(profilepic.getId(), profilepic);
+		profilepic = new ProfilePic();
+		Date date = new Date();
+		profilepic.setUid(uid);
+		profilepic.setPath(filePath);
+		profilepic.setCurrent(true);
+		profilepic.setUploadTime(date);
+		coll1.insert(profilepic);
+		
+		
 		return user;
+	}
+	public List<ProfilePic> getProfilePic(String uid) {
+		
+		List<ProfilePic> profilePicList = new ArrayList<ProfilePic>();
+		DBCollection collection = mongo.getCollection("profilepic");
+		JacksonDBCollection<ProfilePic, String> coll1 = JacksonDBCollection.wrap(collection,ProfilePic.class, String.class);
+		BasicDBObject query = new BasicDBObject();
+		query.put("uid", uid);
+		DBCursor<ProfilePic> cursor = coll1.find(query);
+		while(cursor.hasNext()){
+			ProfilePic profilepic = cursor.next();
+			profilePicList.add(profilepic);
+			
+		}
+		return profilePicList;
+	}
+	public User uploadPic(String filePath, String uid) {
+		List<UploadPic> profilePicList = new ArrayList<UploadPic>();
+		DBCollection collection = mongo.getCollection("uploadPic");
+		JacksonDBCollection<UploadPic, String> coll1 = JacksonDBCollection.wrap(collection,UploadPic.class, String.class);
+		return null;
 	}	
 }
 

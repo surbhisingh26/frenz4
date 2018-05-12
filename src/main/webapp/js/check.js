@@ -1,3 +1,7 @@
+function setDropZoneAction(formIdentifier, actionName) {
+	alert($(formIdentifier).find('[type=file]').length);
+	$(formIdentifier).prop('action', actionName);
+}
 function check() {
 	var pass = document.getElementById("pass").value;
 	var passConfirm = document.getElementById("passConfirm").value;

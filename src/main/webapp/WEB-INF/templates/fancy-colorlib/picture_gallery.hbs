@@ -18,155 +18,38 @@
 				<div class="card">
                             <!-- Nav tabs -->
                     <ul class="nav nav-tabs profile-tab" role="tablist">
-                        <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Display Images</a> </li>
-                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Your Uploads</a> </li>
-                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Add Pictures</a> </li>
+                        <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#dp" role="tab">Display Images</a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#uploads" role="tab">Your Uploads</a> </li>
+                        <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#addpic" role="tab">Add Pictures</a> </li>
                     </ul>
                             <!-- Tab panes -->
                     <div class="tab-content">
-                        <div class="tab-pane active" id="home" role="tabpanel">
+                        <div class="tab-pane active" id="dp" role="tabpanel">
                             <div class="card-block">
                                 <div class="row el-element-overlay">
+								{{#profilePicList}}
 									<div class="col-md-6">
 										<div class="card">
 											<div class="el-card-item">
-												<div class="el-card-avatar el-overlay-1"> 	<img src="img/friends.jpg" alt="user" />
+												<div class="el-card-avatar el-overlay-1"> 	<img src="{{path}}" alt="user" />
 													<div class="el-overlay">
 														<ul class="el-info">
-															<li><a class="btn default btn-outline image-popup-vertical-fit" href="img/friends.jpg"><i class="icon-magnifier"></i></a></li>
+															<li><a class="btn default btn-outline image-popup-vertical-fit" href="{{path}}"><i class="icon-magnifier"></i></a></li>
 															<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
 														</ul>
 													</div>
 												</div>
 												<div class="el-card-content">
-													<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
+													<h3 class="box-title">Project title</h3> <input type="hidden" value="{{uploadTime}}" class="uploadTime{{id}}"><small ><label class="uploadedTime{{id}}"></label></small>
 											<br/> </div>
 											</div>
 										</div>
 									</div>
-									<div class="col-md-6">
-										<div class="card">
-											<div class="el-card-item">
-												<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img2.jpg" alt="user" />
-													<div class="el-overlay">
-														<ul class="el-info">
-															<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-															<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-														</ul>
-													</div>
-												</div>
-												<div class="el-card-content">
-													<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-											<br/> </div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="card">
-											<div class="el-card-item">
-												<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img3.jpg" alt="user" />
-													<div class="el-overlay">
-														<ul class="el-info">
-															<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-															<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-														</ul>
-													</div>
-												</div>
-												<div class="el-card-content">
-													<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-											<br/> </div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="card">
-											<div class="el-card-item">
-												<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img4.jpg" alt="user" />
-													<div class="el-overlay">
-														<ul class="el-info">
-															<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-															<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-														</ul>
-												</div>
-											</div>
-											<div class="el-card-content">
-												<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-										<br/> </div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="card">
-										<div class="el-card-item">
-											<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img3.jpg" alt="user" />
-												<div class="el-overlay">
-													<ul class="el-info">
-														<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-														<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-													</ul>
-												</div>
-											</div>
-											<div class="el-card-content">
-												<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-										<br/> </div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="card">
-										<div class="el-card-item">
-											<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img5.jpg" alt="user" />
-												<div class="el-overlay">
-													<ul class="el-info">
-														<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-														<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-													</ul>
-												</div>
-											</div>
-											<div class="el-card-content">
-												<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-										<br/> </div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="card">
-										<div class="el-card-item">
-											<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img6.jpg" alt="user" />
-												<div class="el-overlay">
-													<ul class="el-info">
-														<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-														<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-													</ul>
-												</div>
-											</div>
-											<div class="el-card-content">
-												<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-										<br/> </div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="card">
-										<div class="el-card-item">
-											<div class="el-card-avatar el-overlay-1"> <img src="../assets/images/big/img1.jpg" alt="user" />
-											<div class="el-overlay">
-												<ul class="el-info">
-													<li><a class="btn default btn-outline image-popup-vertical-fit" href="../assets/images/users/1.jpg"><i class="icon-magnifier"></i></a></li>
-													<li><a class="btn default btn-outline" href="javascript:void(0);"><i class="icon-link"></i></a></li>
-												</ul>
-											</div>
-										</div>
-										<div class="el-card-content">
-											<h3 class="box-title">Project title</h3> <small>subtitle of project</small>
-									<br/> </div>
-									</div>
-								</div>
-							</div>
+									{{/profilePicList}}
 						</div>
 					</div>
                 </div>
-                <div class="tab-pane" id="profile" role="tabpanel">
+                <div class="tab-pane" id="uploads" role="tabpanel">
                     <div class="card-block">
                         <div class="card-columns el-element-overlay">
 							<div class="card">
@@ -232,20 +115,59 @@
 					</div>
                 </div>
             </div>
-            <div class="tab-pane" id="settings" role="tabpanel">
+            <div class="tab-pane" id="addpic" role="tabpanel">
                 <div class="card-block">
                     <div class="card-body">
                         <h4 class="card-title">Dropzone</h4>
-                            <h6 class="card-subtitle">Add pictures to your gallery <code>.dropzone</code> to form.</h6>
-                            <form action="#" class="dropzone dz-clickable">
+                            <h6 class="card-subtitle">Add pictures to your gallery <code></h6>
+                            <form action="addPictures" class="dropzone dz-clickable dz-form">
 								<div class="dz-default dz-message"><span>Drop files here to upload</span></div></form>
+								</div>
 					</div>  
                 </div>
             </div>
-         </div>					
+         					
 		</div>
 	</div>
 </div>
+</div>
 {{>right_sidebar}}
 {{>foot}}
+<script>
+$(document).ready(function(){
+var now = moment();
+{{#profilePicList}}
+var time = $('.uploadTime{{id}}');
+var uploadTime = moment($(time).val(),'ddd MMM DD HH:mm:ss IST yyyy');
+
+if(moment(uploadTime,'ddd MMM DD HH:mm:ss IST yyyy').isValid()){
+var Days =  moment.duration(now - uploadTime).days();
+var Hours =  moment.duration(now - uploadTime).hours();
+var Minutes =  moment.duration(now - uploadTime).minutes();
+var Seconds =  moment.duration(now - uploadTime).seconds();
+
+if(Days!=0){
+if(Days==1)
+$('.uploadedTime{{id}}').text("yesterday at " + uploadTime.format('HH:mm a'));
+else if(Days<1)
+$('.uploadedTime{{id}}').text(uploadTime.format('DD MMM YYYY HH:mm'));
+}
+else if(Hours!=0){
+if(Hours==1)
+$('.uploadedTime{{id}}').text(Hours+" hour ago");
+else
+$('.uploadedTime{{id}}').text(Hours+" hours ago");
+}
+else if(Minutes!=0)
+
+$('.uploadedTime{{id}}').text(Minutes+" minutes ago");
+else if(Seconds!=0)
+$('.uploadedTime{{id}}').text("Just now");
+}
+{{/profilePicList}}
+//if(moment($('#uploadTime').val())).isValid('ddd MMM DD HH:mm:ss IST YYYY'){
+//alert("fgr");
+//}
+});
+</script>
 {{>end}}

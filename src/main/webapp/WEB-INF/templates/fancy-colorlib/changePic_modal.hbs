@@ -13,7 +13,7 @@
 					<div class="tab-pane" id="settings" role="tabpanel" >
 					<div class="card-block"> 
 						<div class="card-body" >
-							<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" class="img-circle" width="200px" height="200px" style="margin-top:30px">
+							<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" class="img-circle" width="200px" height="200px" style="margin-top:5px">
 							
 						</div>
 					</div>						
@@ -23,17 +23,24 @@
                 <div class="tab-pane" id="settings1" role="tabpanel" >
 					<div class="card-block"> 
 						<div class="card-body" >
-							<h4 class="card-title">Dropzone</h4>
-							<h6 class="card-subtitle">Click below to change</h6>
-							<form action="profilepic" class="dropzone dz-clickable dz-form">
+							
+							
+							<!-- <form onsubmit="setDropZoneAction($(this), 'profilepic');" class="dropzone dz-clickable dz-form">
+								<div class="dz-default dz-message" style="width=100px;height:100px" >
+									<span>Drop files here to upload</span>
+								</div>
+							</form> -->
+							<form action="profilepic" class="dropzone dz-clickable dz-form" id="my-awesome-dropzone">
 								<div class="dz-default dz-message" style="width=100px;height:100px" >
 									<span>Drop files here to upload</span>
 								</div>
 							</form>
-							<form action="profilepic" >
+							<!--<form action="profilepic" class="dropzone">
+							  <div class="fallback">
+								<input name="file" type="file"  />
+							  </div>
+							</form>-->
 							
-							<button class="btn btn-primary" type="submit">Change<button>
-							</form>
 							
 							</div>
 						</div>  
@@ -45,7 +52,7 @@
             </div>
             <div class="modal-footer">
 			<form action = "profilepic">
-                <button type="button" class="btn btn-danger waves-effect text-left">Change</button>
+                <button type="button" class="btn btn-danger waves-effect text-left">Close</button>
 				</form>
             </div>
         </div>
