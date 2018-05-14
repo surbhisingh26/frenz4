@@ -19,12 +19,12 @@ public class Filters implements Filter{
 		System.out.println("Filter init called");
 		System.out.println("Task scheduled");
 		//Reminder reminder = new Reminder(5);
-	//	int n=2;
-   	/* for(int i=0;i<n;i++){
+		//	int n=2;
+		/* for(int i=0;i<n;i++){
    	 new Reminder(5*i);
-   	 
+
    	 }*/
-		
+
 	}
 
 	public void destroy() {
@@ -40,29 +40,35 @@ public class Filters implements Filter{
 		System.out.println("filtering path: " + path);
 
 		if(!path.contains(".")) {
-			
+			if(path.contains("friend")||path.contains("Friend")){
+
+				request.getRequestDispatcher("/friendpaths" + path).forward(request, response);
+				System.out.println("friend");
+			}
+
 			/*if(path.contains("passenger")||path.contains("Passenger"))	{		
 				request.getRequestDispatcher("/passengerpaths" + path).forward(request, response);
 				System.out.println("passenger");
 			}
-			
+
 			else if(path.contains("friend")||path.contains("Friend")){
-				
+
 				request.getRequestDispatcher("/friendpaths" + path).forward(request, response);
 				System.out.println("friend");
 			}
 			else if(path.contains("email")||path.contains("Email")){
-				
+
 				request.getRequestDispatcher("/emailpaths" + path).forward(request, response);
 				System.out.println("email");
 			}
-			
+
 			else{*/
-				
+			else{
 				request.getRequestDispatcher("/userpaths" + path).forward(request, response);
 				System.out.println("user");
-		//	}
-			
+			}
+			//	}
+
 
 		} 
 		else {

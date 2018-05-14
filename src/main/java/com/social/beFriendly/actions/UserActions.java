@@ -15,10 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
-import com.social.beFriendly.app.Utility;
+
 import com.social.beFriendly.model.ProfilePic;
+import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.UserService;
+import com.social.scframework.App.Utility;
 
 
 
@@ -29,6 +31,7 @@ public class UserActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
 	String uid;
+	String templatePath = "C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -58,7 +61,7 @@ public class UserActions extends HttpServlet {
 		if(path==null||path.equals("/")){
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			//hmap = utility.checkSession(request);
-			utility.getHbs(response,"home",hmap);
+			utility.getHbs(response,"home",hmap,templatePath);
 		}
 
 		else{
@@ -77,7 +80,7 @@ public class UserActions extends HttpServlet {
 	public void login(HttpServletRequest request,HttpServletResponse response){
 
 		try {
-			utility.getHbs(response,"login_page",null);
+			utility.getHbs(response,"login_page",null,templatePath);
 		} catch (ServletException e) {
 
 			e.printStackTrace();
@@ -90,7 +93,7 @@ public class UserActions extends HttpServlet {
 	public void register(HttpServletRequest request,HttpServletResponse response){
 
 		try {
-			utility.getHbs(response,"register_page",null);
+			utility.getHbs(response,"register_page",null,templatePath);
 		} catch (ServletException e) {
 
 			e.printStackTrace();
@@ -145,7 +148,7 @@ public class UserActions extends HttpServlet {
 				String msg = "You are already registered with this email";
 				hmap.put("message", msg);
 				//utility.getHbs(response,"message",hmap);
-				utility.getHbs(response,"register_page",hmap);
+				utility.getHbs(response,"register_page",hmap,templatePath);
 			}
 			else{
 				String registeredMsg = "You are successfully registered!!! Login to Continue";
@@ -157,7 +160,7 @@ public class UserActions extends HttpServlet {
 				}
 				else
 				{					
-					utility.getHbs(response,"login_page",hmap);
+					utility.getHbs(response,"login_page",hmap,templatePath);
 				}
 
 			}
@@ -201,13 +204,13 @@ public class UserActions extends HttpServlet {
 
 				hmap.put("message", msg);
 
-				utility.getHbs(response,"login_page",hmap);
+				utility.getHbs(response,"login_page",hmap,templatePath);
 
 			}
 			else if(result.equals(password)){
 				msg = "Wrong password entered";
 				hmap.put("message", msg);
-				utility.getHbs(response,"login_page",hmap);
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 			else if(result.equals("Register First")){
@@ -255,8 +258,11 @@ public class UserActions extends HttpServlet {
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			utility.getHbs(response,"dashboard",hmap);
+			uid = utility.getSession(request);
+			UserService userservice = new UserService();
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
+			utility.getHbs(response,"dashboard",hmap,templatePath);
 		} catch (ServletException e) {
 
 			e.printStackTrace();
@@ -269,8 +275,11 @@ public class UserActions extends HttpServlet {
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			utility.getHbs(response,"profile",hmap);
+			uid = utility.getSession(request);
+			UserService userservice = new UserService();
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
+			utility.getHbs(response,"profile",hmap,templatePath);
 		} catch (ServletException e) {
 
 			e.printStackTrace();
@@ -281,12 +290,8 @@ public class UserActions extends HttpServlet {
 	}
 	public void logout(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			uid = (String) hmap.get("uid");
+			uid = utility.getSession(request);
 			String reference = request.getParameter("reference");
-
-
 
 			Cookie loginCookie=new Cookie("uid","");  
 			loginCookie.setMaxAge(0);  
@@ -309,53 +314,51 @@ public class UserActions extends HttpServlet {
 	public void gallery(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			uid = (String) hmap.get("uid");
+			uid = utility.getSession(request);
 			UserService userservice = new UserService();
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
+			
 			List<ProfilePic> profilePicList = userservice.getProfilePic(uid);
 			hmap.put("profilePicList", profilePicList);
-			utility.getHbs(response,"picture_gallery",hmap);
+
+			List<UploadPic> uploadPicList = userservice.getUploadPic(uid);
+			hmap.put("uploadPicList", uploadPicList);
+			utility.getHbs(response,"picture_gallery",hmap,templatePath);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
+
 	
-	public void friends(HttpServletRequest request,HttpServletResponse response){
-		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			uid = (String) hmap.get("uid");
-			utility.getHbs(response,"friends",hmap);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
 	public void search(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			uid = (String) hmap.get("uid");
-			String search = request.getParameter("search");
+			uid = utility.getSession(request);
 			UserService userservice = new UserService();
-			System.out.println(search);
-			List<User> searchedUser = userservice.searchUser(search);
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
+			//hmap.put("", value)
+			String search = request.getParameter("search");
+
+			hmap.putAll(userservice.searchUser(search,uid));			
 			hmap.put("search",search);
-			hmap.put("searchedUser", searchedUser);
-			utility.getHbs(response,"search",hmap);
-			
+			utility.getHbs(response,"search",hmap,templatePath);
+
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void profilepic(HttpServletRequest request, HttpServletResponse response){
 		try {
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			uid = (String) hmap.get("uid");
+			uid = utility.getSession(request);
+			UserService userservice = new UserService();
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
 			System.out.println("profile pic "+uid);
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/dp";
@@ -367,19 +370,19 @@ public class UserActions extends HttpServlet {
 			System.out.println("File is ................ " + fileName);
 			Part file = request.getPart("file");
 			System.out.println("File is ................ " + file);
-			
+
 			hmap.put("file", file);
 			hmap.put("filename",fileName);
 			file.write(fileSaveDir + File.separator + fileName);
 			String filePath= File.separator +"images/beFriendlyimages/"+uid+"/dp" + File.separator + fileName;
 			UserService userService = new UserService();
-			User user = userService.updatePic(filePath,uid);
-		
+			userService.updatePic(filePath,uid);
 
-			hmap.put("loggedInUser",user);
+
+			//hmap.put("loggedInUser",user);
 			System.out.println("filepath  ...  "+filePath);
 			//String path = request.getPathInfo();
-			
+
 
 		}
 		catch(Exception e){
@@ -389,8 +392,10 @@ public class UserActions extends HttpServlet {
 	public void addPictures(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap = utility.checkSession(request);
-			uid = (String) hmap.get("uid");
+			uid = utility.getSession(request);
+			UserService userservice = new UserService();
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/uploads";
 			File fileSaveDir=new File(savePath);
@@ -401,18 +406,18 @@ public class UserActions extends HttpServlet {
 			System.out.println("File is ................ " + fileName);
 			Part file = request.getPart("file");
 			System.out.println("File is ................ " + file);
-			
+
 			hmap.put("file", file);
 			hmap.put("filename",fileName);
 			file.write(fileSaveDir + File.separator + fileName);
 			String filePath= File.separator +"images/beFriendlyimages/"+uid+"/uploads" + File.separator + fileName;
 			UserService userService = new UserService();
-			User user = userService.uploadPic(filePath,uid);
-		
+			userService.uploadPic(filePath,uid);
+
 
 			//hmap.put("loggedInUser",user);
 			System.out.println("filepath  ...  "+filePath);
-			
+
 		}
 		catch(Exception e){
 			e.printStackTrace();

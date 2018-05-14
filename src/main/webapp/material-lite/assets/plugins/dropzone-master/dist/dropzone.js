@@ -271,6 +271,8 @@
             node = _ref[_i];
 			 
             node.textContent = this._renameFilename(file.name);
+			if($('.dz-form input')!=null)
+			$('.dz-form input').remove();
 			$('.dz-form').append('<input type="hidden" name="filename" value="'+file.name+'">');
 			
 			

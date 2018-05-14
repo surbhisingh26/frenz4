@@ -198,3 +198,7 @@ a.link:hover, a.link:focus {
 .card-no-border .sidebar-footer {
   background: #181c22;
 }
+.friend-btn{
+		background-color:#26c6da;
+		color:#ffffff;
+	}

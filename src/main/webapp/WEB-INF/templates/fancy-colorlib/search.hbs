@@ -18,23 +18,109 @@
                     </div>
                 </div>
 <div class="row">
+<button class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
                     <!-- .col -->
+					{{#if user}}
+					{{#loggedInUser}}
+					<div class="col-md-6 col-lg-6 col-xlg-4">
+                        <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 text-center">
+                                    <a href="app-contact-detail.html"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <h3 class="box-title m-b-0">{{name}}</h3> <small>{{email}}</small><br><small>Web Developer</small>                                    <div>													
+								</form>
+								</div>
+                                </div>
+								
+                            </div>
+                        </div>
+                    </div>
+					{{/loggedInUser}}
+					{{/if}}
+					{{#searchedFriend}}
+                    <div class="col-md-6 col-lg-6 col-xlg-4">
+                        <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 text-center">
+                                    <a href="app-contact-detail.html"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <h3 class="box-title m-b-0">{{name}}</h3>
+								<small>{{email}}</small><br>									<small>Web Developer</small>
+                                    <div>
+									<form action="befriend" method="post">
+									<input type="hidden" value="{{id}}" name="fid">
+									<button class="btn friend-btn" disabled="disabled"> Friends</button>		
+								</form>
+								</div>
+                                </div>
+								
+                            </div>
+                        </div>
+                    </div>
+					{{/searchedFriend}}
+					{{#requestedUser}}
+                    <div class="col-md-6 col-lg-6 col-xlg-4">
+                        <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 text-center">
+                                    <a href="app-contact-detail.html"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <h3 class="box-title m-b-0">{{name}}</h3><small>{{email}}</small><br> <small>Web Developer</small>
+                                    <div>
+									<form action="befriend" method="post">
+									<input type="hidden" value="{{id}}" name="fid">
+									<button class="btn friend-btn" disabled="disabled"> Request Sent</button>																
+								</form>
+								</div>
+                                </div>
+								
+                            </div>
+                        </div>
+                    </div>
+					{{/requestedUser}}
+					{{#pendingFriend}}
+                    <div class="col-md-6 col-lg-6 col-xlg-4">
+                        <div class="card card-body" style="padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 text-center">
+                                    <a href="app-contact-detail.html"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <h3 class="box-title m-b-0">{{name}}</h3> <small>{{email}}</small><br><small>Web Developer</small>
+                                    <div>
+									<form action="befriend" method="post">
+									<input type="hidden" value="{{id}}" name="fid">
+									<button class="btn friend-btn">Accept</button>
+									<button class="btn friend-btn">Reject</button>																
+								</form>
+								</div>
+                                </div>
+								
+                            </div>
+                        </div>
+                    </div>
+					{{/pendingFriend}}
 					{{#searchedUser}}
                     <div class="col-md-6 col-lg-6 col-xlg-4">
                         <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
                             <div class="row">
                                 <div class="col-md-4 col-lg-3 text-center">
-                                    <a href="app-contact-detail.html"><img src="img/users/1.jpg" alt="user" class="img-circle img-responsive"></a>
+                                    <a href="app-contact-detail.html"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
                                 </div>
                                 <div class="col-md-8 col-lg-9">
-                                    <h3 class="box-title m-b-0">{{name}}</h3> <small>Web Developer</small>
-                                    <address>
-                                        795 Folsom Ave, Suite 600 San Francisco, CADGE 94107
-                                        <br/>
-                                        <br/>
-                                        <abbr title="Phone">P:</abbr> (123) 456-7890
-                                    </address>
+                                    <h3 class="box-title m-b-0">{{name}}</h3> <small>{{email}}</small><br><small>Web Developer</small>
+                                    <div>
+									<form action="befriend" method="post">
+									<input type="hidden" value="{{id}}" name="fid">
+									<button class="btn friend-btn">Be Friend</button>
+								</form>
+								</div>
                                 </div>
+								
                             </div>
                         </div>
                     </div>

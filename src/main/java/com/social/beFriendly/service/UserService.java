@@ -4,30 +4,34 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.social.beFriendly.DAO.ProfilePicDAO;
+import com.social.beFriendly.DAO.UploadPicDAO;
+import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
-import com.social.scframework.service.DBConnection;
 
 
 public class UserService {
-	DBConnection db = new DBConnection();
-	DB mongo = db.getDB("BeFriendly");
-	DBCollection collec = mongo.getCollection("user");
-	JacksonDBCollection<User, String> coll = JacksonDBCollection.wrap(collec,User.class, String.class);
+	UserDAO userdao = new UserDAO();
+	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
+	ProfilePicDAO profilepicdao = new ProfilePicDAO();
+	JacksonDBCollection<ProfilePic, String> dpCollection =  profilepicdao.profilePicDAO();
+	UploadPicDAO uploadpicdao = new UploadPicDAO();
+	JacksonDBCollection<UploadPic, String> uploadCollection =  uploadpicdao.uploadPicDAO();
 	public Boolean registerUser(String fname, String lname, String mname, String country, String city, String mobile,
 			String password, String gender, String dob, String bgcolor, String filePath, String email, String reference,
 			String referenceId) {
+
 		if(!mname.equals(""))
 			mname = mname + " ";
 		User registration = new User();
@@ -43,7 +47,7 @@ public class UserService {
 		BasicDBObject query = new BasicDBObject();
 
 		query.put("email", email);
-		DBCursor<User> cursor = coll.find(query);
+		DBCursor<User> cursor = userCollection.find(query);
 
 		if (cursor.hasNext()) {
 			return false;
@@ -65,7 +69,7 @@ public class UserService {
 		registration.setReferenceId(referenceId);
 		registration.setPoints(50);
 
-		WriteResult<User, String> reg = coll.insert(registration);
+		WriteResult<User, String> reg = userCollection.insert(registration);
 		registration = reg.getSavedObject();
 		//DBCollection collection = mongo.getCollection("invitation");
 		/*JacksonDBCollection<Invite, String> coll1 = JacksonDBCollection.wrap(collection,Invite.class, String.class);
@@ -120,7 +124,7 @@ public class UserService {
 		if(email!=""){
 			BasicDBObject query = new BasicDBObject();
 			query.put("email", email);
-			DBCursor<User> cursor = coll.find(query);
+			DBCursor<User> cursor = userCollection.find(query);
 			String result = null;
 			if (cursor.hasNext()) {
 				User user = cursor.next();
@@ -142,7 +146,7 @@ public class UserService {
 		else{
 			BasicDBObject query = new BasicDBObject();
 			query.put("referenceId", referenceId);
-			DBCursor<User> cursor = coll.find(query);
+			DBCursor<User> cursor = userCollection.find(query);
 			if(cursor.hasNext()){
 				User registration = cursor.next();
 				String id = registration.getId();
@@ -159,17 +163,17 @@ public class UserService {
 	}
 	public Boolean login(String uid){
 
-		User user = coll.findOneById(uid);
+		User user = userCollection.findOneById(uid);
 		System.out.println(uid);
 		System.out.println(user.getName());
 		user.setLoggedIn(true);
-		coll.updateById(uid, user);
+		userCollection.updateById(uid, user);
 		return user.getLoggedIn();
 
 	}
 	public User findOneById(String uid) {
 
-		User user = coll.findOneById(uid);
+		User user = userCollection.findOneById(uid);
 		return user;
 	}
 
@@ -178,95 +182,163 @@ public class UserService {
 		Date date = new Date();		
 
 		//System.out.println("Date is "+now);
-		User user = coll.findOneById(uid);
+		User user = userCollection.findOneById(uid);
 		user.setLoggedIn(false);
 		user.setLastLoggedInAt(date);
-		coll.updateById(uid, user);
+		userCollection.updateById(uid, user);
 	}
-	public List<User> searchUser(String search) {
-		
+	public Map<String,Object> searchUser(String search,String uid) {
+		Map<String,Object> hmap = new HashMap<String, Object>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("name", new BasicDBObject("$regex" , "(?i).*"+search+".*"));
+		List<User> requestedUser = new ArrayList<User>();
+		List<User> searchedFriend = new ArrayList<User>();
+		List<User> pendingFriend = new ArrayList<User>();
 		List<User> searchedUser = new ArrayList<User>();
-		DBCursor<User> cursor = coll.find(query);
+		DBCursor<User> cursor = userCollection.find(query);
+		FriendService friendservice = new FriendService();
 		User user = new User();
 		while(cursor.hasNext()){
 			user = cursor.next();
-			searchedUser.add(user);
+
+			String status = friendservice.checkStatus(uid, user.getId());
+			if(user.getId().equals(uid))
+				hmap.put("user", true);
+			else if(status.equalsIgnoreCase("My Request Accepted")||status.equals("I Accepted Request"))
+				searchedFriend.add(user);
+			else if(status.equalsIgnoreCase("Request Sent"))
+				requestedUser.add(user);
+			else if(status.equalsIgnoreCase("Pending Request"))
+				pendingFriend.add(user);
+			else
+				searchedUser.add(user);
 			System.out.println("name " + user.getName());
 		}
 		query.clear();
 		query.put("email", new BasicDBObject("$regex" , "(?i).*"+search+".*"));
-		DBCursor<User> EmailCursor = coll.find(query);
+		DBCursor<User> EmailCursor = userCollection.find(query);
 		while(EmailCursor.hasNext()){
 			user = EmailCursor.next();
 			Boolean flag = true;
-				for(User u:searchedUser){
-					
-					if(u.getEmail().equals(user.getEmail())){
-						flag = false;
-						break;
-					}
+			for(User u:searchedUser){
+
+				if(u.getEmail().equals(user.getEmail())){
+					flag = false;
+					break;
 				}
-				if(flag==true)
-				searchedUser.add(user);		
-				
-			
+			}
+			for(User u:searchedFriend){
+
+				if(u.getEmail().equals(user.getEmail())){
+					flag = false;
+					break;
+				}
+			}
+			for(User u:requestedUser){
+
+				if(u.getEmail().equals(user.getEmail())){
+					flag = false;
+					break;
+				}
+			}
+			for(User u:pendingFriend){
+
+				if(u.getEmail().equals(user.getEmail())){
+					flag = false;
+					break;
+				}
+			}
+			if(flag==true){
+				String status = friendservice.checkStatus(uid, user.getId());
+				if(user.getId().equals(uid))
+					hmap.put("user", true);
+				else if(status.equalsIgnoreCase("My Request Accepted")||status.equals("I Accepted Request"))
+					searchedFriend.add(user);
+				else if(status.equalsIgnoreCase("Request Sent"))
+					requestedUser.add(user);
+				else if(status.equalsIgnoreCase("Pending Request"))
+					pendingFriend.add(user);
+				else
+					searchedUser.add(user);
+			}
+
+
 			System.out.println("email " + user.getName());
 		}
-		
-		return searchedUser;
+		hmap.put("searchedFriend", searchedFriend);
+		hmap.put("requestedUser", requestedUser);
+		hmap.put("pendingFriend", pendingFriend);
+		hmap.put("searchedUser", searchedUser);
+		return hmap;
 	}
 	public User updatePic(String filePath, String uid) {
-		User user = coll.findOneById(uid);
+		User user = userCollection.findOneById(uid);
 		System.out.println("uid is ..."+uid);
 		user.setImagepath(filePath);
 		System.out.println("path is ..."+user.getImagepath());
-		coll.updateById(uid, user);
+		userCollection.updateById(uid, user);
 
-		DBCollection collection = mongo.getCollection("profilepic");
-		JacksonDBCollection<ProfilePic, String> coll1 = JacksonDBCollection.wrap(collection,ProfilePic.class, String.class);
-		
 		BasicDBObject query = new BasicDBObject();
 		query.put("current", true);
-		DBCursor<ProfilePic> cursor = coll1.find(query);
+		DBCursor<ProfilePic> cursor = dpCollection.find(query);
 		ProfilePic profilepic = new ProfilePic();
 		if(cursor.hasNext()){
 			profilepic = cursor.next();
 			profilepic.setCurrent(false);			
 		}
-		coll1.updateById(profilepic.getId(), profilepic);
+		dpCollection.updateById(profilepic.getId(), profilepic);
 		profilepic = new ProfilePic();
 		Date date = new Date();
 		profilepic.setUid(uid);
 		profilepic.setPath(filePath);
 		profilepic.setCurrent(true);
 		profilepic.setUploadTime(date);
-		coll1.insert(profilepic);
-		
-		
+		dpCollection.insert(profilepic);
+
+
 		return user;
 	}
 	public List<ProfilePic> getProfilePic(String uid) {
-		
+
 		List<ProfilePic> profilePicList = new ArrayList<ProfilePic>();
-		DBCollection collection = mongo.getCollection("profilepic");
-		JacksonDBCollection<ProfilePic, String> coll1 = JacksonDBCollection.wrap(collection,ProfilePic.class, String.class);
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
-		DBCursor<ProfilePic> cursor = coll1.find(query);
+		DBCursor<ProfilePic> cursor = dpCollection.find(query);
+
 		while(cursor.hasNext()){
 			ProfilePic profilepic = cursor.next();
 			profilePicList.add(profilepic);
-			
+
 		}
 		return profilePicList;
 	}
 	public User uploadPic(String filePath, String uid) {
-		List<UploadPic> profilePicList = new ArrayList<UploadPic>();
-		DBCollection collection = mongo.getCollection("uploadPic");
-		JacksonDBCollection<UploadPic, String> coll1 = JacksonDBCollection.wrap(collection,UploadPic.class, String.class);
+
+		Date time = new Date();
+		UploadPic upload = new UploadPic();
+		upload.setPath(filePath);
+		upload.setUid(uid);
+		upload.setUploadTime(time);
+		uploadCollection.insert(upload);
 		return null;
+	}
+	public List<UploadPic> getUploadPic(String uid) {
+
+		List<UploadPic> uploadPicList = new ArrayList<UploadPic>();
+		BasicDBObject query = new BasicDBObject();
+		BasicDBObject sort = new BasicDBObject();
+		query.put("uid", uid);
+		sort.put("time", -1);
+		DBCursor<UploadPic> cursor = uploadCollection.find(query).sort(sort);
+
+		while(cursor.hasNext()){
+
+			UploadPic uploadpic = cursor.next();
+			uploadPicList.add(uploadpic);
+
+		}
+
+		return uploadPicList;
 	}	
 }
 

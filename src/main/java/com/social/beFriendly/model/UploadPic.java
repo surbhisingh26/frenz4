@@ -2,7 +2,9 @@ package com.social.beFriendly.model;
 
 import java.util.Date;
 
-public class UploadPic {
+import com.social.scframework.model.BaseObject;
+
+public class UploadPic extends BaseObject {
 private String uid;
 private String path;
 public String getUid() {

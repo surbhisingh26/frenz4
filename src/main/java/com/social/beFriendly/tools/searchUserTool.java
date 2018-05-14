@@ -6,7 +6,7 @@ public class searchUserTool {
 	
 	public static void main(String args[]){
 	UserService user = new UserService();
-	user.searchUser("singh");
+	user.searchUser("singh","");
 	}
 
 }

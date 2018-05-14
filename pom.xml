@@ -45,6 +45,16 @@
     <artifactId>scframework</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
+<dependency>
+    <groupId>com.sun.mail</groupId>
+    <artifactId>smtp</artifactId>
+    <version>1.4.4</version>
+</dependency>
+<dependency>
+	<groupId>com.sun.mail</groupId>
+	<artifactId>javax.mail</artifactId>
+	<version>1.5.5</version>
+</dependency>
   </dependencies>
   <build>
     <finalName>beFriendly</finalName>

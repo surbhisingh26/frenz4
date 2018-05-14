@@ -183,3 +183,7 @@ a.link:hover, a.link:focus {
   background: #ffffff;
   color: #f62d51;
 }
+.friend-btn{
+		background-color:#f62d51;
+		color:#ffffff;
+	}
