@@ -59,3 +59,88 @@
 	<script src="material-lite/assets/plugins/calendar/dist/cal-init.js"></script>
 	<script src="material-lite/assets/plugins/styleswitcher/jQuery.style.switcher.js"></script>
 	<script src="material-lite/assets/plugins/dropzone-master/dist/dropzone.js"></script>
+	
+	
+	
+	<script>
+	$('.notification').click(function(){
+	var request = $.ajax({
+	url:"notifications",
+	method:"POST",
+	dataType:"json"
+	});
+	request.done(function(response) {
+	var now = moment();
+	if(response.count<10)
+	response.count=10;
+	for(var count = 0;count<response.count;count++){
+	console.log(response.notifyList[count].purpose);
+	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc"></span>'+response.notifyList[count].notification+'<span class="time notiTime'+response.notifyList[count].id+'"></span> </div></a>')
+	
+	var time = moment(response.notifyList[count].date,'MMM DD,YYYY HH:mm:ss A');
+	if(time.isValid()) {
+	var Days =  moment.duration(now - time).days();
+	
+var Hours =  moment.duration(now - time).hours();
+var Minutes =  moment.duration(now - time).minutes();
+var Seconds =  moment.duration(now - time).seconds();
+
+if(Days!=0){
+if(Days==1)
+$('.notiTime'+response.notifyList[count].id).text("yesterday at " + notiTime+response.notifyList[count].id.format('HH:mm a'));
+else if(Days<1)
+$('.notiTime'+response.notifyList[count].id).text(notiTime+response.notifyList[count].id.format('DD MMM YYYY HH:mm'));
+}
+else if(Hours!=0){
+if(Hours==1)
+$('.notiTime'+response.notifyList[count].id).text(Hours+" hour ago");
+else
+$('.notiTime'+response.notifyList[count].id).text(Hours+" hours ago");
+}
+else if(Minutes!=0)
+
+$('.notiTime'+response.notifyList[count].id).text(Minutes+" minutes ago");
+else if(Seconds!=0)
+$('.notiTime'+response.notifyList[count].id).text("Just now");
+	}
+	}
+	});
+	});
+	</script>
+	<script>
+$(document).ready(function(){
+var now = moment();
+{{#profilePicList}}
+var time = $('.uploadTime{{id}}');
+var uploadTime = moment($(time).val(),'ddd MMM DD hh:mm:ss IST yyyy');
+
+if(moment(uploadTime,'ddd MMM DD hh:mm:ss IST yyyy').isValid()){
+var Days =  moment.duration(now - uploadTime).days();
+var Hours =  moment.duration(now - uploadTime).hours();
+var Minutes =  moment.duration(now - uploadTime).minutes();
+var Seconds =  moment.duration(now - uploadTime).seconds();
+
+if(Days!=0){
+if(Days==1)
+$('.uploadedTime{{id}}').text("yesterday at " + uploadTime.format('hh:mm a'));
+else if(Days<1)
+$('.uploadedTime{{id}}').text(uploadTime.format('DD MMM YYYY hh:mm'));
+}
+else if(Hours!=0){
+if(Hours==1)
+$('.uploadedTime{{id}}').text(Hours+" hour ago");
+else
+$('.uploadedTime{{id}}').text(Hours+" hours ago");
+}
+else if(Minutes!=0)
+
+$('.uploadedTime{{id}}').text(Minutes+" minutes ago");
+else if(Seconds!=0)
+$('.uploadedTime{{id}}').text("Just now");
+}
+{{/profilePicList}}
+//if(moment($('#uploadTime').val())).isValid('ddd MMM DD HH:mm:ss IST YYYY'){
+//alert("fgr");
+//}
+});
+</script>

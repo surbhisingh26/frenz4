@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import com.google.gson.Gson;
-
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
+import com.social.beFriendly.service.EmailService;
+import com.social.beFriendly.service.NotificationService;
 import com.social.beFriendly.service.UserService;
 import com.social.scframework.App.Utility;
 
@@ -37,7 +38,7 @@ public class UserActions extends HttpServlet {
 	 */
 	public UserActions() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -76,7 +77,22 @@ public class UserActions extends HttpServlet {
 			} 
 		}
 	}
+	public Map<String, Object> getUserDetails(HttpServletRequest request,HttpServletResponse response){
 
+		
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			uid = utility.getSession(request);
+			UserService userservice = new UserService();
+			User user = userservice.findOneById(uid);
+			hmap.put("loggedInUser", user);
+			hmap.put("uid", uid);
+			if(uid!=null)
+				hmap.put("login", true);
+			NotificationService notificationService = new NotificationService();
+			hmap.putAll(notificationService.notificationRead(uid));
+			
+		return hmap;
+	}
 	public void login(HttpServletRequest request,HttpServletResponse response){
 
 		try {
@@ -258,10 +274,7 @@ public class UserActions extends HttpServlet {
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			uid = utility.getSession(request);
-			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
+			hmap.putAll(getUserDetails(request, response));
 			utility.getHbs(response,"dashboard",hmap,templatePath);
 		} catch (ServletException e) {
 
@@ -275,10 +288,7 @@ public class UserActions extends HttpServlet {
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			uid = utility.getSession(request);
-			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
+			hmap.putAll(getUserDetails(request, response));
 			utility.getHbs(response,"profile",hmap,templatePath);
 		} catch (ServletException e) {
 
@@ -314,16 +324,16 @@ public class UserActions extends HttpServlet {
 	public void gallery(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = utility.getSession(request);
+			hmap.putAll(getUserDetails(request, response));
 			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
-			
+			uid = (String) hmap.get("uid");
+
 			List<ProfilePic> profilePicList = userservice.getProfilePic(uid);
 			hmap.put("profilePicList", profilePicList);
 
 			List<UploadPic> uploadPicList = userservice.getUploadPic(uid);
 			hmap.put("uploadPicList", uploadPicList);
+			System.out.println("................."+hmap);
 			utility.getHbs(response,"picture_gallery",hmap,templatePath);
 		}
 		catch(Exception e){
@@ -331,15 +341,13 @@ public class UserActions extends HttpServlet {
 		}
 	}
 
-	
+
 	public void search(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = utility.getSession(request);
+			hmap.putAll(getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
 			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
-			//hmap.put("", value)
 			String search = request.getParameter("search");
 
 			hmap.putAll(userservice.searchUser(search,uid));			
@@ -355,10 +363,8 @@ public class UserActions extends HttpServlet {
 	public void profilepic(HttpServletRequest request, HttpServletResponse response){
 		try {
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = utility.getSession(request);
-			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
+			hmap.putAll(getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
 			System.out.println("profile pic "+uid);
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/dp";
@@ -392,10 +398,8 @@ public class UserActions extends HttpServlet {
 	public void addPictures(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = utility.getSession(request);
-			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
+			hmap.putAll(getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/uploads";
 			File fileSaveDir=new File(savePath);
@@ -418,6 +422,46 @@ public class UserActions extends HttpServlet {
 			//hmap.put("loggedInUser",user);
 			System.out.println("filepath  ...  "+filePath);
 
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void unsubscribe(HttpServletRequest request,HttpServletResponse response){
+		try{
+			String email = request.getParameter("email");
+			EmailService emailservice = new EmailService();
+			emailservice.unsubscribe(email);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void notifications(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			NotificationService notifyservice = new NotificationService();
+			hmap.putAll(notifyservice.getNotification(uid));
+
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void allnotifications(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			NotificationService notifyservice = new NotificationService();
+			hmap.putAll(notifyservice.getNotification(uid));
+			utility.getHbs(response, "notification", hmap, templatePath);
 		}
 		catch(Exception e){
 			e.printStackTrace();

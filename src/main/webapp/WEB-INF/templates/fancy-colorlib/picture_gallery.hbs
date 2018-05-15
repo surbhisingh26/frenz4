@@ -85,41 +85,5 @@
 </div>
 {{>right_sidebar}}
 {{>foot}}
-<script>
-$(document).ready(function(){
-var now = moment();
-{{#profilePicList}}
-var time = $('.uploadTime{{id}}');
-var uploadTime = moment($(time).val(),'ddd MMM DD HH:mm:ss IST yyyy');
 
-if(moment(uploadTime,'ddd MMM DD HH:mm:ss IST yyyy').isValid()){
-var Days =  moment.duration(now - uploadTime).days();
-var Hours =  moment.duration(now - uploadTime).hours();
-var Minutes =  moment.duration(now - uploadTime).minutes();
-var Seconds =  moment.duration(now - uploadTime).seconds();
-
-if(Days!=0){
-if(Days==1)
-$('.uploadedTime{{id}}').text("yesterday at " + uploadTime.format('HH:mm a'));
-else if(Days<1)
-$('.uploadedTime{{id}}').text(uploadTime.format('DD MMM YYYY HH:mm'));
-}
-else if(Hours!=0){
-if(Hours==1)
-$('.uploadedTime{{id}}').text(Hours+" hour ago");
-else
-$('.uploadedTime{{id}}').text(Hours+" hours ago");
-}
-else if(Minutes!=0)
-
-$('.uploadedTime{{id}}').text(Minutes+" minutes ago");
-else if(Seconds!=0)
-$('.uploadedTime{{id}}').text("Just now");
-}
-{{/profilePicList}}
-//if(moment($('#uploadTime').val())).isValid('ddd MMM DD HH:mm:ss IST YYYY'){
-//alert("fgr");
-//}
-});
-</script>
 {{>end}}

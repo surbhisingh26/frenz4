@@ -5,13 +5,9 @@
 </div>
 <div style="margin:30px;padding:10px; margin-bottom:30px;background-color:#D8E9FA;margin-right:150px">
 <p>Hey {{#reciever}}{{name}}{{/reciever}}</p>
-<p>You have a Friend request from {{#loggedInUser}}{{name}}{{/loggedInUser}}</p>
-<p>Make a new friend in just one move</p>
-<img src = "{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" width="40px" height:"40px">
-<form action = "http://localhost:8080/beFriendly/friendresponse">
-<input type="hidden" value="{{#loggedInUser}}{{id}}{{/loggedInUser}}">
-<button name="response" value="Accept">Accept</button>
-<button name="response" valus="Reject">Reject</button>
+<p>Your request to be friend of {{#loggedInUser}}{{name}}{{/loggedInUser}} is {{response}}ed.</p>
+<form action = "http://localhost:8080/beFriendly/friends">
+<button>View Friends</button>
 </form>
 </div>
 <div style="margin:30px;padding:10px; margin-top:30px;background-color:#3284D8; margin-right:150px">

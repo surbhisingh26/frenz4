@@ -11,7 +11,9 @@ public class Notification extends BaseObject{
 	private String notification;
 	private String link;
 	private Date date;
-	private String friendId;
+	private String image;
+	private String purpose;
+	private Boolean read;
 	public String getUserId() {
 		return userId;
 	}
@@ -24,11 +26,11 @@ public class Notification extends BaseObject{
 	public void setNotification(String notification) {
 		this.notification = notification;
 	}
-	public String getFriendId() {
-		return friendId;
+	public String getImage() {
+		return image;
 	}
-	public void setFriendId(String friendId) {
-		this.friendId = friendId;
+	public void setImage(String friendId) {
+		this.image = friendId;
 	}
 	public String getLink() {
 		return link;
@@ -41,6 +43,18 @@ public class Notification extends BaseObject{
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	public String getPurpose() {
+		return purpose;
+	}
+	public void setPurpose(String purpose) {
+		this.purpose = purpose;
+	}
+	public Boolean getRead() {
+		return read;
+	}
+	public void setRead(Boolean read) {
+		this.read = read;
 	}
 }
 

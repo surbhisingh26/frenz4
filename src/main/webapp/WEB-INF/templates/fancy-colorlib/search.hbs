@@ -50,10 +50,16 @@
                                     <h3 class="box-title m-b-0">{{name}}</h3>
 								<small>{{email}}</small><br>									<small>Web Developer</small>
                                     <div>
-									<form action="befriend" method="post">
-									<input type="hidden" value="{{id}}" name="fid">
-									<button class="btn friend-btn" disabled="disabled"> Friends</button>		
-								</form>
+								<div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Friends
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                        
+                                        <a class="dropdown-item" href="removefriend?fid={{id}}&search={{search}}">Remove as Friend</a>
+                                        
+                                    </div>
+                                </div>		
 								</div>
                                 </div>
 								
@@ -70,11 +76,17 @@
                                 </div>
                                 <div class="col-md-8 col-lg-9">
                                     <h3 class="box-title m-b-0">{{name}}</h3><small>{{email}}</small><br> <small>Web Developer</small>
-                                    <div>
-									<form action="befriend" method="post">
-									<input type="hidden" value="{{id}}" name="fid">
-									<button class="btn friend-btn" disabled="disabled"> Request Sent</button>																
-								</form>
+                                    <div>									
+									<div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Request Sent
+                                    </button>
+                                    <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                        
+                                        <a class="dropdown-item" href="cancelfriendrequest?fid={{id}}&search={{search}}">Cancel Request</a>
+                                        
+                                    </div>
+                                </div>									
 								</div>
                                 </div>
 								
@@ -92,10 +104,11 @@
                                 <div class="col-md-8 col-lg-9">
                                     <h3 class="box-title m-b-0">{{name}}</h3> <small>{{email}}</small><br><small>Web Developer</small>
                                     <div>
-									<form action="befriend" method="post">
+									<form action="friendresponse" method="post">
 									<input type="hidden" value="{{id}}" name="fid">
-									<button class="btn friend-btn">Accept</button>
-									<button class="btn friend-btn">Reject</button>																
+									<input type="hidden" value="{{search}}" name="search">
+									<button class="btn friend-btn responseBtn" name="response" value="Accept">Accept</button>
+									<button class="btn friend-btn responseBtn" name="response" value="Reject">Reject</button>																
 								</form>
 								</div>
                                 </div>
@@ -116,8 +129,10 @@
                                     <div>
 									<form action="befriend" method="post">
 									<input type="hidden" value="{{id}}" name="fid">
+									<input type="hidden" value="{{search}}" name="search">
 									<button class="btn friend-btn">Be Friend</button>
 								</form>
+
 								</div>
                                 </div>
 								
@@ -130,5 +145,4 @@
 					</div>
 {{>right_sidebar}}
 {{>foot}}
-
 {{>end}}

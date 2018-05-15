@@ -2,8 +2,6 @@ package com.social.beFriendly.service;
 
 import java.util.Date;
 
-import javax.swing.plaf.basic.BasicScrollBarUI;
-
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
@@ -49,6 +47,13 @@ public class EmailService {
 			return true;
 		}
 		return false;
+	}
+	public void unsubscribe(String email) {
+		Unsubscribe unsubscribe = new Unsubscribe();
+		Date date = new Date();
+		unsubscribe.setEmails(email);
+		unsubscribe.setDate(date);
+		unsubscribeCollection.insert(unsubscribe);		
 	}
 
 }

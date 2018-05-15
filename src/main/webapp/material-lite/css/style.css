@@ -5740,14 +5740,14 @@ File: scss
         background: #ffb22b; }
       .mailbox .message-center a .user-img .offline {
         background: #ffb22b; }
-    .mailbox .message-center a .mail-contnet {
+    .mailbox .message-center a .mail-content {
       display: inline-block;
       width: 75%;
       vertical-align: middle; }
-      .mailbox .message-center a .mail-contnet h5 {
+      .mailbox .message-center a .mail-content h5 {
         margin: 5px 0px 0; }
-      .mailbox .message-center a .mail-contnet .mail-desc,
-      .mailbox .message-center a .mail-contnet .time {
+      .mailbox .message-center a .mail-content .mail-desc,
+      .mailbox .message-center a .mail-content .time {
         font-size: 12px;
         display: block;
         margin: 1px 0;
@@ -5956,14 +5956,14 @@ File: scss
         background: #ffb22b; }
       .message-box .message-widget a .user-img .offline {
         background: #ffb22b; }
-    .message-box .message-widget a .mail-contnet {
+    .message-box .message-widget a .mail-content {
       display: inline-block;
       width: 75%;
       vertical-align: middle; }
-      .message-box .message-widget a .mail-contnet h5 {
+      .message-box .message-widget a .mail-content h5 {
         margin: 5px 0px 0; }
-      .message-box .message-widget a .mail-contnet .mail-desc,
-      .message-box .message-widget a .mail-contnet .time {
+      .message-box .message-widget a .mail-content .mail-desc,
+      .message-box .message-widget a .mail-content .time {
         font-size: 12px;
         display: block;
         margin: 1px 0;

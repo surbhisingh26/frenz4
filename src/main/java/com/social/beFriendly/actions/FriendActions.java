@@ -3,6 +3,7 @@ package com.social.beFriendly.actions;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -69,31 +70,38 @@ public class FriendActions extends HttpServlet {
 	}
 	public void befriend(HttpServletRequest request, HttpServletResponse response){
 		try{
-		Map<String, Object> hmap = new HashMap<String, Object>();
-		uid = utility.getSession(request);
-		UserService userservice = new UserService();
-		User user = userservice.findOneById(uid);
-		hmap.put("loggedInUser", user);
-		String fid = request.getParameter("fid");
-		FriendService friendservice = new FriendService();
-		friendservice.beFriend(uid,fid);
-		User friend = userservice.findOneById(fid);
-		NotificationService  notify = new NotificationService();
-		Email email = new Email();
-		hmap.put("name",friend.getName());
-		String status = "Pending";
-		EmailService emailservice = new EmailService();
-		String id = emailservice.email(user.getName(),"FriendRequest",friend.getEmail(),status,"Friend Request");
-		Boolean unsubscription = emailservice.checkSubscription(friend.getEmail());
-		if(unsubscription==true)
-			status = "Failed";
-		else{
-		email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","requestTemplate",templatePath+"/EmailTemplates", hmap);
-		status = "Sent";
-		}
-		emailservice.updateEmail(id,status);
-		String notification = "You have a friend request from "+ user.getName();
-		notify.sendNotification(uid,fid,notification);
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			UserActions useraction = new UserActions();
+			UserService userservice = new UserService();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			User user = (User) hmap.get("loggedInUser");
+			String fid = request.getParameter("fid");
+			FriendService friendservice = new FriendService();
+			friendservice.beFriend(uid,fid);
+			User friend = userservice.findOneById(fid);
+			NotificationService  notify = new NotificationService();
+			Email email = new Email();
+			hmap.put("reciever",friend);
+			String status = "Pending";
+			EmailService emailservice = new EmailService();
+			String id = emailservice.email(user.getName(),"FriendRequest",friend.getEmail(),status,"Friend Request");
+			Boolean unsubscription = emailservice.checkSubscription(friend.getEmail());
+			if(unsubscription==true)
+				status = "Failed";
+			else{
+				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","requestTemplate",templatePath+"/EmailTemplates", hmap);
+				status = "Sent";
+			}
+			emailservice.updateEmail(id,status);
+			String notification = user.getName()+ " wants to be your friend";
+			notify.sendNotification(fid,user.getImagepath(),notification,"friends","Friend Request");
+			String search = request.getParameter("search");
+			if(search!=null){
+				response.sendRedirect("search?search="+search);
+			}
+			else
+				response.sendRedirect("friends");
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -102,11 +110,115 @@ public class FriendActions extends HttpServlet {
 	public void friends(HttpServletRequest request,HttpServletResponse response){
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = utility.getSession(request);
-			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
-			hmap.put("loggedInUser", user);
+			UserActions useraction = new UserActions();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			FriendService friendService = new FriendService();
+			List<User> friendList = friendService.getFriends(uid);
+			System.out.println("................."+hmap);
+			String read = request.getParameter("read");
+			String id = request.getParameter("id");
+			NotificationService notificationService = new NotificationService();
+			
+			if(read!=null&&read.equals("true")){
+				notificationService.markRead(id);
+			}
+			hmap.put("friendList", friendList);
+			System.out.println("................."+hmap);
 			utility.getHbs(response,"friends",hmap,templatePath);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void friendresponse(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			UserActions useraction = new UserActions();
+			UserService userservice = new UserService();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			User user = (User) hmap.get("loggedInUser");
+			String requestResponse = request.getParameter("response");
+			String fid = request.getParameter("fid");
+			User friend = userservice.findOneById(fid);
+			System.out.println(fid);
+			System.out.println("Response is .............." + requestResponse);
+			FriendService friendService = new FriendService();
+			friendService.friendResponse(uid,fid,requestResponse);
+			NotificationService notifyservice = new NotificationService();
+			String notification = user.getName() + " " + requestResponse + "ed to be Your Friend";
+			notifyservice.sendNotification(fid, user.getImagepath(), notification,"friends","Friend Response");
+			hmap.put("reciever",friend);
+			hmap.put("response", requestResponse);
+
+			String status = "pending";
+			EmailService emailservice = new EmailService();
+			String id = emailservice.email(user.getName(),"FriendResponse",friend.getEmail(),status,"Friend Request");
+			Boolean unsubscription = emailservice.checkSubscription(friend.getEmail());
+			Email email = new Email();
+			if(unsubscription==true)
+				status = "Failed";
+			else{
+				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","responseTemplate",templatePath+"/EmailTemplates", hmap);
+				status = "Sent";
+			}
+			emailservice.updateEmail(id,status);
+			String search = request.getParameter("search");
+			if(search!=null){
+				response.sendRedirect("search?search="+search);
+			}
+			else
+				response.sendRedirect("friends");
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void cancelfriendrequest(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			UserActions useraction = new UserActions();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			User user = (User) hmap.get("loggedInUser");
+			String fid = request.getParameter("fid");
+			System.out.println(fid);
+			FriendService friendService = new FriendService();
+			friendService.cancelRequest(uid,fid);
+			NotificationService notifyservice = new NotificationService();
+			String notification = user.getName()+ "wants to be your friend";
+			notifyservice.deleteNotification(fid,notification);
+			String search = request.getParameter("search");
+			if(search!=null){
+				response.sendRedirect("search?search="+search);
+			}
+			else
+				response.sendRedirect("friends");
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void removefriend(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			UserActions useraction = new UserActions();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			String fid = request.getParameter("fid");
+			System.out.println(fid);
+			FriendService friendService = new FriendService();
+			friendService.removeFriend(uid,fid);
+
+			String search = request.getParameter("search");
+			if(search!=null){
+				response.sendRedirect("search?search="+search);
+			}
+			else
+				response.sendRedirect("friends");
+
 		}
 		catch(Exception e){
 			e.printStackTrace();
