@@ -1,0 +1,61 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+
+
+<div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Contact List</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Contact</li>
+                        </ol>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- .row -->
+                <div class="row">
+                    <!-- .col -->
+					{{#requestList}}
+                    <div class="col-md-6 col-lg-6 col-xlg-4">
+                        <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                            <div class="row">
+                                <div class="col-md-4 col-lg-3 text-center">
+                                    <a href="friendprofile?fid={{id}}"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                </div>
+                                <div class="col-md-8 col-lg-9">
+                                    <h3 class="box-title m-b-0">{{name}}</h3> <small>Web Developer</small><br>
+                                    <small>{{email}}</small>
+									<div>
+									<button type="button" class="btn friend-btn responseBtn" id="accept{{id}}" onclick="ajaxRequest('friendresponse', 'POST', {fid:'{{id}}', response:'Accept',}, {dataType:'json', callback:afterAccept})">Accept</button>
+									<button type="button" class="btn friend-btn responseBtn" id="reject{{id}}" onclick="ajaxRequest('friendresponse', 'POST', {fid:'{{id}}', response:'Reject',}, {dataType:'json', callback:afterReject})">Reject</button>																
+								</form>
+								</div>
+								</div>
+                                </div>
+                            </div>
+                        </div>
+                    
+					{{/requestList}}
+                    <!-- /.col -->
+                    
+                </div>
+
+</div>
+</div>
+{{>right_sidebar}}
+{{>foot}}
+{{>end}}

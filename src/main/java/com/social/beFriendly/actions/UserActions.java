@@ -275,6 +275,8 @@ public class UserActions extends HttpServlet {
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
+			FriendActions friendActions = new FriendActions();
+			hmap.putAll(friendActions.friendactivity(request,response));
 			utility.getHbs(response,"dashboard",hmap,templatePath);
 		} catch (ServletException e) {
 

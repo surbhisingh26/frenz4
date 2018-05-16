@@ -34,19 +34,19 @@
                         <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
                             <div class="row">
                                 <div class="col-md-4 col-lg-3 text-center">
-                                    <a href="app-contact-detail.html"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                    <a href="friendprofile?fid={{id}}"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
                                 </div>
                                 <div class="col-md-8 col-lg-9">
                                     <h3 class="box-title m-b-0">{{name}}</h3> <small>Web Developer</small><br>
                                     <small>{{email}}</small>
 									<div>
-									<div class="btn-group">
+									<div class="btn-group friendBtn" id="{{id}}">
                                     <button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         Friends
                                     </button>
                                     <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
                                         
-                                        <a class="dropdown-item" href="removefriend?fid={{id}}&search={{search}}">Remove as Friend</a>
+                                        <button class="dropdown-item" onclick="ajaxRequest('removefriend', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:afterRemove})">Remove as Friend</button>
                                         
                                     </div>
                                 </div>

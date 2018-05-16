@@ -37,6 +37,24 @@
                                 <div class="tab-pane active" id="home" role="tabpanel">
                                     <div class="card-block">
                                         <div class="profiletimeline">
+										
+										{{#activityList}}
+										<div class="sl-item">
+												{{#if current}}
+                                                <div class="sl-left"> <img src="{{path}}" alt="user" class="img-circle"> </div>
+												{{/if}}
+                                                <div class="sl-right">
+                                                    <div><a href="#" class="link"><img src="{{path}}" alt="user">
+                                                        
+                                                        <div class="like-comm"> <a href="javascript:void(0)" class="link m-r-10">2 comment</a> <a href="javascript:void(0)" class="link m-r-10"><i class="fa fa-heart text-danger"></i> 5 Love</a> </div>
+                                                    </div>
+                                                </div>
+												
+                                            </div>
+										
+										
+										<hr>
+										{{/activityList}}
                                             <div class="sl-item">
                                                 <div class="sl-left"> <img src="img/users/1.jpg" alt="user" class="img-circle"> </div>
                                                 <div class="sl-right">

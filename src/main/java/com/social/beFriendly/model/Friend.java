@@ -6,11 +6,13 @@ import com.social.scframework.model.BaseObject;
 
 public class Friend extends BaseObject {
 
+	
 	String uid;
 	String fid;
 	Date requestDate;
 	Date responseDate;
 	String status;
+	Boolean friends;
 
 	public Date getRequestDate() {
 		return requestDate;
@@ -42,6 +44,12 @@ public class Friend extends BaseObject {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public Boolean getFriends() {
+		return friends;
+	}
+	public void setFriends(Boolean friends) {
+		this.friends = friends;
 	}
 
 }

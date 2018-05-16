@@ -1,14 +1,35 @@
 {{>head}}
 {{>header}}
 {{>side_navbar}}
+<div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+			<div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Notification</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Notifications</li>
+                        </ol>
+                    </div>
+
+                </div>
 
 <ul class="list-group">
-{{#notifyList}}
-  <li class="list-group-item">{{notification}}</li>
-{{/notifyList}}
+{{#notifyList}}<input type="hidden" value="{{date}}" class="uploadTime{{id}}"><small class="uploadedTime{{id}} pull-right"></small> 
+   <a href="{{link}}?read=true"> <li class="list-group-item">
+		<img src="{{image}}" width="40px" height="40px" style="margin-right:5px" class="img-circle">
+		<div>
+            <h5>{{purpose}}</h5> <span class="mail-desc">{{notification}}</span>
+        </div>
+    </li>
+	 </a>
+	{{/notifyList}}
 </ul>
-
-
+</div>
+</div>
 {{>right_sidebar}}
 {{>foot}}
 {{>end}}

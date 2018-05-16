@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.FriendService;
@@ -24,6 +25,7 @@ public class FriendActions extends HttpServlet {
 	Utility utility = new Utility();
 	String uid;
 	String templatePath = "C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib";
+	Map<String, Object> hmap = new HashMap<String, Object>();
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -51,7 +53,7 @@ public class FriendActions extends HttpServlet {
 
 
 		if(path==null||path.equals("/")){
-			Map<String, Object> hmap  = new HashMap<String, Object>();
+			
 			//hmap = utility.checkSession(request);
 			utility.getHbs(response,"home",hmap,templatePath);
 		}
@@ -70,12 +72,13 @@ public class FriendActions extends HttpServlet {
 	}
 	public void befriend(HttpServletRequest request, HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
+			
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
+			
 			String fid = request.getParameter("fid");
 			FriendService friendservice = new FriendService();
 			friendservice.beFriend(uid,fid);
@@ -95,13 +98,11 @@ public class FriendActions extends HttpServlet {
 			}
 			emailservice.updateEmail(id,status);
 			String notification = user.getName()+ " wants to be your friend";
-			notify.sendNotification(fid,user.getImagepath(),notification,"friends","Friend Request");
-			String search = request.getParameter("search");
-			if(search!=null){
-				response.sendRedirect("search?search="+search);
-			}
-			else
-				response.sendRedirect("friends");
+			notify.sendNotification(fid,user.getImagepath(),notification,"friendrequest","Friend Request");
+			hmap.put("responseStatus",true);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -109,31 +110,34 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friends(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
+			
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			List<User> friendList = friendService.getFriends(uid);
 			System.out.println("................."+hmap);
-			String read = request.getParameter("read");
-			String id = request.getParameter("id");
-			NotificationService notificationService = new NotificationService();
 			
-			if(read!=null&&read.equals("true")){
-				notificationService.markRead(id);
-			}
 			hmap.put("friendList", friendList);
 			System.out.println("................."+hmap);
 			utility.getHbs(response,"friends",hmap,templatePath);
 		}
 		catch(Exception e){
 			e.printStackTrace();
+			hmap.put("responseStatus",false);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			try {
+				response.getWriter().write(new Gson().toJson(hmap));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	public void friendresponse(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
+			
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
@@ -148,7 +152,7 @@ public class FriendActions extends HttpServlet {
 			friendService.friendResponse(uid,fid,requestResponse);
 			NotificationService notifyservice = new NotificationService();
 			String notification = user.getName() + " " + requestResponse + "ed to be Your Friend";
-			notifyservice.sendNotification(fid, user.getImagepath(), notification,"friends","Friend Response");
+			notifyservice.sendNotification(fid, user.getImagepath(), notification,"friendprofile?fid="+uid+"&","Friend Response");
 			hmap.put("reciever",friend);
 			hmap.put("response", requestResponse);
 
@@ -160,24 +164,32 @@ public class FriendActions extends HttpServlet {
 			if(unsubscription==true)
 				status = "Failed";
 			else{
+				
 				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","responseTemplate",templatePath+"/EmailTemplates", hmap);
 				status = "Sent";
 			}
 			emailservice.updateEmail(id,status);
-			String search = request.getParameter("search");
-			if(search!=null){
-				response.sendRedirect("search?search="+search);
-			}
-			else
-				response.sendRedirect("friends");
+			hmap.put("responseStatus",true);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			hmap.put("responseStatus",false);
+			hmap.put("responseStatus",false);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			try {
+				response.getWriter().write(new Gson().toJson(hmap));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	public void cancelfriendrequest(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
+			
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
@@ -189,21 +201,28 @@ public class FriendActions extends HttpServlet {
 			NotificationService notifyservice = new NotificationService();
 			String notification = user.getName()+ "wants to be your friend";
 			notifyservice.deleteNotification(fid,notification);
-			String search = request.getParameter("search");
-			if(search!=null){
-				response.sendRedirect("search?search="+search);
-			}
-			else
-				response.sendRedirect("friends");
+			hmap.put("responseStatus",true);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
 
 		}
 		catch(Exception e){
 			e.printStackTrace();
+			hmap.put("responseStatus",false);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			try {
+				response.getWriter().write(new Gson().toJson(hmap));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 	public void removefriend(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
+			
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
@@ -212,16 +231,97 @@ public class FriendActions extends HttpServlet {
 			FriendService friendService = new FriendService();
 			friendService.removeFriend(uid,fid);
 
-			String search = request.getParameter("search");
-			if(search!=null){
-				response.sendRedirect("search?search="+search);
+			hmap.put("responseStatus",true);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			hmap.put("responseStatus",false);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			try {
+				response.getWriter().write(new Gson().toJson(hmap));
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-			else
-				response.sendRedirect("friends");
+		}
+	}
+	public void friendprofile(HttpServletRequest request,HttpServletResponse response){
+		try{
+			
+			UserActions useraction = new UserActions();
+			UserService userservice = new UserService();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			String fid = request.getParameter("fid");
+			System.out.println(fid);
+			User friend = userservice.findOneById(fid);
+			String read = request.getParameter("read");
+			if(read==null)
+				read = request.getParameter("?read");
+			String id = request.getParameter("id");
+			NotificationService notificationService = new NotificationService();
+			
+			if(read!=null&&read.equals("true")){
+				notificationService.markRead(id);
+			}
+			System.out.println(friend.getName());
+			hmap.put("friend", friend);
+			utility.getHbs(response, "friend_profile", hmap, templatePath);
 
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
+	public void friendrequest(HttpServletRequest request,HttpServletResponse response){
+		try{
+			
+			UserActions useraction = new UserActions();
+			
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			
+			FriendService friendService = new FriendService();
+			List<User> requestList = friendService.getFriendRequsets(uid);
+			String read = request.getParameter("read");
+			if(read==null)
+				read = request.getParameter("?read");
+			String id = request.getParameter("id");
+			NotificationService notificationService = new NotificationService();
+			
+			if(read!=null&&read.equals("true")){
+				notificationService.markRead(id);
+			}
+			hmap.put("requestList", requestList);
+			utility.getHbs(response, "friend_request", hmap, templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public Map<String,Object> friendactivity(HttpServletRequest request,HttpServletResponse response){
+		try{
+			
+			UserActions useraction = new UserActions();
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (String) hmap.get("uid");
+			
+			FriendService friendService = new FriendService();
+			hmap.putAll(friendService.friendsActivity(uid));
+			
+			//utility.getHbs(response, "friend_request", hmap, templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return hmap;
+	}
+	
 }

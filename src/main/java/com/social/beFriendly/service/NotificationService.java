@@ -42,8 +42,10 @@ public class NotificationService {
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		List<Notification> notifyList = new ArrayList<Notification>();
 		query.put("userId", userId);
+		BasicDBObject sortQuery = new BasicDBObject();
+		sortQuery.put("date", -1);
 		long count = notifyCollection.count(query);
-		DBCursor<Notification> cursor = notifyCollection.find(query);
+		DBCursor<Notification> cursor = notifyCollection.find(query).sort(sortQuery);
 		while(cursor.hasNext()){
 			Notification notification = cursor.next();
 			System.out.println("Notification ................. " + notification.getNotification());
