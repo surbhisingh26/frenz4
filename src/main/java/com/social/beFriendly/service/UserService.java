@@ -339,6 +339,25 @@ public class UserService {
 		}
 
 		return uploadPicList;
+	}
+	public Map<String,Object> myActivity(String uid) {
+		Map<String,Object> hmap = new HashMap<String, Object>();
+		List<Object> myActivityList = new ArrayList<Object>();
+		BasicDBObject query = new BasicDBObject();
+		query.put("uid", uid);
+		DBCursor<ProfilePic> profilePic = dpCollection.find(query);
+		DBCursor<UploadPic> uploadPic = uploadCollection.find(query);
+		//DBCursor<ProfilePic> profilePic = dpCollection.find(query);
+		while(profilePic.hasNext()){
+			ProfilePic pic = profilePic.next();
+			myActivityList.add(pic);
+		}
+		while(uploadPic.hasNext()){
+			UploadPic pic = uploadPic.next();
+			myActivityList.add(pic);
+		}
+		hmap.put("myActivityList",myActivityList);
+		return hmap;
 	}	
 }
 

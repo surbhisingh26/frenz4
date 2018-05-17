@@ -53,7 +53,7 @@ public class FriendActions extends HttpServlet {
 
 
 		if(path==null||path.equals("/")){
-			
+
 			//hmap = utility.checkSession(request);
 			utility.getHbs(response,"home",hmap,templatePath);
 		}
@@ -72,13 +72,13 @@ public class FriendActions extends HttpServlet {
 	}
 	public void befriend(HttpServletRequest request, HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
-			
+
 			String fid = request.getParameter("fid");
 			FriendService friendservice = new FriendService();
 			friendservice.beFriend(uid,fid);
@@ -110,14 +110,14 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friends(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			List<User> friendList = friendService.getFriends(uid);
 			System.out.println("................."+hmap);
-			
+
 			hmap.put("friendList", friendList);
 			System.out.println("................."+hmap);
 			utility.getHbs(response,"friends",hmap,templatePath);
@@ -137,7 +137,7 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendresponse(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
@@ -164,7 +164,7 @@ public class FriendActions extends HttpServlet {
 			if(unsubscription==true)
 				status = "Failed";
 			else{
-				
+
 				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","responseTemplate",templatePath+"/EmailTemplates", hmap);
 				status = "Sent";
 			}
@@ -189,7 +189,7 @@ public class FriendActions extends HttpServlet {
 	}
 	public void cancelfriendrequest(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
@@ -222,7 +222,7 @@ public class FriendActions extends HttpServlet {
 	}
 	public void removefriend(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
@@ -252,7 +252,7 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendprofile(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
@@ -265,7 +265,7 @@ public class FriendActions extends HttpServlet {
 				read = request.getParameter("?read");
 			String id = request.getParameter("id");
 			NotificationService notificationService = new NotificationService();
-			
+
 			if(read!=null&&read.equals("true")){
 				notificationService.markRead(id);
 			}
@@ -280,12 +280,12 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendrequest(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+
 			UserActions useraction = new UserActions();
-			
+
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
-			
+
 			FriendService friendService = new FriendService();
 			List<User> requestList = friendService.getFriendRequsets(uid);
 			String read = request.getParameter("read");
@@ -293,7 +293,7 @@ public class FriendActions extends HttpServlet {
 				read = request.getParameter("?read");
 			String id = request.getParameter("id");
 			NotificationService notificationService = new NotificationService();
-			
+
 			if(read!=null&&read.equals("true")){
 				notificationService.markRead(id);
 			}
@@ -305,23 +305,22 @@ public class FriendActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	public Map<String,Object> friendactivity(HttpServletRequest request,HttpServletResponse response){
+	public void friendactivity(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
 			UserActions useraction = new UserActions();
+
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (String) hmap.get("uid");
-			
 			FriendService friendService = new FriendService();
 			hmap.putAll(friendService.friendsActivity(uid));
-			
-			//utility.getHbs(response, "friend_request", hmap, templatePath);
+			System.out.println("..............." + uid);
+			utility.getHbs(response, "friends_activity", hmap, templatePath);
 
 		}
 		catch(Exception e){
-			e.printStackTrace();
+
 		}
-		return hmap;
 	}
-	
+
+
 }

@@ -9,6 +9,9 @@ public class ProfilePic extends BaseObject {
 	private String path;
 	private Boolean current;
 	private Date uploadTime;
+	private String message;
+	private String caption;
+	
 	
 	public String getUid() {
 		return uid;
@@ -33,6 +36,18 @@ public class ProfilePic extends BaseObject {
 	}
 	public void setUploadTime(Date uploadTime) {
 		this.uploadTime = uploadTime;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getCaption() {
+		return caption;
+	}
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 	
 	

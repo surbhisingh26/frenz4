@@ -7,6 +7,21 @@ import com.social.scframework.model.BaseObject;
 public class UploadPic extends BaseObject {
 private String uid;
 private String path;
+private Date uploadTime;
+private String message;
+private String caption;
+public String getMessage() {
+	return message;
+}
+public void setMessage(String message) {
+	this.message = message;
+}
+public String getCaption() {
+	return caption;
+}
+public void setCaption(String caption) {
+	this.caption = caption;
+}
 public String getUid() {
 	return uid;
 }
@@ -25,5 +40,4 @@ public Date getUploadTime() {
 public void setUploadTime(Date uploadTime) {
 	this.uploadTime = uploadTime;
 }
-private Date uploadTime;
 }

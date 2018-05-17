@@ -75,7 +75,7 @@
 	response.count=10;
 	for(var count = 0;count<response.count;count++){
 	console.log(response.notifyList[count].purpose);
-	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc"></span>'+response.notifyList[count].notification+'<span class="time notiTime'+response.notifyList[count].id+'"></span> </div></a>')
+	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc">'+response.notifyList[count].notification+'</span><small class="time notiTime'+response.notifyList[count].id+'"></small> </div></a>')
 	
 	var time = moment(response.notifyList[count].date,'MMM DD,YYYY HH:mm:ss A');
 	if(time.isValid()) {
@@ -89,7 +89,7 @@ if(Days!=0){
 if(Days==1)
 $('.notiTime'+response.notifyList[count].id).text("yesterday at " + notiTime+response.notifyList[count].id.format('HH:mm a'));
 else if(Days>1)
-$('.notiTime'+response.notifyList[count].id).text(notiTime+response.notifyList[count].id.format('DD MMM YYYY HH:mm'));
+$('.notiTime'+response.notifyList[count].id).text(notiTime+response.notifyList[count].id.format('DD MMM YYYY HH:mm a'));
 }
 else if(Hours!=0){
 if(Hours==1)
@@ -108,107 +108,52 @@ $('.notiTime'+response.notifyList[count].id).text("Just now");
 	});
 	</script>
 	<script>
+	
+	function getTimeAgo(elementIdentifier) {
+	var now = moment();
+		$(elementIdentifier).each(function(){
+		var me = $(this);
+		var oldValue = moment($(me).text(),'ddd MMM DD hh:mm:ss IST yyyy');
+		var timeAgoVal = "";
+		if(moment(oldValue,'ddd MMM DD hh:mm:ss IST yyyy').isValid()){
+			var Days =  moment.duration(now - oldValue).days();
+			var Hours =  moment.duration(now - oldValue).hours();
+			var Minutes =  moment.duration(now - oldValue).minutes();
+			var Seconds =  moment.duration(now - oldValue).seconds();
+			if(Days!=0){
+			if(Days==1)
+			timeAgoVal = "yesterday at " + oldValue.format('hh:mm a');
+			else if(Days>1)
+			timeAgoVal = oldValue.format('DD MMM YYYY hh:mm a');
+			}
+			else if(Hours!=0){
+			if(Hours==1)
+			timeAgoVal = Hours+" hour ago";
+			else
+			timeAgoVal = Hours+" hours ago";
+			}
+			else if(Minutes!=0)
+
+			timeAgoVal = Minutes+" minutes ago";
+			else if(Seconds!=0)
+			timeAgoVal = "Just now";
+			}
+		$(me).text(timeAgoVal);
+		
+		});
+	
+	}
 $(document).ready(function(){
-
-var now = moment();
-{{#profilePicList}}
-var time = $('.uploadTime{{id}}');
-var uploadTime = moment($(time).val(),'ddd MMM DD hh:mm:ss IST yyyy');
-
-if(moment(uploadTime,'ddd MMM DD hh:mm:ss IST yyyy').isValid()){
-var Days =  moment.duration(now - uploadTime).days();
-var Hours =  moment.duration(now - uploadTime).hours();
-var Minutes =  moment.duration(now - uploadTime).minutes();
-var Seconds =  moment.duration(now - uploadTime).seconds();
-
-if(Days!=0){
-if(Days==1)
-$('.uploadedTime{{id}}').text("yesterday at " + uploadTime.format('hh:mm a'));
-else if(Days>1)
-$('.uploadedTime{{id}}').text(uploadTime.format('DD MMM YYYY hh:mm'));
-}
-else if(Hours!=0){
-if(Hours==1)
-$('.uploadedTime{{id}}').text(Hours+" hour ago");
-else
-$('.uploadedTime{{id}}').text(Hours+" hours ago");
-}
-else if(Minutes!=0)
-
-$('.uploadedTime{{id}}').text(Minutes+" minutes ago");
-else if(Seconds!=0)
-$('.uploadedTime{{id}}').text("Just now");
-}
-{{/profilePicList}}
-//if(moment($('#uploadTime').val())).isValid('ddd MMM DD HH:mm:ss IST YYYY'){
-//alert("fgr");
-//}
-});
-
-</script>
-
-<script>
-$(document).ready(function(){
-
-var now = moment();
-{{#notifyList}}
-var time = $('.uploadTime{{id}}');
-var uploadTime = moment($(time).val(),'ddd MMM DD hh:mm:ss IST yyyy');
-
-if(moment(uploadTime,'ddd MMM DD hh:mm:ss IST yyyy').isValid()){
-var Days =  moment.duration(now - uploadTime).days();
-var Hours =  moment.duration(now - uploadTime).hours();
-var Minutes =  moment.duration(now - uploadTime).minutes();
-var Seconds =  moment.duration(now - uploadTime).seconds();
-
-if(Days!=0){
-if(Days==1)
-$('.uploadedTime{{id}}').text("yesterday at " + uploadTime.format('hh:mm a'));
-else if(Days>1)
-$('.uploadedTime{{id}}').text(uploadTime.format('DD MMM YYYY hh:mm'));
-}
-else if(Hours!=0){
-if(Hours==1)
-$('.uploadedTime{{id}}').text(Hours+" hour ago");
-else
-$('.uploadedTime{{id}}').text(Hours+" hours ago");
-}
-else if(Minutes!=0)
-
-$('.uploadedTime{{id}}').text(Minutes+" minutes ago");
-else if(Seconds!=0)
-$('.uploadedTime{{id}}').text("Just now");
-}
-{{/notifyList}}
-//if(moment($('#uploadTime').val())).isValid('ddd MMM DD HH:mm:ss IST YYYY'){
-//alert("fgr");
-//}
+getTimeAgo('.timeAgo');
 });
 
 </script>
 
 
+
+
 <script>
-function afterReject(data, extraInfo, response){
-if(response.responseStatus==true){
-var id = data.fid;
-$('#reject'+id).replaceWith("");
-$('#accept'+id).replaceWith('<button type="button" class="btn friend-btn beFriend" id="'+id+'" onclick="ajaxRequest(\'befriend\',\'POST\', {fid:\''+id+'\'},{dataType:\'json\', callback:beFriend})">Be Friend</button>');
-}
-	else{
-	alert("Some Error Occured!!! Try After Some Time")
-	}
-}
-function afterAccept(data, extraInfo, response){
-if(response.responseStatus==true){
-var id = data.fid;
-$('#reject'+id).replaceWith("");
-$('#accept'+id).replaceWith('<div class="btn-group friendBtn" id="'+id+'"><button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Friends</button><div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;"><button class="dropdown-item" onclick="ajaxRequest(\'removefriend\', \'POST\', {fid:\''+id+'\'}, {dataType:\'json\', callback:afterRemove})">Remove as Friend</button> </div></div>	');
-}
-	else{
-	alert("Some Error Occured!!! Try After Some Time")
-	}
-}
+
 function ajaxRequest(url, method, data, extraInfo) {
 var request = $.ajax({
 	url:url,
@@ -228,7 +173,26 @@ console.log($('#befriendDiv').html());
 	
 	});
 }
-
+function afterReject(data, extraInfo, response){
+if(response.responseStatus==true){
+var id = data.fid;
+$('#reject'+id).replaceWith("");
+$('#accept'+id).replaceWith('<button type="button" class="btn friend-btn beFriend" id="'+id+'" onclick="ajaxRequest(\'befriend\',\'POST\', {fid:\''+id+'\'},{dataType:\'json\', callback:beFriend})">Be Friend</button>');
+}
+	else{
+	alert("Some Error Occurred!!! Try After Some Time")
+	}
+}
+function afterAccept(data, extraInfo, response){
+if(response.responseStatus==true){
+var id = data.fid;
+$('#reject'+id).replaceWith("");
+$('#accept'+id).replaceWith('<div class="btn-group friendBtn" id="'+id+'"><button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Friends</button><div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;"><button class="dropdown-item" onclick="ajaxRequest(\'removefriend\', \'POST\', {fid:\''+id+'\'}, {dataType:\'json\', callback:afterRemove})">Remove as Friend</button> </div></div>	');
+}
+	else{
+	alert("Some Error Occurred!!! Try After Some Time")
+	}
+}
 function beFriend(data, extraInfo, response){
 var id = data.fid;
 if(response.responseStatus==true){
@@ -236,7 +200,7 @@ var id = data.fid;
 	$('#'+id).replaceWith('<div class="btn-group sentBtn" id="'+id+'"><button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">Request Sent</button><div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;"><button type="button" class="dropdown-item" onclick="ajaxRequest(\'cancelfriendrequest\', \'POST\', {fid:\''+id+'\'}, {dataType:\'json\', callback:afterCancel})">Cancel Request</button></div></div>');
 	}
 	else{
-	alert("Some Error Occured!!! Try After Some Time")
+	alert("Some Error Occurred!!! Try After Some Time")
 	}
 	}
 	function afterCancel(data, extraInfo, response){
@@ -245,7 +209,7 @@ var id = data.fid;
 	$('#'+id).replaceWith('<button type="button" class="btn friend-btn beFriend" id="'+id+'" onclick="ajaxRequest(\'befriend\',\'POST\', {fid:\''+id+'\'},{dataType:\'json\', callback:beFriend})">Be Friend</button>');
 	}
 	else{
-	alert("Some Error Occured!!! Try After Some Time")
+	alert("Some Error Occurred!!! Try After Some Time")
 	}
 	}
 	function afterRemove(data, extraInfo, response){
@@ -254,7 +218,7 @@ var id = data.fid;
 	$('#'+id).replaceWith('<button type="button" class="btn friend-btn beFriend" id="'+id+'" onclick="ajaxRequest(\'befriend\',\'POST\', {fid:\''+id+'\'},{dataType:\'json\', callback:beFriend})">Be Friend</button>');
 	}
 	else{
-	alert("Some Error Occured!!! Try After Some Time")
+	alert("Some Error Occurred!!! Try After Some Time")
 	}
 	}
 

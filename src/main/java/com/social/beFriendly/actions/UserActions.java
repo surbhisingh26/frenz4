@@ -275,8 +275,11 @@ public class UserActions extends HttpServlet {
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			FriendActions friendActions = new FriendActions();
-			hmap.putAll(friendActions.friendactivity(request,response));
+			
+			UserService userService = new UserService();
+			System.out.println("DASHBOARD.......");
+			hmap.putAll(userService.myActivity(uid));
+			System.out.println("DASHBOARD.......");
 			utility.getHbs(response,"dashboard",hmap,templatePath);
 		} catch (ServletException e) {
 
