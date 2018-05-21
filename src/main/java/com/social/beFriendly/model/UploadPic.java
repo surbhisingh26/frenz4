@@ -2,10 +2,12 @@ package com.social.beFriendly.model;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
+
 import com.social.scframework.model.BaseObject;
 
 public class UploadPic extends BaseObject {
-private String uid;
+private ObjectId uid;
 private String path;
 private Date uploadTime;
 private String message;
@@ -22,10 +24,10 @@ public String getCaption() {
 public void setCaption(String caption) {
 	this.caption = caption;
 }
-public String getUid() {
+public ObjectId getUid() {
 	return uid;
 }
-public void setUid(String uid) {
+public void setUid(ObjectId uid) {
 	this.uid = uid;
 }
 public String getPath() {

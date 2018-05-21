@@ -15,4 +15,11 @@ public class ProfilePicDAO {
 		JacksonDBCollection<ProfilePic, String> coll = JacksonDBCollection.wrap(collec,ProfilePic.class, String.class);
 		return coll;
 	}
+
+	public DBCollection dpCollectionDAO() {
+		DBConnection db = new DBConnection();
+		DB mongo = db.getDB("BeFriendly");
+		DBCollection collec = mongo.getCollection("profilepic");
+		return collec;
+	}
 }

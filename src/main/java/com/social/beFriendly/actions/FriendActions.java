@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bson.types.ObjectId;
+
 import com.google.gson.Gson;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.EmailService;
@@ -23,7 +25,7 @@ import com.social.scframework.App.Utility;
 public class FriendActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
-	String uid;
+	ObjectId uid;
 	String templatePath = "C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib";
 	Map<String, Object> hmap = new HashMap<String, Object>();
 	/**
@@ -76,13 +78,13 @@ public class FriendActions extends HttpServlet {
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 
-			String fid = request.getParameter("fid");
+			ObjectId fid =new ObjectId( request.getParameter("fid"));
 			FriendService friendservice = new FriendService();
 			friendservice.beFriend(uid,fid);
-			User friend = userservice.findOneById(fid);
+			User friend = userservice.findOneById(fid.toString());
 			NotificationService  notify = new NotificationService();
 			Email email = new Email();
 			hmap.put("reciever",friend);
@@ -113,7 +115,7 @@ public class FriendActions extends HttpServlet {
 
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			List<User> friendList = friendService.getFriends(uid);
 			System.out.println("................."+hmap);
@@ -141,11 +143,11 @@ public class FriendActions extends HttpServlet {
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 			String requestResponse = request.getParameter("response");
-			String fid = request.getParameter("fid");
-			User friend = userservice.findOneById(fid);
+			ObjectId fid =new ObjectId(request.getParameter("fid"));
+			User friend = userservice.findOneById(fid.toString());
 			System.out.println(fid);
 			System.out.println("Response is .............." + requestResponse);
 			FriendService friendService = new FriendService();
@@ -192,9 +194,9 @@ public class FriendActions extends HttpServlet {
 
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
-			String fid = request.getParameter("fid");
+			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			System.out.println(fid);
 			FriendService friendService = new FriendService();
 			friendService.cancelRequest(uid,fid);
@@ -225,8 +227,8 @@ public class FriendActions extends HttpServlet {
 
 			UserActions useraction = new UserActions();
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
-			String fid = request.getParameter("fid");
+			uid = (ObjectId) hmap.get("uid");
+			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			System.out.println(fid);
 			FriendService friendService = new FriendService();
 			friendService.removeFriend(uid,fid);
@@ -256,10 +258,10 @@ public class FriendActions extends HttpServlet {
 			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
-			String fid = request.getParameter("fid");
+			uid = (ObjectId) hmap.get("uid");
+			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			System.out.println(fid);
-			User friend = userservice.findOneById(fid);
+			User friend = userservice.findOneById(fid.toString());
 			String read = request.getParameter("read");
 			if(read==null)
 				read = request.getParameter("?read");
@@ -284,10 +286,10 @@ public class FriendActions extends HttpServlet {
 			UserActions useraction = new UserActions();
 
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 
 			FriendService friendService = new FriendService();
-			List<User> requestList = friendService.getFriendRequsets(uid);
+			List<User> requestList = friendService.getFriendRequests(uid);
 			String read = request.getParameter("read");
 			if(read==null)
 				read = request.getParameter("?read");
@@ -308,13 +310,14 @@ public class FriendActions extends HttpServlet {
 	public void friendactivity(HttpServletRequest request,HttpServletResponse response){
 		try{
 			UserActions useraction = new UserActions();
-
+			System.out.println("Friends Activity");
 			hmap.putAll(useraction.getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			hmap.putAll(friendService.friendsActivity(uid));
 			System.out.println("..............." + uid);
 			utility.getHbs(response, "friends_activity", hmap, templatePath);
+			System.out.println("end");
 
 		}
 		catch(Exception e){

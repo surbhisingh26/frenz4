@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.bson.types.ObjectId;
+
 import com.google.gson.Gson;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
@@ -31,7 +33,7 @@ import com.social.scframework.App.Utility;
 public class UserActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
-	String uid;
+	ObjectId uid;
 	String templatePath = "C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib";
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -81,9 +83,9 @@ public class UserActions extends HttpServlet {
 
 		
 			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = utility.getSession(request);
+			uid = new ObjectId(utility.getSession(request));
 			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid);
+			User user = userservice.findOneById(uid.toString());
 			hmap.put("loggedInUser", user);
 			hmap.put("uid", uid);
 			if(uid!=null)
@@ -275,8 +277,8 @@ public class UserActions extends HttpServlet {
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			
 			UserService userService = new UserService();
+			uid = (ObjectId) hmap.get("uid");
 			System.out.println("DASHBOARD.......");
 			hmap.putAll(userService.myActivity(uid));
 			System.out.println("DASHBOARD.......");
@@ -305,7 +307,7 @@ public class UserActions extends HttpServlet {
 	}
 	public void logout(HttpServletRequest request,HttpServletResponse response){
 		try{
-			uid = utility.getSession(request);
+			uid = new ObjectId(utility.getSession(request));
 			String reference = request.getParameter("reference");
 
 			Cookie loginCookie=new Cookie("uid","");  
@@ -331,7 +333,7 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
 			UserService userservice = new UserService();
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 
 			List<ProfilePic> profilePicList = userservice.getProfilePic(uid);
 			hmap.put("profilePicList", profilePicList);
@@ -351,7 +353,7 @@ public class UserActions extends HttpServlet {
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			UserService userservice = new UserService();
 			String search = request.getParameter("search");
 
@@ -369,7 +371,7 @@ public class UserActions extends HttpServlet {
 		try {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			System.out.println("profile pic "+uid);
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/dp";
@@ -404,7 +406,7 @@ public class UserActions extends HttpServlet {
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/uploads";
 			File fileSaveDir=new File(savePath);
@@ -447,7 +449,7 @@ public class UserActions extends HttpServlet {
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			NotificationService notifyservice = new NotificationService();
 			hmap.putAll(notifyservice.getNotification(uid));
 
@@ -463,7 +465,7 @@ public class UserActions extends HttpServlet {
 		try{
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
-			uid = (String) hmap.get("uid");
+			uid = (ObjectId) hmap.get("uid");
 			NotificationService notifyservice = new NotificationService();
 			hmap.putAll(notifyservice.getNotification(uid));
 			utility.getHbs(response, "notification", hmap, templatePath);

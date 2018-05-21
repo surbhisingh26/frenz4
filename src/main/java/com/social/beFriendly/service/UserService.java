@@ -8,14 +8,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 
+import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.social.beFriendly.DAO.ActivityDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
+import com.social.beFriendly.model.Activity;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
@@ -28,6 +34,8 @@ public class UserService {
 	JacksonDBCollection<ProfilePic, String> dpCollection =  profilepicdao.profilePicDAO();
 	UploadPicDAO uploadpicdao = new UploadPicDAO();
 	JacksonDBCollection<UploadPic, String> uploadCollection =  uploadpicdao.uploadPicDAO();
+	ActivityDAO activitydao = new ActivityDAO();
+	JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
 	public Boolean registerUser(String fname, String lname, String mname, String country, String city, String mobile,
 			String password, String gender, String dob, String bgcolor, String filePath, String email, String reference,
 			String referenceId) {
@@ -177,17 +185,17 @@ public class UserService {
 		return user;
 	}
 
-	public void logout(String uid){
+	public void logout(ObjectId uid){
 
 		Date date = new Date();		
 
 		//System.out.println("Date is "+now);
-		User user = userCollection.findOneById(uid);
+		User user = userCollection.findOneById(uid.toString());
 		user.setLoggedIn(false);
 		user.setLastLoggedInAt(date);
-		userCollection.updateById(uid, user);
+		userCollection.updateById(uid.toString(), user);
 	}
-	public Map<String,Object> searchUser(String search,String uid) {
+	public Map<String,Object> searchUser(String search,ObjectId uid) {
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("name", new BasicDBObject("$regex" , "(?i).*"+search+".*"));
@@ -201,7 +209,7 @@ public class UserService {
 		while(cursor.hasNext()){
 			user = cursor.next();
 
-			String status = friendservice.checkStatus(uid, user.getId());
+			String status = friendservice.checkStatus(uid, new ObjectId(user.getId()));
 			if(user.getId().equals(uid))
 				hmap.put("user", true);
 			else if(status.equalsIgnoreCase("My Request Accepted")||status.equals("I Accepted Request"))
@@ -249,7 +257,7 @@ public class UserService {
 				}
 			}
 			if(flag==true){
-				String status = friendservice.checkStatus(uid, user.getId());
+				String status = friendservice.checkStatus(uid,new ObjectId(user.getId()));
 				if(user.getId().equals(uid))
 					hmap.put("user", true);
 				else if(status.equalsIgnoreCase("My Request Accepted")||status.equals("I Accepted Request"))
@@ -271,12 +279,12 @@ public class UserService {
 		hmap.put("searchedUser", searchedUser);
 		return hmap;
 	}
-	public User updatePic(String filePath, String uid) {
-		User user = userCollection.findOneById(uid);
+	public User updatePic(String filePath, ObjectId uid) {
+		User user = userCollection.findOneById(uid.toString());
 		System.out.println("uid is ..."+uid);
 		user.setImagepath(filePath);
 		System.out.println("path is ..."+user.getImagepath());
-		userCollection.updateById(uid, user);
+		userCollection.updateById(uid.toString(), user);
 
 		BasicDBObject query = new BasicDBObject();
 		query.put("current", true);
@@ -293,12 +301,21 @@ public class UserService {
 		profilepic.setPath(filePath);
 		profilepic.setCurrent(true);
 		profilepic.setUploadTime(date);
-		dpCollection.insert(profilepic);
+		WriteResult<ProfilePic, String> pic = dpCollection.insert(profilepic);
+		profilepic = pic.getSavedObject();
+		System.out.println("Profile pic id is ...... " + profilepic.getId());
+		Activity activity = new Activity();
+		activity.setUid(uid);
+		activity.setActivityId(new ObjectId(profilepic.getId()));
+		activity.setDate(date);
+		activity.setType("profilepic");
+		activityCollection.insert(activity);
+
 
 
 		return user;
 	}
-	public List<ProfilePic> getProfilePic(String uid) {
+	public List<ProfilePic> getProfilePic(ObjectId uid) {
 
 		List<ProfilePic> profilePicList = new ArrayList<ProfilePic>();
 		BasicDBObject query = new BasicDBObject();
@@ -312,17 +329,25 @@ public class UserService {
 		}
 		return profilePicList;
 	}
-	public User uploadPic(String filePath, String uid) {
+	public void uploadPic(String filePath, ObjectId uid) {
 
 		Date time = new Date();
 		UploadPic upload = new UploadPic();
 		upload.setPath(filePath);
 		upload.setUid(uid);
 		upload.setUploadTime(time);
-		uploadCollection.insert(upload);
-		return null;
+		WriteResult<UploadPic,String> pic = uploadCollection.insert(upload);
+		upload = pic.getSavedObject();
+		System.out.println("Upload id is ...... " + upload.getId());
+		Activity activity = new Activity();
+		activity.setUid(uid);
+		activity.setActivityId(new ObjectId(upload.getId()));
+		activity.setDate(time);
+		activity.setType("uploadpic");
+		activityCollection.insert(activity);
+
 	}
-	public List<UploadPic> getUploadPic(String uid) {
+	public List<UploadPic> getUploadPic(ObjectId uid) {
 
 		List<UploadPic> uploadPicList = new ArrayList<UploadPic>();
 		BasicDBObject query = new BasicDBObject();
@@ -340,22 +365,58 @@ public class UserService {
 
 		return uploadPicList;
 	}
-	public Map<String,Object> myActivity(String uid) {
+
+	public Map<String,Object> myActivity(ObjectId uid) {
 		Map<String,Object> hmap = new HashMap<String, Object>();
+		DBCollection coll = activitydao.activityCollectionDAO();
 		List<Object> myActivityList = new ArrayList<Object>();
-		BasicDBObject query = new BasicDBObject();
-		query.put("uid", uid);
-		DBCursor<ProfilePic> profilePic = dpCollection.find(query);
-		DBCursor<UploadPic> uploadPic = uploadCollection.find(query);
-		//DBCursor<ProfilePic> profilePic = dpCollection.find(query);
-		while(profilePic.hasNext()){
-			ProfilePic pic = profilePic.next();
-			myActivityList.add(pic);
+		List<DBObject> pipeline = new ArrayList<DBObject>();
+
+		DBObject match = new BasicDBObject("$match",
+	            new BasicDBObject("uid" , uid)
+	            
+	        );
+		pipeline.add(match);
+
+		DBObject lookupFields = new BasicDBObject("from", "uploadpic");
+		lookupFields.put("localField","activityId");
+		lookupFields.put("foreignField","_id");
+		lookupFields.put("as", "uploadpic");  
+		pipeline.add(new BasicDBObject("$lookup",lookupFields));
+
+		DBObject profilePicFields = new BasicDBObject("from", "profilepic");
+		profilePicFields.put("localField","activityId");
+		profilePicFields.put("foreignField","_id");
+		profilePicFields.put("as", "profilepic");
+		pipeline.add(new BasicDBObject("$lookup",profilePicFields));
+		
+		DBObject friendFields = new BasicDBObject("from", "friend");
+		friendFields.put("localField","activityId");
+		friendFields.put("foreignField","_id");
+		friendFields.put("as", "friend");
+		pipeline.add(new BasicDBObject("$lookup",friendFields));
+		
+		DBObject userfields = new BasicDBObject("from", "user");
+		userfields.put("localField","friend.fid");
+		userfields.put("foreignField","_id");
+		userfields.put("as", "userFriend");
+		pipeline.add(new BasicDBObject("$lookup",userfields));
+		
+	
+		DBObject sort = new BasicDBObject("$sort",
+	            new BasicDBObject("date",-1));
+		
+	     pipeline.add(sort);
+
+		System.out.println(pipeline);
+
+		AggregationOutput output = coll.aggregate(pipeline);
+		
+		for (DBObject result : output.results()) {
+			myActivityList.add(result);
+			System.out.println(result);
 		}
-		while(uploadPic.hasNext()){
-			UploadPic pic = uploadPic.next();
-			myActivityList.add(pic);
-		}
+
 		hmap.put("myActivityList",myActivityList);
 		return hmap;
 	}	

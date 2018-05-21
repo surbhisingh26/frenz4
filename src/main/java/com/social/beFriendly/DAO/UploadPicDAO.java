@@ -11,8 +11,15 @@ public class UploadPicDAO {
 	public JacksonDBCollection<UploadPic,String> uploadPicDAO(){
 		DBConnection db = new DBConnection();
 		DB mongo = db.getDB("BeFriendly");
-		DBCollection collec = mongo.getCollection("uploadPic");
+		DBCollection collec = mongo.getCollection("uploadpic");
 		JacksonDBCollection<UploadPic, String> coll = JacksonDBCollection.wrap(collec,UploadPic.class, String.class);
 		return coll;
+	}
+	public DBCollection uploadCollectionDAO(){
+		DBConnection db = new DBConnection();
+		DB mongo = db.getDB("BeFriendly");
+		DBCollection collec = mongo.getCollection("uploadpic");
+		
+		return collec;
 	}
 }

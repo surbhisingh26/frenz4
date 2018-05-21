@@ -2,17 +2,19 @@ package com.social.beFriendly.model;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
+
 import com.social.scframework.model.BaseObject;
 
 public class Friend extends BaseObject {
 
 	
-	String uid;
-	String fid;
-	Date requestDate;
-	Date responseDate;
-	String status;
-	Boolean friends;
+	private ObjectId uid;
+	private ObjectId fid;
+	private Date requestDate;
+	private Date responseDate;
+	private String status;
+	private Boolean friends;
 
 	public Date getRequestDate() {
 		return requestDate;
@@ -26,16 +28,16 @@ public class Friend extends BaseObject {
 	public void setResponseDate(Date responseDate) {
 		this.responseDate = responseDate;
 	}	
-	public String getUid() {
+	public ObjectId getUid() {
 		return uid;
 	}
-	public void setUid(String uid) {
+	public void setUid(ObjectId uid) {
 		this.uid = uid;
 	}
-	public String getFid() {
+	public ObjectId getFid() {
 		return fid;
 	}
-	public void setFid(String fid) {
+	public void setFid(ObjectId fid) {
 		this.fid = fid;
 	}
 

@@ -33,8 +33,10 @@
                             <div class="card-body" style="padding:30px">
                                 <ul class="timeline">
 								{{#activityList}}
+								{{#if left}}
+								{{#uploadpic}}
                                     <li>
-                                        <div class="timeline-badge success"><img class="img-responsive" alt="user" src="../assets/images/users/1.jpg" alt="img"> </div>
+                                        <div class="timeline-badge success"><img class="img-responsive" alt="user" src="img/users/1.jpg" alt="img"> </div>
                                         <div class="timeline-panel">
                                             <div class="timeline-heading">
                                                 <h4 class="timeline-title">{{name}}</h4>
@@ -45,19 +47,53 @@
                                             </div>
                                         </div>
                                     </li>
-									{{/activityList}}
-                                    <li class="timeline-inverted">
-                                        <div class="timeline-badge warning"><img class="img-responsive" alt="user" src="../assets/images/users/2.jpg" alt="img"> </div>
+									{{/uploadpic}}
+									{{#profilepic}}
+                                    <li>
+                                        <div class="timeline-badge success"><img class="img-responsive" alt="user" src="img/users/1.jpg" alt="img"> </div>
                                         <div class="timeline-panel">
                                             <div class="timeline-heading">
-                                                <h4 class="timeline-title">Ritesh Deshmukh</h4>
+                                                <h4 class="timeline-title">{{name}}</h4>
+                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small> </p>
                                             </div>
                                             <div class="timeline-body">
-                                                <p><img class="img-responsive" alt="user" src="../assets/images/users/3.jpg" alt="img"></p>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
+                                                <img src = "{{path}}" width="350" height="350">
                                             </div>
                                         </div>
                                     </li>
+									{{/profilepic}}
+									{{else}}
+									{{#uploadpic}}
+                                    <li class="timeline-inverted">
+                                        <div class="timeline-badge success"><img class="img-responsive" alt="user" src="img/users/1.jpg" alt="img"> </div>
+                                        <div class="timeline-panel">
+                                            <div class="timeline-heading">
+                                                <h4 class="timeline-title">{{name}}</h4>
+                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small> </p>
+                                            </div>
+                                            <div class="timeline-body">
+                                                <img src = "{{path}}" width="350" height="350">
+                                            </div>
+                                        </div>
+                                    </li>
+									{{/uploadpic}}
+									{{#profilepic}}
+                                    <li class="timeline-inverted">
+                                        <div class="timeline-badge success"><img class="img-responsive" alt="user" src="img/users/1.jpg" alt="img"> </div>
+                                        <div class="timeline-panel">
+                                            <div class="timeline-heading">
+                                                <h4 class="timeline-title">{{name}}</h4>
+                                                <p><small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small> </p>
+                                            </div>
+                                            <div class="timeline-body">
+                                                <img src = "{{path}}" width="350" height="350">
+                                            </div>
+                                        </div>
+                                    </li>
+									{{/profilepic}}
+									{{/if}}
+									{{/activityList}}
+									
                                     <li>
                                         <div class="timeline-badge danger"><i class="fa fa-bomb"></i> </div>
                                         <div class="timeline-panel">

@@ -2,22 +2,24 @@ package com.social.beFriendly.model;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.social.scframework.model.BaseObject;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Notification extends BaseObject{
-	private String userId;
+	private ObjectId userId;
 	private String notification;
 	private String link;
 	private Date date;
 	private String image;
 	private String purpose;
 	private Boolean read;
-	public String getUserId() {
+	public ObjectId getUserId() {
 		return userId;
 	}
-	public void setUserId(String userId) {
+	public void setUserId(ObjectId userId) {
 		this.userId = userId;
 	}
 	public String getNotification() {
