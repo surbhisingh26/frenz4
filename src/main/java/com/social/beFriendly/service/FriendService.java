@@ -2,7 +2,7 @@ package com.social.beFriendly.service;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -197,16 +197,28 @@ public class FriendService {
 		friendFields.put("foreignField","uid");
 		friendFields.put("as", "friend");
 		pipeline.add(new BasicDBObject("$lookup",friendFields));
+		DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
+		pipeline.add(unwindFriend);
 		
 		DBObject matchfriend = new BasicDBObject("$match",
 				new BasicDBObject("friend.friends" , true));		
 		pipeline.add(matchfriend);
+		
+		DBObject friendInfoFields = new BasicDBObject("from", "user");
+		friendInfoFields.put("localField","friend.fid");
+		friendInfoFields.put("foreignField","_id");
+		friendInfoFields.put("as", "friendInfo");
+		pipeline.add(new BasicDBObject("$lookup",friendInfoFields));
+		
 		
 		DBObject activityFields = new BasicDBObject("from", "activity");
 		activityFields.put("localField","friend.fid");
 		activityFields.put("foreignField","uid");
 		activityFields.put("as", "activity");
 		pipeline.add(new BasicDBObject("$lookup",activityFields));
+		DBObject unwindActivity = new BasicDBObject("$unwind","$activity");
+		pipeline.add(unwindActivity);
+		
 		
 		DBObject uploadpicFields = new BasicDBObject("from", "uploadpic");
 		uploadpicFields.put("localField","activity.activityId");
@@ -220,10 +232,12 @@ public class FriendService {
 		profilepicFields.put("as", "profilepic");
 		pipeline.add(new BasicDBObject("$lookup",profilepicFields));
 		
+		
 
 		DBObject sort = new BasicDBObject("$sort",
-				new BasicDBObject("date",-1));
-
+				new BasicDBObject("activity.date",-1));
+	
+		
 		pipeline.add(sort);
 
 		System.out.println(pipeline);

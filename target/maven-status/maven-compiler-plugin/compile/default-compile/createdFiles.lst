@@ -7,6 +7,7 @@ com\social\beFriendly\model\User.class
 com\social\beFriendly\model\Email.class
 com\social\beFriendly\model\Unsubscribe.class
 com\social\beFriendly\actions\Filters.class
+com\social\beFriendly\DAO\CommentDAO.class
 com\social\beFriendly\tools\ReflectionTool.class
 com\social\beFriendly\DAO\ProfilePicDAO.class
 com\social\beFriendly\model\ProfilePic.class
@@ -20,6 +21,7 @@ com\social\beFriendly\DAO\FriendDAO.class
 com\social\beFriendly\model\Notification.class
 com\social\beFriendly\DAO\NotificationDAO.class
 com\social\beFriendly\model\Activity.class
+com\social\beFriendly\model\Comment.class
 com\social\beFriendly\tools\searchUserTool.class
 com\social\beFriendly\service\NotificationService.class
 com\social\beFriendly\DAO\ActivityDAO.class

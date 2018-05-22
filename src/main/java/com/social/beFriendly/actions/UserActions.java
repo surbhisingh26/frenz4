@@ -474,6 +474,43 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	public void addcomment(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			String comment = request.getParameter("comment");
+			ObjectId fid = new ObjectId(request.getParameter("fid"));
+			ObjectId activityId =  new ObjectId(request.getParameter("activityId"));
+			UserService userService = new UserService();
+			userService.addComment(comment,fid,activityId);
+			/*hmap.putAll(userService.showComments(activityId));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));*/
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void showcomments(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			UserService userService = new UserService();
+			hmap.putAll(userService.showComments(activityId));
+			System.out.println(hmap);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
 
 

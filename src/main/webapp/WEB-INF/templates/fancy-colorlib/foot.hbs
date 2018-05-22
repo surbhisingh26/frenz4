@@ -163,8 +163,6 @@ var request = $.ajax({
 	});
 	request.done(function(response){
 	
-	console.log($('.beFriend').val());
-console.log($('#befriendDiv').html());
 	if(typeof extraInfo.callback == 'function') {
 	
 		extraInfo.callback(data, extraInfo, response);
@@ -221,5 +219,27 @@ var id = data.fid;
 	alert("Some Error Occurred!!! Try After Some Time")
 	}
 	}
+	function postComment(data, extraInfo, response){
+	
+	}
+	function commentBox(data, extraInfo, response){
+	console.log(data);
+	console.log(response);
+	if($('.timeline' + data.activityId + ' .divBox').css('display')=='none')
+			$('.timeline' + data.activityId + ' .divBox').css('display','inline');
+	else
+			$('.timeline' + data.activityId + ' .divBox').css('display','none');
+	}
 
+</script>
+<script>
+	//function commentBox(boxIdentifier){
+	//if($(boxIdentifier + ' .divBox').css('display')=='none')
+	//		$(boxIdentifier + ' .divBox').css('display','inline');
+	//else
+	//		$(boxIdentifier + ' .divBox').css('display','none');
+			//ajaxRequest("showcomments",'POST',)
+	//}
+	
+	
 </script>

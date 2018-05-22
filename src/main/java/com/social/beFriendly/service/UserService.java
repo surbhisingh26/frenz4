@@ -18,10 +18,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.beFriendly.DAO.ActivityDAO;
+import com.social.beFriendly.DAO.CommentDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
+import com.social.beFriendly.model.Comment;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
@@ -418,6 +420,59 @@ public class UserService {
 		}
 
 		hmap.put("myActivityList",myActivityList);
+		return hmap;
+	}
+	public void addComment(String commentMessage, ObjectId fid, ObjectId activityId) {
+		Date date = new Date();
+		CommentDAO commentdao = new CommentDAO();		
+		JacksonDBCollection<Comment, String> commentCollection = commentdao.commentDAO();
+		Comment comment = new Comment();
+		comment.setActivityId(activityId);
+		comment.setComment(commentMessage);
+		comment.setFid(fid);
+		comment.setTime(date);
+		commentCollection.insert(comment);
+		
+	}
+	public Map<String,Object> showComments(ObjectId activityId) {
+		Map<String, Object> hmap = new HashMap<String, Object>();
+		DBCollection coll = activitydao.activityCollectionDAO();
+		
+		List<DBObject> pipeline = new ArrayList<DBObject>();
+		List<Object> commentList = new ArrayList<Object>();
+		DBObject match = new BasicDBObject("$match",
+	            new BasicDBObject("activityId" , activityId)
+	            
+	        );
+		pipeline.add(match);
+
+		DBObject lookupFields = new BasicDBObject("from", "comment");
+		lookupFields.put("localField","activityId");
+		lookupFields.put("foreignField","activityId");
+		lookupFields.put("as", "comments");  
+		pipeline.add(new BasicDBObject("$lookup",lookupFields));
+		DBObject unwindActivity = new BasicDBObject("$unwind","$comments");
+		pipeline.add(unwindActivity);
+		DBObject friendsFields = new BasicDBObject("from", "user");
+		friendsFields.put("localField","comments.fid");
+		friendsFields.put("foreignField","_id");
+		friendsFields.put("as", "friend");  
+		pipeline.add(new BasicDBObject("$lookup",friendsFields));
+		
+		DBObject sort = new BasicDBObject("$sort",
+	            new BasicDBObject("date",-1));
+		
+	     pipeline.add(sort);
+
+		System.out.println(pipeline);
+
+		AggregationOutput output = coll.aggregate(pipeline);
+		
+		for (DBObject result : output.results()) {
+			commentList.add(result);
+			System.out.println(result);
+		}
+		hmap.put("commentList", commentList);
 		return hmap;
 	}	
 }
