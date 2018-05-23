@@ -40,7 +40,7 @@ public class UserActions extends HttpServlet {
 	 */
 	public UserActions() {
 		super();
-		
+
 	}
 
 	/**
@@ -81,18 +81,18 @@ public class UserActions extends HttpServlet {
 	}
 	public Map<String, Object> getUserDetails(HttpServletRequest request,HttpServletResponse response){
 
-		
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			uid = new ObjectId(utility.getSession(request));
-			UserService userservice = new UserService();
-			User user = userservice.findOneById(uid.toString());
-			hmap.put("loggedInUser", user);
-			hmap.put("uid", uid);
-			if(uid!=null)
-				hmap.put("login", true);
-			NotificationService notificationService = new NotificationService();
-			hmap.putAll(notificationService.notificationRead(uid));
-			
+
+		Map<String, Object> hmap = new HashMap<String, Object>();
+		uid = new ObjectId(utility.getSession(request));
+		UserService userservice = new UserService();
+		User user = userservice.findOneById(uid.toString());
+		hmap.put("loggedInUser", user);
+		hmap.put("uid", uid);
+		if(uid!=null)
+			hmap.put("login", true);
+		NotificationService notificationService = new NotificationService();
+		hmap.putAll(notificationService.notificationRead(uid));
+
 		return hmap;
 	}
 	public void login(HttpServletRequest request,HttpServletResponse response){
@@ -479,16 +479,18 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
+			User user = (User) hmap.get("loggedInUser");
 			String comment = request.getParameter("comment");
 			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			ObjectId activityId =  new ObjectId(request.getParameter("activityId"));
 			UserService userService = new UserService();
-			userService.addComment(comment,fid,activityId);
-			/*hmap.putAll(userService.showComments(activityId));
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(new Gson().toJson(hmap));*/
-			
+			//Activity activity = userService.findActivityLink(activityId.toString());
+			//String type = activity.getType();
+			userService.addComment(comment,uid,activityId);
+			NotificationService notiService = new NotificationService();
+			if(fid!=uid){
+			notiService.sendNotification(fid, user.getImagepath(), user.getName() + " commented on your post","post?activityId="+activityId+"&" , "New comment");
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -499,9 +501,21 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
+			String skipStr = request.getParameter("skip");
+			String limitStr = request.getParameter("limit");
+			System.out.println("Skip " + skipStr);
+			System.out.println("Limit " + limitStr);
+			int skip = 0;
+			int limit = 5;
+			if(skipStr!=null&&!skipStr.equals("")){
+				skip = Integer.parseInt(skipStr);
+			}
+			if(limitStr!=null&&!limitStr.equals("")){
+				limit = Integer.parseInt(limitStr);
+			}
 			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
 			UserService userService = new UserService();
-			hmap.putAll(userService.showComments(activityId));
+			hmap.putAll(userService.showComments(activityId,skip,limit));
 			System.out.println(hmap);
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
@@ -511,6 +525,23 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	public void post(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			
+			UserService userservice = new UserService();
+			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			hmap.putAll(userservice.post(activityId));
+			
+			utility.getHbs(response, "post", hmap, templatePath);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 }
 
 

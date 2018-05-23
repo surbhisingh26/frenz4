@@ -423,6 +423,7 @@ public class UserService {
 		return hmap;
 	}
 	public void addComment(String commentMessage, ObjectId fid, ObjectId activityId) {
+		System.out.println("ADD COmment..................");
 		Date date = new Date();
 		CommentDAO commentdao = new CommentDAO();		
 		JacksonDBCollection<Comment, String> commentCollection = commentdao.commentDAO();
@@ -434,10 +435,11 @@ public class UserService {
 		commentCollection.insert(comment);
 		
 	}
-	public Map<String,Object> showComments(ObjectId activityId) {
+	public Map<String,Object> showComments(ObjectId activityId,int skip,int limit) {
 		Map<String, Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = activitydao.activityCollectionDAO();
-		
+		CommentDAO commentdao = new CommentDAO();
+		JacksonDBCollection<Comment, String> commentCollection = commentdao.commentDAO();
 		List<DBObject> pipeline = new ArrayList<DBObject>();
 		List<Object> commentList = new ArrayList<Object>();
 		DBObject match = new BasicDBObject("$match",
@@ -456,13 +458,21 @@ public class UserService {
 		DBObject friendsFields = new BasicDBObject("from", "user");
 		friendsFields.put("localField","comments.fid");
 		friendsFields.put("foreignField","_id");
-		friendsFields.put("as", "friend");  
+		friendsFields.put("as", "friend"); 
+		
 		pipeline.add(new BasicDBObject("$lookup",friendsFields));
-		
+		DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
+		pipeline.add(unwindFriend);
 		DBObject sort = new BasicDBObject("$sort",
-	            new BasicDBObject("date",-1));
-		
-	     pipeline.add(sort);
+	            new BasicDBObject("comments.time",-1));
+		pipeline.add(sort);
+	     
+	     DBObject skipTo = new BasicDBObject("$skip",skip);
+	     pipeline.add(skipTo);
+	     DBObject limitCount = new BasicDBObject("$limit",limit);
+	     pipeline.add(limitCount);
+	     
+	    // pipeline.add(commentCount);
 
 		System.out.println(pipeline);
 
@@ -471,8 +481,58 @@ public class UserService {
 		for (DBObject result : output.results()) {
 			commentList.add(result);
 			System.out.println(result);
+			
 		}
+		BasicDBObject query = new BasicDBObject();
+		query.put("activityId", activityId);
+		long commentCount =  commentCollection.count(query);
+		
 		hmap.put("commentList", commentList);
+		hmap.put("count", commentCount);
+		hmap.put("skip", skip+limit);
+		hmap.put("limit", 10);
+		if(skip+limit<commentCount){
+			hmap.put("showMore", true);
+		}
+		else
+		{
+			hmap.put("showMore", false);
+		}
+		return hmap;
+	}
+	
+	public Activity findActivityLink(String id) {
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection = activitydao.activityDAO();
+		Activity activity = activityCollection.findOneById(id);
+		
+		return activity;
+	}
+	public Map<String, Object> post(ObjectId activityId) {
+		Map<String, Object> hmap = new HashMap<String, Object>();
+		ActivityDAO activitydao = new ActivityDAO();
+		DBCollection activityCollection = activitydao.activityCollectionDAO();
+		List<DBObject> pipeline = new ArrayList<DBObject>();
+		
+		DBObject match = new BasicDBObject("$match",
+	            new BasicDBObject("activityId" , activityId)
+	            
+	        );
+		pipeline.add(match);
+		DBObject lookupFields = new BasicDBObject("from", "profilepic");
+		lookupFields.put("localField","activityId");
+		lookupFields.put("foreignField","_id");
+		lookupFields.put("as", "profilepic");  
+		pipeline.add(new BasicDBObject("$lookup",lookupFields));
+		DBObject uploadFields = new BasicDBObject("from", "uploadpic");
+		uploadFields.put("localField","activityId");
+		uploadFields.put("foreignField","_id");
+		uploadFields.put("as", "uploadpic");  
+		pipeline.add(new BasicDBObject("$lookup",uploadFields));
+		
+		AggregationOutput output = activityCollection.aggregate(pipeline);
+		hmap.put("activity",output.results());
+			
 		return hmap;
 	}	
 }
