@@ -19,10 +19,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.beFriendly.DAO.ActivityDAO;
+import com.social.beFriendly.DAO.CommentDAO;
 import com.social.beFriendly.DAO.FriendDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
+import com.social.beFriendly.model.Comment;
 import com.social.beFriendly.model.Friend;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.User;
@@ -184,6 +186,8 @@ public class FriendService {
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = userdao.userCollectionDAO();
 		int count = 1;
+		
+		
 		List<Object>activityList = new ArrayList<Object>();
 		
 		List<DBObject> pipeline = new ArrayList<DBObject>();
@@ -236,6 +240,7 @@ public class FriendService {
 
 		DBObject sort = new BasicDBObject("$sort",
 				new BasicDBObject("activity.date",-1));
+
 	
 		
 		pipeline.add(sort);
@@ -243,7 +248,7 @@ public class FriendService {
 		System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
-		
+		//long commentCount = commentCollection.count();
 		for (DBObject result : output.results()) {
 			activityList.add(result);
 			if(count%2==0)
@@ -256,7 +261,7 @@ public class FriendService {
 		}
 		System.out.println("SIZE IS ......................" +activityList.size());
 		
-		
+		//hmap.put("commentCount", commentCount);
 		hmap.put("activityList", activityList);
 		return hmap;
 	}	

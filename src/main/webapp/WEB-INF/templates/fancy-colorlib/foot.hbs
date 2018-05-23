@@ -59,7 +59,7 @@
 	<script src="material-lite/assets/plugins/calendar/dist/cal-init.js"></script>
 	<script src="material-lite/assets/plugins/styleswitcher/jQuery.style.switcher.js"></script>
 	<script src="material-lite/assets/plugins/dropzone-master/dist/dropzone.js"></script>
-	
+	<script src="js/handlebars-latest.js"></script>
 	
 	
 	<script>
@@ -219,27 +219,63 @@ var id = data.fid;
 	alert("Some Error Occurred!!! Try After Some Time")
 	}
 	}
-	function postComment(data, extraInfo, response){
 	
-	}
-	function commentBox(data, extraInfo, response){
-	console.log(data);
-	console.log(response);
-	if($('.timeline' + data.activityId + ' .divBox').css('display')=='none')
-			$('.timeline' + data.activityId + ' .divBox').css('display','inline');
-	else
-			$('.timeline' + data.activityId + ' .divBox').css('display','none');
-	}
-
+	
 </script>
 <script>
-	//function commentBox(boxIdentifier){
-	//if($(boxIdentifier + ' .divBox').css('display')=='none')
-	//		$(boxIdentifier + ' .divBox').css('display','inline');
-	//else
-	//		$(boxIdentifier + ' .divBox').css('display','none');
-			//ajaxRequest("showcomments",'POST',)
-	//}
+function commentBox(data, extraInfo, response){
+	console.log(data);
+	console.log(response);
+
+	if($('.timeline' + data.activityId + ' .divBox').css('display')=='none'){
+			$('.timeline' + data.activityId + ' .divBox').css('display','inline');
+			if(response.count==1)
+			$('.timeline' + data.activityId + ' .comment').text(response.count + " Comment");
+			else if(response.count>1)
+			$('.timeline' + data.activityId + ' .comment').text(response.count + " Comments");
+			$.each(response.commentList, function(k, v){
+			
+			//console.log("k = " , k , "v = ", v)	;
+						
+			$('.timeline' + data.activityId + ' .divBox ul').prepend('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
+			});
+			
+			if(response.showMore){
+			
+			$('.timeline' + data.activityId + ' .viewAll').css('display','inline');
+			}
+	}		
+	else {
+			$('.timeline' + data.activityId + ' .divBox').css('display','none');
+			$('.timeline' + data.activityId + ' .divBox ul').html('');
+			
+	}
 	
+		
+						
+	}
+	function postComment(data, extraInfo, response){
+		$('.timeline' + data.activityId + ' .divBox textarea').val('');
+		$('.timeline' + data.activityId + ' .divBox ul').html('');
+		$('.timeline' + data.activityId + ' .divBox').css('display','none');
+		ajaxRequest("showcomments",'POST',data,{dataType:'json', callback:commentBox});
+	}
+	function allComment(data, extraInfo, response){
+	$.each(response.commentList, function(k, v){
+			console.log(response)
+			//console.log("k = " , k , "v = ", v)	;
+						
+			$('.allcomments').prepend('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
+			});
+			
+			if($('.allcomments .showMore').length>0)
+			$('.allcomments .showMore').remove();
+			if(response.showMore){
+			$('.allcomments').append('<li class="list-group-item showMore" style="background-color:#E5E7EA;margin-bottom:5px"><a href="#" onclick="ajaxRequest(\'showcomments\',\'POST\', {activityId:\''+data.activityId+'\', skip:\''+response.skip+'\',limit:\''+response.limit+'\'},{dataType:\'json\',callback:allComment})">Show More</a></li>');
+			}
+	}
+	$('.close').click(function(){
 	
+	$('.allcomments').empty();
+	});
 </script>
