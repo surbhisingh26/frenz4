@@ -19,11 +19,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.beFriendly.DAO.ActivityDAO;
 import com.social.beFriendly.DAO.CommentDAO;
+import com.social.beFriendly.DAO.HeartDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
 import com.social.beFriendly.model.Comment;
+import com.social.beFriendly.model.Heart;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
@@ -287,11 +289,11 @@ public class UserService {
 		user.setImagepath(filePath);
 		System.out.println("path is ..."+user.getImagepath());
 		userCollection.updateById(uid.toString(), user);
-
+		ProfilePic profilepic = new ProfilePic();
 		BasicDBObject query = new BasicDBObject();
 		query.put("current", true);
 		DBCursor<ProfilePic> cursor = dpCollection.find(query);
-		ProfilePic profilepic = new ProfilePic();
+		
 		if(cursor.hasNext()){
 			profilepic = cursor.next();
 			profilepic.setCurrent(false);			
@@ -303,6 +305,7 @@ public class UserService {
 		profilepic.setPath(filePath);
 		profilepic.setCurrent(true);
 		profilepic.setUploadTime(date);
+		
 		WriteResult<ProfilePic, String> pic = dpCollection.insert(profilepic);
 		profilepic = pic.getSavedObject();
 		System.out.println("Profile pic id is ...... " + profilepic.getId());
@@ -311,6 +314,9 @@ public class UserService {
 		activity.setActivityId(new ObjectId(profilepic.getId()));
 		activity.setDate(date);
 		activity.setType("profilepic");
+		activity.setHeartBreaks(0);
+		activity.setHearts(0);
+		activity.setComments(0);
 		activityCollection.insert(activity);
 
 
@@ -338,6 +344,7 @@ public class UserService {
 		upload.setPath(filePath);
 		upload.setUid(uid);
 		upload.setUploadTime(time);
+		
 		WriteResult<UploadPic,String> pic = uploadCollection.insert(upload);
 		upload = pic.getSavedObject();
 		System.out.println("Upload id is ...... " + upload.getId());
@@ -346,6 +353,9 @@ public class UserService {
 		activity.setActivityId(new ObjectId(upload.getId()));
 		activity.setDate(time);
 		activity.setType("uploadpic");
+		activity.setHeartBreaks(0);
+		activity.setHearts(0);
+		activity.setComments(0);
 		activityCollection.insert(activity);
 
 	}
@@ -375,9 +385,9 @@ public class UserService {
 		List<DBObject> pipeline = new ArrayList<DBObject>();
 
 		DBObject match = new BasicDBObject("$match",
-	            new BasicDBObject("uid" , uid)
-	            
-	        );
+				new BasicDBObject("uid" , uid)
+
+				);
 		pipeline.add(match);
 
 		DBObject lookupFields = new BasicDBObject("from", "uploadpic");
@@ -391,29 +401,29 @@ public class UserService {
 		profilePicFields.put("foreignField","_id");
 		profilePicFields.put("as", "profilepic");
 		pipeline.add(new BasicDBObject("$lookup",profilePicFields));
-		
+
 		DBObject friendFields = new BasicDBObject("from", "friend");
 		friendFields.put("localField","activityId");
 		friendFields.put("foreignField","_id");
 		friendFields.put("as", "friend");
 		pipeline.add(new BasicDBObject("$lookup",friendFields));
-		
+
 		DBObject userfields = new BasicDBObject("from", "user");
 		userfields.put("localField","friend.fid");
 		userfields.put("foreignField","_id");
 		userfields.put("as", "userFriend");
 		pipeline.add(new BasicDBObject("$lookup",userfields));
-		
-	
+
+
 		DBObject sort = new BasicDBObject("$sort",
-	            new BasicDBObject("date",-1));
-		
-	     pipeline.add(sort);
+				new BasicDBObject("date",-1));
+
+		pipeline.add(sort);
 
 		System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
-		
+
 		for (DBObject result : output.results()) {
 			myActivityList.add(result);
 			System.out.println(result);
@@ -434,6 +444,16 @@ public class UserService {
 		comment.setTime(date);
 		commentCollection.insert(comment);
 		
+		BasicDBObject query = new BasicDBObject();
+		query.put("activityId", activityId);
+		DBCursor<Activity> cursor = activityCollection.find(query);
+		if(cursor.hasNext()){
+			Activity activity = cursor.next();
+			activity.setComments(activity.getComments()+1);
+			activityCollection.updateById(activity.getId(), activity);
+		}
+		
+
 	}
 	public Map<String,Object> showComments(ObjectId activityId,int skip,int limit) {
 		Map<String, Object> hmap = new HashMap<String, Object>();
@@ -443,9 +463,9 @@ public class UserService {
 		List<DBObject> pipeline = new ArrayList<DBObject>();
 		List<Object> commentList = new ArrayList<Object>();
 		DBObject match = new BasicDBObject("$match",
-	            new BasicDBObject("activityId" , activityId)
-	            
-	        );
+				new BasicDBObject("activityId" , activityId)
+
+				);
 		pipeline.add(match);
 
 		DBObject lookupFields = new BasicDBObject("from", "comment");
@@ -459,34 +479,34 @@ public class UserService {
 		friendsFields.put("localField","comments.fid");
 		friendsFields.put("foreignField","_id");
 		friendsFields.put("as", "friend"); 
-		
+
 		pipeline.add(new BasicDBObject("$lookup",friendsFields));
 		DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
 		pipeline.add(unwindFriend);
 		DBObject sort = new BasicDBObject("$sort",
-	            new BasicDBObject("comments.time",-1));
+				new BasicDBObject("comments.time",-1));
 		pipeline.add(sort);
-	     
-	     DBObject skipTo = new BasicDBObject("$skip",skip);
-	     pipeline.add(skipTo);
-	     DBObject limitCount = new BasicDBObject("$limit",limit);
-	     pipeline.add(limitCount);
-	     
-	    // pipeline.add(commentCount);
+
+		DBObject skipTo = new BasicDBObject("$skip",skip);
+		pipeline.add(skipTo);
+		DBObject limitCount = new BasicDBObject("$limit",limit);
+		pipeline.add(limitCount);
+
+		// pipeline.add(commentCount);
 
 		System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
-		
+
 		for (DBObject result : output.results()) {
 			commentList.add(result);
 			System.out.println(result);
-			
+
 		}
 		BasicDBObject query = new BasicDBObject();
 		query.put("activityId", activityId);
 		long commentCount =  commentCollection.count(query);
-		
+
 		hmap.put("commentList", commentList);
 		hmap.put("count", commentCount);
 		hmap.put("skip", skip+limit);
@@ -500,12 +520,12 @@ public class UserService {
 		}
 		return hmap;
 	}
-	
+
 	public Activity findActivityLink(String id) {
 		ActivityDAO activitydao = new ActivityDAO();
 		JacksonDBCollection<Activity, String> activityCollection = activitydao.activityDAO();
 		Activity activity = activityCollection.findOneById(id);
-		
+
 		return activity;
 	}
 	public Map<String, Object> post(ObjectId activityId) {
@@ -513,11 +533,11 @@ public class UserService {
 		ActivityDAO activitydao = new ActivityDAO();
 		DBCollection activityCollection = activitydao.activityCollectionDAO();
 		List<DBObject> pipeline = new ArrayList<DBObject>();
-		
+
 		DBObject match = new BasicDBObject("$match",
-	            new BasicDBObject("activityId" , activityId)
-	            
-	        );
+				new BasicDBObject("activityId" , activityId)
+
+				);
 		pipeline.add(match);
 		DBObject lookupFields = new BasicDBObject("from", "profilepic");
 		lookupFields.put("localField","activityId");
@@ -529,10 +549,65 @@ public class UserService {
 		uploadFields.put("foreignField","_id");
 		uploadFields.put("as", "uploadpic");  
 		pipeline.add(new BasicDBObject("$lookup",uploadFields));
-		
+
 		AggregationOutput output = activityCollection.aggregate(pipeline);
 		hmap.put("activity",output.results());
+
+		return hmap;
+	}
+	public Map<String, Object> heartIncrease(ObjectId activityId, ObjectId uid, boolean broken) {
+		Map<String, Object> hmap = new HashMap<String, Object>();
+		HeartDAO heartdao = new HeartDAO();
+		JacksonDBCollection<Heart, String> heartCollection = heartdao.heartDAO();
+		BasicDBObject activityQuery = new BasicDBObject();
+		activityQuery.put("activityId", activityId);
+		DBCursor<Activity> activityCursor = activityCollection.find(activityQuery);
+		
+		Heart heart = new Heart();
+		BasicDBObject query = new BasicDBObject();
+		query.put("activityId", activityId);
+		query.put("broken", broken);
+		query.put("fid", uid);
+		DBCursor<Heart> cursor = heartCollection.find(query);
+		if(cursor.hasNext()){
+			heart = cursor.next();
+			heartCollection.remove(query);
+			hmap.put("remove", true);
+		}
+		else{
+		query.replace("broken",!broken);
+		System.out.println("Broken revert is " + !broken);
+		DBCursor<Heart> cursor1 = heartCollection.find(query);
+		if(cursor1.hasNext()){
+			heart = cursor1.next();
+			heart.setBroken(broken);
+			heartCollection.updateById(heart.getId(),heart);
+			hmap.put("revert", true);
+			hmap.put("remove", false);
+		}
+		else{
+			heart.setActivityId(activityId);
+			heart.setFid(uid);
+			heart.setBroken(broken);
+			heartCollection.insert(heart);
+			hmap.put("revert", false);
+			hmap.put("remove", false);
+		}
+		}
+		query.remove("fid");
+		query.replace("broken", false);
+		long countHeart = heartCollection.count(query);
+		query.replace("broken", true);
+		long countBroken = heartCollection.count(query);
+		hmap.put("heartCount", countHeart);
+		hmap.put("brokenCount", countBroken);
+		if(activityCursor.hasNext()){
+			Activity activity = activityCursor.next();			
+			activity.setHearts(countHeart);			
+			activity.setHeartBreaks(countBroken);
 			
+			activityCollection.updateById(activity.getId(), activity);
+		}
 		return hmap;
 	}	
 }

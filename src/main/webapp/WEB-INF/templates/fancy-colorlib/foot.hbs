@@ -278,4 +278,81 @@ function commentBox(data, extraInfo, response){
 	
 	$('.allcomments').empty();
 	});
+	function heartIncrease(data,extraInfo,response){
+	console.log(data);
+	console.log(response)
+	if(!response.remove){
+		if(!data.broken){
+			if(response.revert){
+				//$('.heart i').removeClass('fa-heart-o');
+				//$('.heart i').addClass('fa-heart');
+				
+				$('.timeline' + data.activityId + ' .heartBreak i').replaceWith('<div data-icon="X" class="linea-icon linea-basic"></div>');
+				if(response.brokenCount < 2){
+					$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
+				}
+				else{
+					$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
+				}
+			}
+			
+			$('.timeline' + data.activityId + ' .heart i').removeClass('fa-heart-o');
+			$('.timeline' + data.activityId + ' .heart i').addClass('fa-heart');
+			
+			if(response.heartCount < 2){
+				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Heart')
+			}
+			else{
+				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Hearts')
+			}
+		}
+		else{
+		if(response.revert){
+			$('.timeline' + data.activityId + ' .heart i').addClass('fa-heart-o');
+			$('.timeline' + data.activityId + ' .heart i').removeClass('fa-heart');
+			if(response.heartCount < 2){
+				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Heart')
+			}
+			else{
+				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Hearts')
+			}
+		}
+		
+		$('.timeline' + data.activityId + ' .heartBreak div').replaceWith('<i class="mdi mdi-heart-broken"></i>');
+	
+			if(response.brokenCount < 2){
+				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
+			}
+			else{
+				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
+			}
+		}
+		}
+	else{
+		if(!data.broken){
+			
+			$('.timeline' + data.activityId + ' .heart i').addClass('fa-heart-o');
+			$('.timeline' + data.activityId + ' .heart i').removeClass('fa-heart');
+			if(response.heartCount < 2){
+				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Heart')
+			}
+			else{
+				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Hearts')
+			}
+		}
+		else{
+			$('.timeline' + data.activityId + ' .heartBreak i').replaceWith('<div data-icon="X" class="linea-icon linea-basic"></div>');
+			if(response.brokenCount < 2){
+				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
+			}
+			else{
+				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
+			}
+		}
+		}
+		}
+		function heartFriend(){
+		
+		}
+	
 </script>

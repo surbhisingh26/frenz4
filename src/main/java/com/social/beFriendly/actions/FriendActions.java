@@ -324,6 +324,25 @@ public class FriendActions extends HttpServlet {
 
 		}
 	}
+	public void heartfriend(HttpServletRequest request,HttpServletResponse response){
+		try{
+			UserActions useraction = new UserActions();
+			System.out.println("Friends Activity");
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			FriendService friendService = new FriendService();
+			hmap.putAll(friendService.heartFriend(activityId));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+			
+
+		}
+		catch(Exception e){
+
+		}
+	}
 
 
 }

@@ -533,9 +533,39 @@ public class UserActions extends HttpServlet {
 			
 			UserService userservice = new UserService();
 			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			String read = request.getParameter("read");
+			if(read==null)
+				read = request.getParameter("?read");
+			String id = request.getParameter("id");
+			NotificationService notificationService = new NotificationService();
+
+			if(read!=null&&read.equals("true")){
+				notificationService.markRead(id);
+			}
+					
 			hmap.putAll(userservice.post(activityId));
 			
 			utility.getHbs(response, "post", hmap, templatePath);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void heartincrease(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			UserService userservice = new UserService();
+			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			String brokenStr = request.getParameter("broken");
+			boolean broken = Boolean.parseBoolean(brokenStr);
+			System.out.println("Broken..........." + broken);
+			hmap.putAll(userservice.heartIncrease(activityId,uid,broken));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();

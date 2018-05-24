@@ -14,25 +14,44 @@
 				
 				{{#uploadpic}}
 				<div class="sl-right text-center timeline{{_id}}">
+				<div>
 				<img class = "img-thumbnail img-fluid" src = "{{path}}" width="350" height="350">
-                                             <div class="like-comm btn-group">
+				</div>
+                                             <div class="like-comm btn-group" style="margin-top:5px">
 											
 											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})" >
-												<a href="javascript:void(0)" class="link m-r-10 comment">Comment</a>
+												<a href="javascript:void(0)" class="link m-r-10 comment">{{#activity}}{{comments}}{{/activity}} Comment</a>
 											</button>
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="fa fa-heart text-danger"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heart </button>
+											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartIncrease})">
+														
+												<i class="fa {{^heart}}fa-heart-o{{/heart}}{{#heart}}{{#broken}}fa fa-heart-o{{/broken}}{{^broken}}fa fa-heart{{/broken}}{{/heart}} text-danger"></i>
+	
+												
+												</button><button type="button" class="btn btn-secondary heartCount" data-container="body">{{#activity}}{{hearts}}{{/activity}} Heart </button>
 											</button>
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="mdi mdi-heart-broken text-default"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heartbreak 
+											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartIncrease})">
+											{{#heart}} 
+												{{#if broken}}
+												<i class="mdi mdi-heart-broken"></i>
+												{{else}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+												{{/if}}
+											{{/heart}}
+											{{^heart}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+											{{/heart}}
+												
+												
+												
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body">{{#activity}}{{heartBreaks}}{{/activity}} Heartbreak 
 											</button>
 											
 										</div>
 										<div style="display:none;" class="divBox">
 											<ul class="list-group" style="margin-top:5px">
-											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View All Comments</a></li>
+											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View More Comments</a></li>
 											</ul>
 											
 											<textarea class="form-control" placeholder="Type Your Comment" rows="2" style="background-color:#fff;margin-top:5px" id ="commentMessage{{_id}}"></textarea>
@@ -43,25 +62,44 @@
 				{{/uploadpic}}
 				{{#profilepic}}
 				<div class="sl-right text-center timeline{{_id}}">
+				<div>
 				<img class = "img-thumbnail img-fluid" src = "{{path}}" width="350" height="350">
-                                             <div class="like-comm btn-group">
+				<div>
+                                             <div class="like-comm btn-group" style="margin-top:5px">
 											
 											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})" >
-												<a href="javascript:void(0)" class="link m-r-10 comment">Comment</a>
+												<a href="javascript:void(0)" class="link m-r-10 comment">{{#activity}}{{comments}}{{/activity}} Comment</a>
 											</button>
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="fa fa-heart text-danger"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heart </button>
+											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartIncrease})">
+														
+												<i class="fa {{^heart}}fa-heart-o{{/heart}}{{#heart}}{{#broken}}fa fa-heart-o{{/broken}}{{^broken}}fa fa-heart{{/broken}}{{/heart}} text-danger"></i>
+	
+												
+												</button><button type="button" class="btn btn-secondary heartCount" data-container="body">{{#activity}}{{hearts}}{{/activity}} Heart </button>
 											</button>
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="mdi mdi-heart-broken text-default"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heartbreak 
+											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartIncrease})">
+											{{#heart}} 
+												{{#if broken}}
+												<i class="mdi mdi-heart-broken"></i>
+												{{else}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+												{{/if}}
+											{{/heart}}
+											{{^heart}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+											{{/heart}}
+												
+												
+												
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body">{{#activity}}{{heartBreaks}}{{/activity}} Heartbreak 
 											</button>
 											
 										</div>
 										<div style="display:none;" class="divBox">
 											<ul class="list-group" style="margin-top:5px">
-											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View All Comments</a></li>
+											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View More Comments</a></li>
 											</ul>
 											
 											<textarea class="form-control" placeholder="Type Your Comment" rows="2" style="background-color:#fff;margin-top:5px" id ="commentMessage{{_id}}"></textarea>

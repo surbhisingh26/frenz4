@@ -19,12 +19,13 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.beFriendly.DAO.ActivityDAO;
-import com.social.beFriendly.DAO.CommentDAO;
+
 import com.social.beFriendly.DAO.FriendDAO;
+import com.social.beFriendly.DAO.HeartDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
-import com.social.beFriendly.model.Comment;
+
 import com.social.beFriendly.model.Friend;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.User;
@@ -182,18 +183,19 @@ public class FriendService {
 
 	}
 	public Map<String,Object> friendsActivity(ObjectId uid) {
-		System.out.println("SERVICE");
+		
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = userdao.userCollectionDAO();
 		int count = 1;
-		
+	//	HeartDAO heartdao = new HeartDAO();
+	//	JacksonDBCollection<Heart, String> heartCollection = heartdao.heartDAO();
 		
 		List<Object>activityList = new ArrayList<Object>();
-		
+
 		List<DBObject> pipeline = new ArrayList<DBObject>();
 		DBObject match = new BasicDBObject("$match",
 				new BasicDBObject("_id" , uid));
-		
+
 		pipeline.add(match);
 
 		DBObject friendFields = new BasicDBObject("from", "friend");
@@ -204,17 +206,19 @@ public class FriendService {
 		DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
 		pipeline.add(unwindFriend);
 		
+		
+
 		DBObject matchfriend = new BasicDBObject("$match",
 				new BasicDBObject("friend.friends" , true));		
 		pipeline.add(matchfriend);
-		
+
 		DBObject friendInfoFields = new BasicDBObject("from", "user");
 		friendInfoFields.put("localField","friend.fid");
 		friendInfoFields.put("foreignField","_id");
 		friendInfoFields.put("as", "friendInfo");
 		pipeline.add(new BasicDBObject("$lookup",friendInfoFields));
-		
-		
+
+
 		DBObject activityFields = new BasicDBObject("from", "activity");
 		activityFields.put("localField","friend.fid");
 		activityFields.put("foreignField","uid");
@@ -222,14 +226,14 @@ public class FriendService {
 		pipeline.add(new BasicDBObject("$lookup",activityFields));
 		DBObject unwindActivity = new BasicDBObject("$unwind","$activity");
 		pipeline.add(unwindActivity);
-		
-		
+
+
 		DBObject uploadpicFields = new BasicDBObject("from", "uploadpic");
 		uploadpicFields.put("localField","activity.activityId");
 		uploadpicFields.put("foreignField","_id");
 		uploadpicFields.put("as", "uploadpic");
 		pipeline.add(new BasicDBObject("$lookup",uploadpicFields));
-		
+
 		DBObject profilepicFields = new BasicDBObject("from", "profilepic");
 		profilepicFields.put("localField","activity.activityId");
 		profilepicFields.put("foreignField","_id");
@@ -237,35 +241,93 @@ public class FriendService {
 		pipeline.add(new BasicDBObject("$lookup",profilepicFields));
 		
 		
-
+		
+		DBObject heartFields = new BasicDBObject("from", "heart");
+		heartFields.put("localField","activity.activityId");
+		heartFields.put("foreignField","activityId");
+		heartFields.put("as", "heart");
+		pipeline.add(new BasicDBObject("$lookup",heartFields));
+		//DBObject unwind = new BasicDBObject("$unwind","$heart");
+		//pipeline.add(unwind);
+		/*DBObject matchheart = new BasicDBObject("$match",
+				new BasicDBObject("heart.fid" , uid));		
+		pipeline.add(matchheart);*/
+		/*DBObject heartsFields = new BasicDBObject("from", "heart");
+		heartsFields.put("localField","heart.fid");
+		heartsFields.put("foreignField","fid");
+		heartsFields.put("as", "hearts");
+		pipeline.add(new BasicDBObject("$lookup",heartsFields));*/
+		
+		DBObject project = new BasicDBObject("$project",
+			new BasicDBObject("name", 1).append("email", 1).append("imagepath", 1).append("friend.uid", 1).append("friend._id", 1)
+			.append("friend.fid", 1).append("friend.friends", 1).append("friendInfo.name", 1).append("friendInfo._id", 1)
+			.append("friendInfo.email", 1).append("friendInfo.imagepath", 1).append("activity._id", 1).append("activity.uid", 1)
+			.append("activity.type", 1).append("activity.date", 1).append("activity.activityId", 1).append("activity.hearts", 1)
+			.append("activity.comments", 1).append("activity.heartBreaks", 1).append("uploadpic._id", 1).append("uploadpic.uid", 1)
+			.append("uploadpic.path", 1).append("profilepic._id", 1).append("profilepic.uid", 1).append("profilepic.path", 1)
+			.append("profilepic.current", 1).append("heart._id", 1).append("heart.fid", 1).append("heart.activityId", 1).
+			append("heart.broken", 1)
+				);
+		
+		/*DBObject project = new BasicDBObject("$project",
+				new BasicDBObject("heart.fid", uid));*/
+		pipeline.add(project);
 		DBObject sort = new BasicDBObject("$sort",
 				new BasicDBObject("activity.date",-1));
-
-	
 		
 		pipeline.add(sort);
 
 		System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
-		//long commentCount = commentCollection.count();
+		
 		for (DBObject result : output.results()) {
+			
+				
 			activityList.add(result);
 			if(count%2==0)
 				result.put("left", false);
 			else
 				result.put("left", true);
-		//	System.out.println("List..............." +activityList.get(5));
+			
 			System.out.println(result);
 			count++;
 		}
 		System.out.println("SIZE IS ......................" +activityList.size());
 		
-		//hmap.put("commentCount", commentCount);
+		
 		hmap.put("activityList", activityList);
+		return hmap;
+	}
+	public Map<String,Object> heartFriend(ObjectId activityId) {
+		Map<String,Object> hmap = new HashMap<String, Object>();
+		List<Object>friendList = new ArrayList<Object>();
+
+		HeartDAO heartdao = new HeartDAO();
+		DBCollection heartCollection = heartdao.heartCollectionDAO();
+		List<DBObject> pipeline = new ArrayList<DBObject>();
+		DBObject match = new BasicDBObject("$match",
+				new BasicDBObject("activityId" , activityId));
+		
+		pipeline.add(match);
+		
+		DBObject friendFields = new BasicDBObject("from", "user");
+		friendFields.put("localField","fid");
+		friendFields.put("foreignField","_id");
+		friendFields.put("as", "friend");
+		pipeline.add(new BasicDBObject("$lookup",friendFields));
+		DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
+		pipeline.add(unwindFriend);
+		AggregationOutput output = heartCollection.aggregate(pipeline);
+		for (DBObject result : output.results()) {
+		
+		friendList.add(result);
+		System.out.println(result);
+		
+	}
 		return hmap;
 	}	
 
-	
+
 }
 
