@@ -596,7 +596,7 @@ public class UserActions extends HttpServlet {
 			UserService userservice = new UserService();
 			String status = request.getParameter("status");
 			userservice.addStatus(uid, status);
-			
+			response.sendRedirect("friendactivity");
 			
 		}
 		catch(Exception e){

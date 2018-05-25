@@ -188,8 +188,6 @@ public class FriendService {
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = userdao.userCollectionDAO();
 		int count = 1;
-	//	HeartDAO heartdao = new HeartDAO();
-	//	JacksonDBCollection<Heart, String> heartCollection = heartdao.heartDAO();
 		
 		List<Object>activityList = new ArrayList<Object>();
 
@@ -207,8 +205,6 @@ public class FriendService {
 		DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
 		pipeline.add(unwindFriend);
 		
-		
-
 		DBObject matchfriend = new BasicDBObject("$match",
 				new BasicDBObject("friend.friends" , true));		
 		pipeline.add(matchfriend);
@@ -228,7 +224,6 @@ public class FriendService {
 		DBObject unwindActivity = new BasicDBObject("$unwind","$activity");
 		pipeline.add(unwindActivity);
 
-
 		DBObject uploadpicFields = new BasicDBObject("from", "uploadpic");
 		uploadpicFields.put("localField","activity.activityId");
 		uploadpicFields.put("foreignField","_id");
@@ -241,7 +236,11 @@ public class FriendService {
 		profilepicFields.put("as", "profilepic");
 		pipeline.add(new BasicDBObject("$lookup",profilepicFields));
 		
-		
+		DBObject statusFields = new BasicDBObject("from", "status");
+		statusFields.put("localField","activity.activityId");
+		statusFields.put("foreignField","_id");
+		statusFields.put("as", "status");
+		pipeline.add(new BasicDBObject("$lookup",statusFields));		
 		
 		DBObject heartFields = new BasicDBObject("from", "heart");
 		heartFields.put("localField","activity.activityId");
@@ -261,7 +260,7 @@ public class FriendService {
 			.append("activity.comments", 1).append("activity.heartBreaks", 1).append("uploadpic._id", 1).append("uploadpic.uid", 1)
 			.append("uploadpic.path", 1).append("profilepic._id", 1).append("profilepic.uid", 1).append("profilepic.path", 1)
 			.append("profilepic.current", 1).append("heart._id", 1).append("heart.fid",1).append("heart.activityId", 1)
-			.append("heart.broken", 1)
+			.append("heart.broken", 1).append("status.statusText", 1)
 				);
 		
 		pipeline.add(project);

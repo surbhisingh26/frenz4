@@ -158,7 +158,6 @@
                                     </li>
 									
 									{{/profilepic}}
-									{{/activityList}}
 									{{#status}}
 									
 									<div class="timeline-badge success">
@@ -170,22 +169,18 @@
                                                 <h4 class="timeline-title">
 													<strong>{{#friendInfo}}{{name}}{{/friendInfo}}</strong>
 												</h4>
-												
                                                 <p><i class="fa fa-clock-o"></i> <small class="text-muted timeAgo">{{#activity}}{{date}}{{/activity}}</small> </p>
                                             </div>
                                             <div class="timeline-body">
-                                                <div class="note-editable" contenteditable="true">
+                                                <div class="note-editable" >
                                     
-                                    
-										<p>{{statusText}}</p>
-										<ul class="list-icons">
-                                        <li><i class="fa fa-check text-success"></i> Lorem ipsum dolor sit amet</li>
-                                        <li><i class="fa fa-check text-success"></i> Consectetur adipiscing elit</li>
-                                        <li><i class="fa fa-check text-success"></i> Integer molestie lorem at massa </li>
-                                    </ul>
-                                </div>
+                                    <div class="card card-body" style="    padding-top: 1.25rem;padding: 1.25rem">
+										<p style="font-family:courier;font-size:15px">{{statusText}}</p>
+										</div>
+											</div>
+                                            <div class="like-comm btn-group" style="margin-top:5px">
 											
-											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})" >
+											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})">
 												<a href="javascript:void(0)" class="link m-r-10 comment">{{#activity}}{{comments}}{{/activity}} Comment</a>
 											</button>
 											
@@ -225,6 +220,8 @@
                                         </div>
 									
 									{{/status}}
+									{{/activityList}}
+								
                                 </ul>
                             </div>
                         </div>
