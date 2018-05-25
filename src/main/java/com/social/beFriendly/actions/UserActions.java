@@ -543,7 +543,7 @@ public class UserActions extends HttpServlet {
 				notificationService.markRead(id);
 			}
 					
-			hmap.putAll(userservice.post(activityId));
+			hmap.putAll(userservice.post(activityId,uid));
 			
 			utility.getHbs(response, "post", hmap, templatePath);
 		}
@@ -556,15 +556,47 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
+			User user = (User) hmap.get("loggedInUser");
 			UserService userservice = new UserService();
 			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			String fidStr = request.getParameter("fid");
 			String brokenStr = request.getParameter("broken");
 			boolean broken = Boolean.parseBoolean(brokenStr);
 			System.out.println("Broken..........." + broken);
 			hmap.putAll(userservice.heartIncrease(activityId,uid,broken));
+			//System.out.println("fid.......... " + fid);
+			if(fidStr!=null){
+				ObjectId fid = new ObjectId(fidStr);
+			NotificationService notiservice = new NotificationService();
+			String notification = null;
+			if(broken){
+				notification = "You have a HeartBreak from " + user.getName();
+			}
+			else{
+				notification = "You have a Heart from " + user.getName();
+			}
+			
+			notiservice.sendNotification(fid, user.getImagepath(), notification, "post?activityId="+activityId+"&", "New Reaction");
+			}
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(new Gson().toJson(hmap));
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void addstatus(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			
+			UserService userservice = new UserService();
+			String status = request.getParameter("status");
+			userservice.addStatus(uid, status);
+			
 			
 		}
 		catch(Exception e){

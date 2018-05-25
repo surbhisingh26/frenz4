@@ -21,12 +21,14 @@ import com.social.beFriendly.DAO.ActivityDAO;
 import com.social.beFriendly.DAO.CommentDAO;
 import com.social.beFriendly.DAO.HeartDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
+import com.social.beFriendly.DAO.StatusDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
 import com.social.beFriendly.model.Comment;
 import com.social.beFriendly.model.Heart;
 import com.social.beFriendly.model.ProfilePic;
+import com.social.beFriendly.model.Status;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
 
@@ -401,6 +403,12 @@ public class UserService {
 		profilePicFields.put("foreignField","_id");
 		profilePicFields.put("as", "profilepic");
 		pipeline.add(new BasicDBObject("$lookup",profilePicFields));
+		
+		DBObject statusFields = new BasicDBObject("from", "status");
+		statusFields.put("localField","activityId");
+		statusFields.put("foreignField","_id");
+		statusFields.put("as", "status");
+		pipeline.add(new BasicDBObject("$lookup",statusFields));
 
 		DBObject friendFields = new BasicDBObject("from", "friend");
 		friendFields.put("localField","activityId");
@@ -413,7 +421,12 @@ public class UserService {
 		userfields.put("foreignField","_id");
 		userfields.put("as", "userFriend");
 		pipeline.add(new BasicDBObject("$lookup",userfields));
-
+		
+		DBObject heartFields = new BasicDBObject("from", "heart");
+		heartFields.put("localField","activityId");
+		heartFields.put("foreignField","activityId");
+		heartFields.put("as", "heart");
+		pipeline.add(new BasicDBObject("$lookup",heartFields));
 
 		DBObject sort = new BasicDBObject("$sort",
 				new BasicDBObject("date",-1));
@@ -425,6 +438,32 @@ public class UserService {
 		AggregationOutput output = coll.aggregate(pipeline);
 
 		for (DBObject result : output.results()) {
+			@SuppressWarnings("unchecked")
+			List<Object> res = (List<Object>) result.get("heart");
+			if(!res.isEmpty()){
+				
+				result.put("noAction",true);
+				for(Object db:res){
+					//System.out.println(db);
+					BasicDBObject object = (BasicDBObject) db;
+					object.get("fid");
+					
+				if(object.get("fid").toString().equals(uid.toString())){
+					
+					result.put("broken",object.get("broken"));
+					result.put("noAction",false);
+					break;
+				}
+					
+				}									
+			}
+			else{
+				result.put("noAction",true);
+				
+			}
+			
+			
+			
 			myActivityList.add(result);
 			System.out.println(result);
 		}
@@ -528,7 +567,7 @@ public class UserService {
 
 		return activity;
 	}
-	public Map<String, Object> post(ObjectId activityId) {
+	public Map<String, Object> post(ObjectId activityId, ObjectId uid) {
 		Map<String, Object> hmap = new HashMap<String, Object>();
 		ActivityDAO activitydao = new ActivityDAO();
 		DBCollection activityCollection = activitydao.activityCollectionDAO();
@@ -549,8 +588,44 @@ public class UserService {
 		uploadFields.put("foreignField","_id");
 		uploadFields.put("as", "uploadpic");  
 		pipeline.add(new BasicDBObject("$lookup",uploadFields));
+		DBObject heartFields = new BasicDBObject("from", "heart");
+		heartFields.put("localField","activityId");
+		heartFields.put("foreignField","activityId");
+		heartFields.put("as", "heart");
+		pipeline.add(new BasicDBObject("$lookup",heartFields));
 
 		AggregationOutput output = activityCollection.aggregate(pipeline);
+		
+		for (DBObject result : output.results()) {
+			//System.out.println(result.get("heart"));
+			@SuppressWarnings("unchecked")
+			List<Object> list = (List<Object>) result.get("heart");
+			List<Object> res = list;
+			if(!res.isEmpty()){
+				
+				result.put("noAction",true);
+				for(Object db:res){
+					//System.out.println(db);
+					BasicDBObject object = (BasicDBObject) db;
+					object.get("fid");
+					
+				if(object.get("fid").toString().equals(uid.toString())){
+					
+					result.put("broken",object.get("broken"));
+					result.put("noAction",false);
+					break;
+				}
+					
+				}									
+			}
+			else{
+				result.put("noAction",true);
+				
+			}
+			
+		}
+		
+		
 		hmap.put("activity",output.results());
 
 		return hmap;
@@ -609,6 +684,27 @@ public class UserService {
 			activityCollection.updateById(activity.getId(), activity);
 		}
 		return hmap;
+	}
+	public void addStatus(ObjectId uid, String statusText) {
+		StatusDAO statusdao = new StatusDAO();
+		JacksonDBCollection<Status, String> statusCollection = statusdao.statusDAO();
+		Date date = new Date();
+		Status status = new Status();
+		status.setDate(date);
+		status.setStatusText(statusText);
+		status.setUid(uid);
+		WriteResult<Status, String> stat = statusCollection.insert(status);
+		status = stat.getSavedObject();
+		Activity activity = new Activity();
+		activity.setActivityId(new ObjectId(status.getId()));
+		activity.setComments(0);
+		activity.setDate(date);
+		activity.setHeartBreaks(0);
+		activity.setHearts(0);
+		activity.setType("status");
+		activity.setUid(uid);
+		activityCollection.insert(activity);
+		
 	}	
 }
 

@@ -24,28 +24,25 @@
 											</button>
 											
 											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartIncrease})">
-														
-												<i class="fa {{^heart}}fa-heart-o{{/heart}}{{#heart}}{{#broken}}fa fa-heart-o{{/broken}}{{^broken}}fa fa-heart{{/broken}}{{/heart}} text-danger"></i>
-	
-												
-												</button><button type="button" class="btn btn-secondary heartCount" data-container="body">{{#activity}}{{hearts}}{{/activity}} Heart </button>
-											</button>
-											
+											{{#if noAction}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{else}}
+											{{^broken}}
+											<i class="fa fa-heart text-danger"></i>
+											{{/broken}}
+											{{#if broken}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{/if}}
+											{{/if}}</button>
+												<button type="button" class="btn btn-secondary heartCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{#activity}}{{hearts}}{{/activity}} Heart </button>				
 											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartIncrease})">
-											{{#heart}} 
+											
 												{{#if broken}}
 												<i class="mdi mdi-heart-broken"></i>
 												{{else}}
 												<div data-icon="X" class="linea-icon linea-basic"></div>
 												{{/if}}
-											{{/heart}}
-											{{^heart}}
-												<div data-icon="X" class="linea-icon linea-basic"></div>
-											{{/heart}}
-												
-												
-												
-												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body">{{#activity}}{{heartBreaks}}{{/activity}} Heartbreak 
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{#activity}}{{heartBreaks}}{{/activity}} Heartbreak 
 											</button>
 											
 										</div>
@@ -72,28 +69,25 @@
 											</button>
 											
 											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartIncrease})">
-														
-												<i class="fa {{^heart}}fa-heart-o{{/heart}}{{#heart}}{{#broken}}fa fa-heart-o{{/broken}}{{^broken}}fa fa-heart{{/broken}}{{/heart}} text-danger"></i>
-	
-												
-												</button><button type="button" class="btn btn-secondary heartCount" data-container="body">{{#activity}}{{hearts}}{{/activity}} Heart </button>
-											</button>
-											
+											{{#if noAction}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{else}}
+											{{^broken}}
+											<i class="fa fa-heart text-danger"></i>
+											{{/broken}}
+											{{#if broken}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{/if}}
+											{{/if}}</button>
+												<button type="button" class="btn btn-secondary heartCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{#activity}}{{hearts}}{{/activity}} Heart </button>				
 											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartIncrease})">
-											{{#heart}} 
+											
 												{{#if broken}}
 												<i class="mdi mdi-heart-broken"></i>
 												{{else}}
 												<div data-icon="X" class="linea-icon linea-basic"></div>
 												{{/if}}
-											{{/heart}}
-											{{^heart}}
-												<div data-icon="X" class="linea-icon linea-basic"></div>
-											{{/heart}}
-												
-												
-												
-												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body">{{#activity}}{{heartBreaks}}{{/activity}} Heartbreak 
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{#activity}}{{heartBreaks}}{{/activity}} Heartbreak 
 											</button>
 											
 										</div>

@@ -265,7 +265,7 @@ function commentBox(data, extraInfo, response){
 			console.log(response)
 			//console.log("k = " , k , "v = ", v)	;
 						
-			$('.allcomments').prepend('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
+			$('.allcomments').append('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
 			});
 			
 			if($('.allcomments .showMore').length>0)
@@ -351,8 +351,23 @@ function commentBox(data, extraInfo, response){
 		}
 		}
 		}
-		function heartFriend(){
+		function heartFriend(data,extraInfo,response){
+		$.each(response.friendList, function(k, v){
+		console.log(v);
+		console.log(data);
+		$('.allfriends').append('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6></li>')	
+			});
+			
+			if($('.allfriends .showMore').length>0)
+			$('.allfriends .showMore').remove();
+			if(response.showMore){
+			$('.allfriends').append('<li class="list-group-item showMore" style="background-color:#E5E7EA;margin-bottom:5px"><a href="#" onclick="ajaxRequest(\'showcomments\',\'POST\', {activityId:\''+data.activityId+'\', skip:\''+response.skip+'\'},{dataType:\'json\',callback:heartFriend})">Show More</a></li>');
+			}
+	}
+	$('.close').click(function(){
+	
+	$('.allfriends').empty();
+	});
 		
-		}
 	
 </script>

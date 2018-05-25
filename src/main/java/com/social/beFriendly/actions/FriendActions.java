@@ -331,8 +331,16 @@ public class FriendActions extends HttpServlet {
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
 			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			String skipStr = request.getParameter("skip");
+			String broken = request.getParameter("broken");
+			int skip = 0;
+			int limit = 15;
+			if(skipStr!=null&&!skipStr.equals("")){
+				skip=Integer.parseInt(skipStr);
+			}
+			
 			FriendService friendService = new FriendService();
-			hmap.putAll(friendService.heartFriend(activityId));
+			hmap.putAll(friendService.heartFriend(activityId,skip,limit,Boolean.parseBoolean(broken)));
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(new Gson().toJson(hmap));
