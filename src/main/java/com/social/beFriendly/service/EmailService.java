@@ -7,6 +7,7 @@ import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 
 import com.mongodb.BasicDBObject;
+
 import com.social.beFriendly.DAO.EmailDAO;
 import com.social.beFriendly.DAO.UnsubscribeDAO;
 import com.social.beFriendly.model.Email;
@@ -54,6 +55,19 @@ public class EmailService {
 		unsubscribe.setEmails(email);
 		unsubscribe.setDate(date);
 		unsubscribeCollection.insert(unsubscribe);		
+	}
+	public String checkStatus(String recieverEmail, String username,String purpose ){
+		
+		
+		BasicDBObject query = new BasicDBObject();
+		query.put("recieverEmails", recieverEmail);
+		query.put("from", username);
+		query.put("purpose",purpose);
+		DBCursor<Email> cursor = emailCollection.find(query);
+		Email email = cursor.next();
+		return email.getStatus();
+
+
 	}
 
 }

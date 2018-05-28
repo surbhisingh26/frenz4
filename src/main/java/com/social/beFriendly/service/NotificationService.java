@@ -49,7 +49,7 @@ public class NotificationService {
 		DBCursor<Notification> cursor = notifyCollection.find(query).sort(sortQuery);
 		while(cursor.hasNext()){
 			Notification notification = cursor.next();
-			System.out.println("Notification ................. " + notification.getNotification());
+			
 			notifyList.add(notification);
 		}
 		hmap.put("count", count);

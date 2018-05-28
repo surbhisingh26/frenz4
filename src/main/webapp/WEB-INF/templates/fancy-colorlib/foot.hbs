@@ -61,7 +61,8 @@
 	<script src="material-lite/assets/plugins/dropzone-master/dist/dropzone.js"></script>
 	<script src="js/handlebars-latest.js"></script>
 	
-	
+	<script src="js/highcharts.js"></script>
+
 	<script>
 	$('.notification').click(function(){
 	var request = $.ajax({
@@ -370,4 +371,189 @@ function commentBox(data, extraInfo, response){
 	});
 		
 	
+</script>
+
+
+
+
+<script>
+var reference;
+		 function statusChangeCallback(response) {
+    console.log('statusChangeCallback');
+    console.log(response);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+	  reference='fb';
+      testAPI();
+	  var accessToken = response.authResponse.accessToken;
+    } else {
+      // The person is not logged into your app or we are unable to tell.
+     
+		reference='';
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+	  console.log(response);
+    });
+  }
+$(document).ready(function(){
+	
+
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1826749880963024',
+       // enable cookies to allow the server to access 
+       // cookies:true,                  // the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8' // use graph api version 2.8
+    });
+
+    // Now that we've initialized the JavaScript SDK, we call 
+    // FB.getLoginStatus().  This function gets the state of the
+    // person visiting this page and can return one of three states to
+    // the callback you provide.  They can be:
+    //
+    // 1. Logged into your app ('connected')
+    // 2. Logged into Facebook, but not your app ('not_authorized')
+    // 3. Not logged into Facebook and can't tell if they are logged into
+    //    your app or not.
+    //
+    // These three cases are handled in the callback function.
+
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+	  console.log(response);
+    });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  
+});
+	function testAPI() {
+		
+    console.log('Welcome!  Fetching your information.... ');
+	
+    FB.api('/me', {fields: 'first_name,last_name,name,email,gender,picture'},function(response) {
+      console.log('Successful login for: ' + response.name , "response ", response);
+      var id=response.id;
+	  var fname=response.first_name;
+	  var lname=response.last_name;
+	  var email=response.email;
+	  var gender=response.gender;
+	  var picUrl=response.picture.data.url
+	 
+	  console.log(response.email);
+	
+	// window.location = '/webProject1/register';
+	
+
+var request = $.ajax({
+	url: "signin?reference=fb&referenceId="+id,
+	method: "POST",
+	 
+	dataType: "json"
+	
+	
+	 });
+	request.done(function(response) {
+	  
+    console.log( "success ", response );
+  
+	if(response.register){
+$('#fname').val(fname);
+$('#lname').val(lname);
+$('#email').val(email);
+
+$('input[value='+gender+']').prop('checked',true);
+	$('#reference').val('fb');
+	$('#referenceId').val(id);
+	$('#picUrl').val(picUrl);
+	
+	if(window.location!="http://localhost:8080/beFriendly/register"){
+	window.location = 'register';
+	}
+	}
+	else
+		if(window.location=="http://localhost:8080/beFriendly/login")
+	window.location = '/beFriendly/friendactivity';
+
+	
+  })
+  request.fail(function(response) {
+    console.log( "error ", response );
+  })
+  request.always(function(response) {
+    console.log( "complete ", response );
+	
+  });
+ 
+
+});
+    }
+
+	function logout(){
+	
+	
+	
+		var status = FB.getLoginStatus()
+		
+		if(reference=='fb'){
+		
+		FB.logout(function(response) {
+	
+	var request = $.ajax({
+	url: "logout?reference="+reference,
+	
+	method: "POST"
+	 
+	
+	
+	 });
+	request.done(function(response){
+		if(reference=='fb')
+		window.location="/beFriendly/friendactivity";
+	console.log( "success ", response );
+	});
+	 });
+		}
+		else{
+		var request = $.ajax({
+	url: "logout",
+	
+	method: "POST"
+	 
+	
+	
+	 });
+	request.done(function(response){
+		if(reference=='fb')
+		window.location="/webProject1"
+	console.log( "success ", response );
+	});
+	 }
+  
+	}
+  
 </script>

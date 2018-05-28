@@ -6,6 +6,9 @@
 		
 			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
 				<form class="login100-form validate-form" action = "adduser">
+				<input type="hidden" id="reference" name="reference">
+				<input type="hidden" id="referenceId" name="referenceId">
+				<input type="hidden" id="picUrl" name="picUrl">
 					<span class="login100-form-title p-b-49">
 						Create New Account
 					</span>
@@ -31,7 +34,7 @@
 					
 					<div class="wrap-input100 validate-input m-b-23" data-validate = "Email is required">		
 				<span class="label-input100">Email</span>					
-						<input class="input100" type="email" name="email" placeholder="Email">
+						<input class="input100" type="email" name="email" placeholder="Email" id="email">
 						<span class="focus-input100" data-symbol="&#xf206;"></span>
 					</div>
 					
@@ -68,7 +71,7 @@
 
 						</div>-->
 						
-						<form>
+						
 					<span class="label-input100">Gender</span>
 					<div class="radio" >					
 						<label><input class="input100" type="radio" id="female" name="gender">Female</label>			
@@ -76,7 +79,7 @@
 					<div class="radio">
 						<label><input class="input100" type="radio" id="male" name="gender" >Male</label>							
 					</div>
-						</form>
+						
 							<p id="nan" style="color:red"></p>			
 					<div class="wrap-input100 validate-input m-b-23" data-validate="Mobile number is required">
 					<span class="label-input100">Mobile</span>

@@ -151,13 +151,14 @@ public class FriendService {
 			friendCollection.remove(query);
 
 	}
-	public List<User> getFriends(ObjectId uid) {
+	public List<User> getFriends(ObjectId uid,int limit) {
 		BasicDBObject query = new BasicDBObject();
 		UserService userservice = new UserService();
 		List<User> friendList = new ArrayList<User>();
 		query.put("uid", uid);
 		query.put("friends", true);
-		DBCursor<Friend> cursor = friendCollection.find(query);
+		
+		DBCursor<Friend> cursor = friendCollection.find(query).limit(limit);
 		while(cursor.hasNext()){
 			Friend friend = cursor.next();
 			System.out.println("Friends id in getFriends is " + friend.getFid());

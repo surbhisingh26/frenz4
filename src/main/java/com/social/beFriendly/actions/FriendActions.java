@@ -117,7 +117,7 @@ public class FriendActions extends HttpServlet {
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
-			List<User> friendList = friendService.getFriends(uid);
+			List<User> friendList = friendService.getFriends(uid,30);
 			System.out.println("................."+hmap);
 
 			hmap.put("friendList", friendList);

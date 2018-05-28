@@ -3,6 +3,7 @@ package com.social.beFriendly.actions;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,11 @@ import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.EmailService;
+import com.social.beFriendly.service.FriendService;
 import com.social.beFriendly.service.NotificationService;
 import com.social.beFriendly.service.UserService;
 import com.social.scframework.App.Utility;
+import com.social.scframework.highchart.HighChart;
 
 
 
@@ -232,8 +235,8 @@ public class UserActions extends HttpServlet {
 			}
 
 			else if(result.equals("Register First")){
-				//hmap.put("register", true);
-				//utility.getHbs(response,"registration",hmap);
+				hmap.put("register", true);
+				
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().write(new Gson().toJson(hmap));
@@ -257,7 +260,7 @@ public class UserActions extends HttpServlet {
 				response.getWriter().write(new Gson().toJson(hmap));
 				if(referenceId.equals("null")){
 
-					response.sendRedirect("dashboard");
+					response.sendRedirect("friendactivity");
 				}
 
 			}
@@ -279,9 +282,12 @@ public class UserActions extends HttpServlet {
 			hmap.putAll(getUserDetails(request, response));
 			UserService userService = new UserService();
 			uid = (ObjectId) hmap.get("uid");
-			System.out.println("DASHBOARD.......");
+			List<User> friendList = new ArrayList<User>();
 			hmap.putAll(userService.myActivity(uid));
-			System.out.println("DASHBOARD.......");
+			FriendService friendService = new FriendService();
+			friendList = friendService.getFriends(uid, 6);
+			hmap.put("friendList", friendList);
+			
 			utility.getHbs(response,"dashboard",hmap,templatePath);
 		} catch (ServletException e) {
 
@@ -295,7 +301,8 @@ public class UserActions extends HttpServlet {
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			hmap.putAll(getUserDetails(request, response));			
+			
 			utility.getHbs(response,"profile",hmap,templatePath);
 		} catch (ServletException e) {
 
@@ -320,7 +327,7 @@ public class UserActions extends HttpServlet {
 			//System.out.println(request.getContextPath());
 			//request.getRequestDispatcher("").forward(request, response);
 			if(reference==null)
-				response.sendRedirect("/beFriendly");
+				response.sendRedirect("login");
 			return;
 		}
 		catch(Exception e){
@@ -565,7 +572,7 @@ public class UserActions extends HttpServlet {
 			System.out.println("Broken..........." + broken);
 			hmap.putAll(userservice.heartIncrease(activityId,uid,broken));
 			//System.out.println("fid.......... " + fid);
-			if(fidStr!=null){
+			if(fidStr!=null&&!fidStr.equals(uid.toString())){
 				ObjectId fid = new ObjectId(fidStr);
 			NotificationService notiservice = new NotificationService();
 			String notification = null;
@@ -604,6 +611,62 @@ public class UserActions extends HttpServlet {
 		}
 	}
 	
+	public void gethighcharts(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			List<HighChart> highcharts = new ArrayList<HighChart>();
+			uid = (ObjectId) hmap.get("uid");
+			String fidStr = request.getParameter("fid");
+			
+			if(fidStr!=null){
+				ObjectId fid = new ObjectId(fidStr);
+				uid=fid;
+			}
+			UserService userservice = new UserService();
+			highcharts.add(userservice.requestpiechart(uid));
+			highcharts.add(userservice.stackedgraph(uid));
+
+			hmap.put("highcharts",highcharts);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void updateprofile(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+			UserService userService = new UserService();
+			userService.updateProfile(uid);
+			
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void points(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+
+			utility.getHbs(response,"points",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
 
 

@@ -3,6 +3,8 @@ package com.social.beFriendly.service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +21,36 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.beFriendly.DAO.ActivityDAO;
 import com.social.beFriendly.DAO.CommentDAO;
+import com.social.beFriendly.DAO.FriendDAO;
 import com.social.beFriendly.DAO.HeartDAO;
+import com.social.beFriendly.DAO.InvitationDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.StatusDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
 import com.social.beFriendly.model.Comment;
+import com.social.beFriendly.model.Friend;
 import com.social.beFriendly.model.Heart;
+import com.social.beFriendly.model.Invite;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.Status;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
+import com.social.scframework.highchart.Chart;
+import com.social.scframework.highchart.Column;
+import com.social.scframework.highchart.Data;
+import com.social.scframework.highchart.DataLabels;
+import com.social.scframework.highchart.HighChart;
+import com.social.scframework.highchart.Pie;
+import com.social.scframework.highchart.PlotOptions;
+import com.social.scframework.highchart.Series;
+import com.social.scframework.highchart.Title;
+import com.social.scframework.highchart.ToolTip;
+import com.social.scframework.highchart.XAxis;
+import com.social.scframework.highchart.YAxis;
+
+
 
 
 public class UserService {
@@ -85,51 +105,51 @@ public class UserService {
 
 		WriteResult<User, String> reg = userCollection.insert(registration);
 		registration = reg.getSavedObject();
-		//DBCollection collection = mongo.getCollection("invitation");
-		/*JacksonDBCollection<Invite, String> coll1 = JacksonDBCollection.wrap(collection,Invite.class, String.class);
+		InvitationDAO invitationdao = new InvitationDAO();
+		JacksonDBCollection<Invite, String> invitationCollection = invitationdao.invitationDAO();
 
 		NotificationService notificationservice = new NotificationService();
 		String link = "points";
-		Date Ndate = new Date();
+		
 		BasicDBObject query1 = new BasicDBObject();
 		query1.put("recieverEmail", email);
-		DBCursor<Invite> cursor1 = coll1.find(query1);
+		DBCursor<Invite> cursor1 = invitationCollection.find(query1);
 
 		while(cursor1.hasNext()){
 			Invite invite = cursor1.next();
 			String userId = invite.getSenderId();
 
-			User user = coll.findOneById(userId);
+			User user = userCollection.findOneById(userId);
 			EmailService emailservice = new EmailService();
-			String mailStatus = emailservice.checkStatus(email, user.getUsername(),"inviteToJoin");
+			String mailStatus = emailservice.checkStatus(email, user.getEmail(),"inviteToJoin");
 			if(mailStatus.equalsIgnoreCase("Sent")){
 				user.setPoints(user.getPoints()+50);
 				String userEmail = user.getEmail();
-				coll.updateById(userId, user);
-				String username = user.getName();
+				userCollection.updateById(userId, user);
+				
 				BasicDBObject query2 = new BasicDBObject();
 
 				query2.put("recieverEmail", userEmail);
-				DBCursor<Invite> cursor2 = coll1.find(query2);
+				DBCursor<Invite> cursor2 = invitationCollection.find(query2);
 				while(cursor2.hasNext()){
 					Invite invite1 = cursor2.next();
 					String secondaryUserId = invite1.getSenderId();
-					User user1 = coll.findOneById(secondaryUserId);
+					User user1 = userCollection.findOneById(secondaryUserId);
 					user1.setPoints(user1.getPoints()+10);
-					coll.updateById(secondaryUserId, user1);
-					coll1.remove(query2);
-					notificationservice.send(secondaryUserId,"Congratulation!!! You have earned 10 points reward on joining of "+registration.getName()+" invited by your friend "+username,link,Ndate);
+					userCollection.updateById(secondaryUserId, user1);
+					invitationCollection.remove(query2);
+					notificationservice.sendNotification(new ObjectId(secondaryUserId), "img/Referral.jpg", "Congratulation!!! You have earned 10 points reward on joining of "+registration.getName()+" invited by your friend ", link, "Referral points");
 				}
 
 				System.out.println("REGISTRATION ID....................."+ registration.getId());
 
-				notificationservice.send(userId,"Congratulation!!! You have earned 50 points reward on joining of "+registration.getName(),link,Ndate);
+				notificationservice.sendNotification(new ObjectId(userId), "img/Referral.jpg", "Congratulation!!! You have earned 50 points reward on joining of "+registration.getName(), link, "Referral points");
 			}
 		}
 
-		notificationservice.send(registration.getId(),"Welcome "+fname+" "+lname+"\n Congratulation!!! You have been rewarded by 50 points in your account",link,Ndate);
+		notificationservice.sendNotification(new ObjectId(registration.getId()), "img/logo-icon.png", "Welcome "+fname+" "+lname+"\n You have been rewarded by 50 points in your account", link, "Welcome");
 
-		 */
+		 
 
 		return true;
 	}
@@ -705,7 +725,283 @@ public class UserService {
 		activity.setUid(uid);
 		activityCollection.insert(activity);
 		
-	}	
+	}
+	public HighChart stackedgraph(ObjectId uid) {
+		
+		List<Data> Oaccept = new ArrayList<Data>();
+		List<Data> Ounresponded =new  ArrayList<Data>();
+		List<Data> Oreject =new  ArrayList<Data>();
+		List<Data> Iaccept =new  ArrayList<Data>();
+		List<Data> Iunresponded =new  ArrayList<Data>();
+		List<Data> Ireject =new  ArrayList<Data>();
+		
+		BasicDBObject request = new BasicDBObject();
+		request.put("uid", uid);
+		
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
+	
+		for(int i = 0;i<12;i++){
+			DBCursor<Friend> cursor1 = friendCollection.find(request);
+		
+		int oucount = 0;
+		int oacount = 0;
+		int orcount = 0;
+		int iucount = 0;
+		int iacount = 0;
+		int ircount = 0;
+		
+			while(cursor1.hasNext()){
+				Friend friend = cursor1.next();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(friend.getRequestDate());
+				int requestMonth = cal.get(Calendar.MONTH);
+				String status = friend.getStatus();
+				if(requestMonth==i){
+					if(status.equalsIgnoreCase("Request Sent")){
+						oucount += 1;
+						//graph.add(1);
+					}
+					else if(status.equalsIgnoreCase("Pending Request")){
+						iucount += 1;
+						//graph.add(1);
+					}
+					else if(friend.getResponseDate()!=null){
+						cal.setTime(friend.getResponseDate());
+						int responseMonth = cal.get(Calendar.MONTH);
+						System.out.println("Month..........." + requestMonth);
+						
+						if(status.equalsIgnoreCase("My Request Accepted")){
+							if(requestMonth!=responseMonth){
+								oucount += 1;
+								
+							}
+							oacount += 1;
+
+						}
+						else if(status.equalsIgnoreCase("My Request Rejected")){
+							orcount += 1;
+						}
+						
+						if(status.equalsIgnoreCase("I Accepted Request")){
+							if(requestMonth!=responseMonth){
+								iucount += 1;
+							}
+							iacount += 1;
+
+						}
+						else if(status.equalsIgnoreCase("I Rejected Request")){
+							ircount += 1;
+						}
+					}
+				}
+				
+			}
+			Data d = new Data();
+			d.setY(oacount);
+			Oaccept.add(d);
+			
+			d = new Data();
+			d.setY(oucount);
+			Ounresponded.add(d);			
+
+			d = new Data();
+			d.setY(orcount);
+			Oreject.add(d);
+			
+
+			d = new Data();
+			d.setY(iacount);
+			Iaccept.add(d);
+			
+			d = new Data();
+			d.setY(iucount);
+			Iunresponded.add(d);
+			
+			d = new Data();
+			d.setY(ircount);
+			Ireject.add(d);		
+		}
+
+		
+		Chart chart = new Chart();
+		chart.setType("column");
+		chart.setRenderTo("friendRequestsByMonth");
+		
+		Title title = new Title();
+		title.setText("Monthly record of making new friends");
+		
+		String[] list = {"jan","Feb","Mar", "Apr", "May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+		List<String> categories = new ArrayList<String>();
+		categories.addAll(Arrays.asList(list));
+		
+		XAxis xaxis = new XAxis();
+		xaxis.setCategories(categories);
+		
+		Title yTitle = new Title();
+		yTitle.setText("Total Requests");
+		YAxis yaxis = new YAxis();
+		yaxis.setAllowDecimals(false);
+		yaxis.setMin(0);
+		yaxis.setTitle(yTitle);
+		
+		ToolTip tooltip = new ToolTip();
+		tooltip.setFormatter("function(){return '<b>' + this.x + '</b><br/>' +this.series.name + ': ' + this.y + '<br/>' + 'Total: ' + this.point.stackTotal;}");
+		
+		Column column = new Column();
+		column.setStacking("normal");
+		PlotOptions plotoptions = new PlotOptions();
+		plotoptions.setColumn(column);
+		
+		Series iAccept = new Series();
+		iAccept.setName("I Accepted");
+		iAccept.setStack("Incoming requests");
+		iAccept.setData(Iaccept);
+		Series iReject = new Series();
+		iReject.setName("I Rejected");
+		iReject.setStack("Incoming requests");
+		iReject.setData(Ireject);
+		Series iUnresponded = new Series();
+		iUnresponded.setName("I did not respond to");
+		iUnresponded.setStack("Incoming requests");
+		iUnresponded.setData(Iunresponded);
+		Series oAccept = new Series();
+		oAccept.setName("My Accepted Requests");
+		oAccept.setStack("Outgoing requests");
+		oAccept.setData(Oaccept);
+		Series oReject = new Series();
+		oReject.setName("My Rejected Requests");
+		oReject.setStack("Outgoing requests");
+		oReject.setData(Oreject);
+		Series oUnresponded = new Series();
+		oUnresponded.setName("My unresponded requests");
+		oUnresponded.setStack("Outgoing requests");
+		oUnresponded.setData(Ounresponded);
+		
+		List<Series> series = new ArrayList<Series>();
+		series.add(iAccept);
+		series.add(iReject);
+		series.add(iUnresponded);
+		series.add(oAccept);
+		series.add(oReject);
+		series.add(oUnresponded);
+		
+		HighChart stackedChart = new HighChart();
+		stackedChart.setChart(chart);
+		stackedChart.setPlotOptions(plotoptions);
+		stackedChart.setSeries(series);
+		stackedChart.setTitle(title);
+		//stackedChart.setTooltip(tooltip);
+		stackedChart.setxAxis(xaxis);
+		stackedChart.setyAxis(yaxis);
+		
+		
+		return stackedChart;
+	}
+	public HighChart requestpiechart(ObjectId uid) {
+		
+		FriendDAO friendDAO = new FriendDAO();
+		
+		JacksonDBCollection<Friend, String> friendCollection = friendDAO.friendDAO();
+		BasicDBObject request = new BasicDBObject();
+		request.put("uid", uid);
+		request.put("status","I Accepted Request");
+		long iacount = friendCollection.getCount(request);
+		request.replace("status", "I Rejected Request");
+		long ircount = friendCollection.getCount(request);
+		System.out.println("I accepted..............." + iacount);
+		System.out.println("I rejected..............." + ircount);
+		request.replace("status", "Pending Request");
+		long iucount = friendCollection.getCount(request);
+		request.replace("status", "My Request Accepted");
+		long oacount = friendCollection.getCount(request);
+		request.replace("status", "My Request Rejected");
+		long orcount = friendCollection.getCount(request);
+		request.replace("status", "Request Sent");
+		long oucount = friendCollection.getCount(request);
+		
+		Data iAccept = new Data();
+		iAccept.setY(iacount);
+		iAccept.setName("I Accept");
+		iAccept.setSelected(true);
+		iAccept.setSliced(true);
+		
+		Data iReject = new Data();
+		iReject.setY(ircount);
+		iReject.setName("I Reject");
+		
+		Data iUnresponded = new Data();
+		iUnresponded.setY(iucount);
+		iUnresponded.setName("I did not respond");
+		
+		Data oAccept = new Data();
+		oAccept.setY(oacount);
+		oAccept.setName("Accepted");
+		
+		Data oReject = new Data();
+		oReject.setY(orcount);
+		oReject.setName("Rejected");
+		
+		Data oUnresponded = new Data();
+		oUnresponded.setY(oucount);
+		oUnresponded.setName("Unresponded");
+		List<Data> data = new ArrayList<Data>();
+		
+		data.add(iAccept);
+		data.add(iReject);
+		data.add(iUnresponded);
+		data.add(oAccept);
+		data.add(oReject);
+		data.add(oUnresponded);
+		
+		Series serie = new Series();
+		serie.setName("Friends");
+		serie.setData(data);
+		serie.setColorByPoint(true);
+		List<Series> series = new ArrayList<Series>();
+		series.add(serie);
+		
+		DataLabels datalabels = new DataLabels();
+		datalabels.setEnabled(false);
+		
+		Pie pie = new Pie();
+		pie.setAllowPointSelect(true);
+		pie.setCursor("pointer");
+		pie.setDataLabels(datalabels);
+		pie.setShowInLegend(true);
+		
+		
+		PlotOptions plotOptions = new PlotOptions();
+		plotOptions.setPie(pie);
+		
+		ToolTip tooltip = new ToolTip();
+		tooltip.setPointFormat("{series.name}: <b>{point.y}</b>");
+		
+		Title title = new Title();
+		title.setText("Total Friend Requests");
+		
+		Chart chart = new Chart();
+		chart.setRenderTo("requestStatusPiechart");
+		chart.setPlotBackgroundColor(null);
+		chart.setPlotBorderWidth(null);
+		chart.setPlotShadow(false);
+		chart.setType("pie");
+		
+		HighChart highcharts = new HighChart();
+		
+		highcharts.setChart(chart);
+		highcharts.setPlotOptions(plotOptions);
+		highcharts.setSeries(series);
+		highcharts.setTitle(title);
+		highcharts.setTooltip(tooltip);
+		
+		return highcharts;
+		
+	}
+	public void updateProfile(ObjectId uid) {
+		//User user = userCollection.findOneById(uid.toString());
+		
+	}
 }
 
 

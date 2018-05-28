@@ -31,12 +31,16 @@
                     <!-- .col -->
 					{{#friendList}}
                     <div class="col-md-6 col-lg-6 col-xlg-4">
-                        <div class="card card-body" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                        <div class="card card-block" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1rem;">
                             <div class="row">
-                                <div class="col-md-4 col-lg-3 text-center">
-                                    <a href="friendprofile?fid={{id}}"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
+                                <div class="col-md-5 col-lg-3">
+								 <div class="message-box contact-box">
+								<div class="message-widget contact-widget">
+                                    <a href="friendprofile?fid={{id}}"><div class="user-img"> <img src="{{imagepath}}" alt="user" class="img-circle" height="100px" style="margin-right:10px; width:100px;"> <span class="profile-status {{#if loggedIn}}online pull-right{{/if}}" style="position:absolute"></span> </div></a>
                                 </div>
-                                <div class="col-md-8 col-lg-9">
+								</div>
+								</div>
+                                <div class="col-md-7 col-lg-9" style="padding-left:40px">
                                     <h3 class="box-title m-b-0">{{name}}</h3> <small>Web Developer</small><br>
                                     <small>{{email}}</small>
 									<div>
