@@ -25,6 +25,7 @@ import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.FriendService;
 import com.social.beFriendly.service.NotificationService;
 import com.social.beFriendly.service.UserService;
+import com.social.scframework.App.Email;
 import com.social.scframework.App.Utility;
 import com.social.scframework.highchart.HighChart;
 
@@ -89,6 +90,9 @@ public class UserActions extends HttpServlet {
 		uid = new ObjectId(utility.getSession(request));
 		UserService userservice = new UserService();
 		User user = userservice.findOneById(uid.toString());
+		if(user.getuType().equals("Admin")){
+			hmap.put("admin", true);
+		}
 		hmap.put("loggedInUser", user);
 		hmap.put("uid", uid);
 		if(uid!=null)
@@ -653,7 +657,7 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	public void points(HttpServletRequest request, HttpServletResponse response){
+	public void earnpoints(HttpServletRequest request, HttpServletResponse response){
 		try {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
@@ -661,6 +665,59 @@ public class UserActions extends HttpServlet {
 			uid = (ObjectId) hmap.get("uid");
 
 			utility.getHbs(response,"points",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void invite(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+			String inviteEmail = request.getParameter("inviteEmail");
+			System.out.println(inviteEmail);
+			UserService userservice = new UserService();
+			String from = userservice.invite(uid,inviteEmail);
+			if(from==null){
+				String msg = "User with this email is already our member!!! Try another";
+				System.out.println(msg);
+				hmap.put("mailMessage", msg);
+				utility.getHbs(response,"points",hmap,templatePath);
+				//response.sendRedirect("points");
+				System.out.println("Message is .... "+hmap.get("mailMessage"));
+			}
+			else if (from.equalsIgnoreCase("Already Invited")){
+				String msg = "You already invited this user";
+				hmap.put("mailMessage", msg);
+				utility.getHbs(response,"points",hmap,templatePath);
+			}
+			else{
+				Email email = new Email();
+				EmailService emailservice = new EmailService();
+				Boolean subscription = emailservice.checkSubscription(inviteEmail);
+				String subject = "Get more connected with your friends..";
+				String purpose = "inviteToJoin";
+				String status = "Pending...";
+				System.out.println("Subscription for "+ inviteEmail +"...."+subscription);
+
+				String id = emailservice.email(from, purpose, inviteEmail, status, subject);
+				if(subscription==true){
+
+					email.send(inviteEmail, inviteEmail, subject, "invitationTemplate" , id, hmap);
+					status = "Sent";
+				}
+				else{
+					status="Failed";
+				}
+				emailservice.updateEmail(id,status);
+				String msg = "Mail Sent...";
+				hmap.put("mailMessage", msg);
+				utility.getHbs(response,"points",hmap,templatePath);
+				//response.sendRedirect("points");
+			}
 
 		}
 		catch(Exception e){

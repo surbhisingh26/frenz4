@@ -5740,6 +5740,35 @@ File: scss
         background: #ffb22b; }
       .mailbox .message-center a .user-img .offline {
         background: #ffb22b; }
+		
+		
+		.mailbox .message-center a .user-img-big {
+      width: 100px;
+      position: relative;
+      display: inline-block;
+      margin: 0 10px 15px 0; }
+      .mailbox .message-center a .user-img-big img {
+        width: 100%; }
+      .mailbox .message-center a .user-img-big .profile-status {
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        display: inline-block;
+        height: 10px;
+        left: 30px;
+        position: absolute;
+        top: 1px;
+        width: 10px; }
+      .mailbox .message-center a .user-img-big .online {
+        background: #26c6da; }
+      .mailbox .message-center a .user-img-big .busy {
+        background: #fc4b6c; }
+      .mailbox .message-center a .user-img-big .away {
+        background: #ffb22b; }
+      .mailbox .message-center a .user-img-big .offline {
+        background: #ffb22b; }
+		
+		
+		
     .mailbox .message-center a .mail-content {
       display: inline-block;
       width: 75%;
@@ -5956,6 +5985,35 @@ File: scss
         background: #ffb22b; }
       .message-box .message-widget a .user-img .offline {
         background: #ffb22b; }
+		
+		
+		.message-box .message-widget a .user-img-big {
+      width: 100px;
+      position: relative;
+      display: inline-block;
+      margin: 0 10px 15px 0; }
+      .message-box .message-widget a .user-img-big img {
+        width: 100%; }
+      .message-box .message-widget a .user-img-big .profile-status {
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        display: inline-block;
+        height: 10px;
+        left: 75px;
+        position: absolute;
+        top: 5px;
+        width: 10px; }
+      .message-box .message-widget a .user-img-big .online {
+        background: #26c6da; }
+      .message-box .message-widget a .user-img-big .busy {
+        background: #fc4b6c; }
+      .message-box .message-widget a .user-img-big .away {
+        background: #ffb22b; }
+      .message-box .message-widget a .user-img-big .offline {
+        background: #ffb22b; }
+		
+		
+		
     .message-box .message-widget a .mail-content {
       display: inline-block;
       width: 75%;

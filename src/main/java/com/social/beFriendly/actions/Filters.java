@@ -46,12 +46,12 @@ public class Filters implements Filter{
 				System.out.println("friend");
 			}
 
-			/*if(path.contains("passenger")||path.contains("Passenger"))	{		
-				request.getRequestDispatcher("/passengerpaths" + path).forward(request, response);
-				System.out.println("passenger");
+			else if(path.contains("list")||path.contains("List")||path.contains("table")||path.contains("Table")||path.contains("edit")||path.contains("delete")||path.contains("modify"))	{		
+				request.getRequestDispatcher("/adminpaths" + path).forward(request, response);
+				System.out.println("admin");
 			}
 
-			else if(path.contains("friend")||path.contains("Friend")){
+			/*else if(path.contains("friend")||path.contains("Friend")){
 
 				request.getRequestDispatcher("/friendpaths" + path).forward(request, response);
 				System.out.println("friend");

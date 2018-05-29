@@ -1,6 +1,13 @@
 package com.social.beFriendly.service;
 
+import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
@@ -12,6 +19,8 @@ import com.social.beFriendly.DAO.EmailDAO;
 import com.social.beFriendly.DAO.UnsubscribeDAO;
 import com.social.beFriendly.model.Email;
 import com.social.beFriendly.model.Unsubscribe;
+import com.social.scframework.App.Utility;
+
 
 public class EmailService {
 	EmailDAO emaildao = new EmailDAO();
@@ -68,6 +77,96 @@ public class EmailService {
 		return email.getStatus();
 
 
+	}
+	public Map<String,Object> emailtable(int limit, int skip,String ascending,String sortBy) {
+		
+		List<Email> emailList = new ArrayList<Email>();
+		Map<String,Object> hmap = new HashMap<String, Object>();
+		
+		long totalCount = emailCollection.getCount();
+		BasicDBObject query = new BasicDBObject();
+		if(ascending.equalsIgnoreCase("true")){
+			query.put(sortBy, -1);
+		}
+		else
+			query.put(sortBy, 1);
+		DBCursor<Email> cursor = emailCollection.find().skip(skip).limit(limit).sort(query);
+
+		
+		while(cursor.hasNext()){
+			Email email = cursor.next();
+			emailList.add(email);
+			System.out.println("FRom ............. " + email.getFrom());
+		}
+		hmap.put("total", totalCount);
+		hmap.put("rows", emailList);
+		return hmap;
+	}
+	public void updateEmail(String id,String recieverEmail, String subject, String purpose, String from, String date, String status,String view) {
+		try {	
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+			Date datetime = format.parse(date);
+			System.out.println("Date time is ............. " + datetime);
+			System.out.println(id);
+			
+			Email email = emailCollection.findOneById(id);
+			System.out.println(email);
+			email.setDate(datetime);
+			email.setFrom(from);
+			email.setPurpose(purpose);
+			email.setRecieverEmail(recieverEmail);
+			email.setStatus(status);
+			email.setViewCount(Integer.parseInt(view));
+			email.setSubject(subject);
+			emailCollection.updateById(id, email);
+
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+	}
+	public void deleteeEmail(String id) {
+		
+		System.out.println(id);
+		emailCollection.removeById(id);
+
+
+	}
+	public void editemail(String id, String field, String change) {
+		try {
+			
+			Email email = emailCollection.findOneById(id);
+			String fieldName = field.substring(0,1).toUpperCase() + field.substring(1);
+			System.out.println(fieldName);
+			
+			Class<?> classType = Email.class.getDeclaredField(field).getType();
+			
+			String	fieldType = classType.getSimpleName();
+			System.out.println(classType);
+			System.out.println(fieldType);
+
+			Object changes = change;
+			if(!fieldType.equalsIgnoreCase("String")){
+				Utility utility = new Utility();
+				changes = utility.changeType(fieldType.toString(), change);
+			}
+			System.out.println("Change is " + changes);
+			String callMethod = "set"+fieldName;
+
+			Method method = Email.class.getDeclaredMethod(callMethod,classType);
+
+			method.invoke(email,changes);
+
+			emailCollection.updateById(id, email);
+		} 
+		catch (Exception e) {
+
+			e.printStackTrace();
+		} 
 	}
 
 }

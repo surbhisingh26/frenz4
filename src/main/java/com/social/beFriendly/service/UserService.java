@@ -1,5 +1,6 @@
 package com.social.beFriendly.service;
 
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
 import com.social.beFriendly.model.Comment;
+import com.social.beFriendly.model.Email;
 import com.social.beFriendly.model.Friend;
 import com.social.beFriendly.model.Heart;
 import com.social.beFriendly.model.Invite;
@@ -37,6 +39,7 @@ import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.Status;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
+import com.social.scframework.App.Utility;
 import com.social.scframework.highchart.Chart;
 import com.social.scframework.highchart.Column;
 import com.social.scframework.highchart.Data;
@@ -117,15 +120,15 @@ public class UserService {
 
 		while(cursor1.hasNext()){
 			Invite invite = cursor1.next();
-			String userId = invite.getSenderId();
+			ObjectId userId = invite.getSenderId();
 
-			User user = userCollection.findOneById(userId);
+			User user = userCollection.findOneById(userId.toString());
 			EmailService emailservice = new EmailService();
 			String mailStatus = emailservice.checkStatus(email, user.getEmail(),"inviteToJoin");
 			if(mailStatus.equalsIgnoreCase("Sent")){
 				user.setPoints(user.getPoints()+50);
 				String userEmail = user.getEmail();
-				userCollection.updateById(userId, user);
+				userCollection.updateById(userId.toString(), user);
 				
 				BasicDBObject query2 = new BasicDBObject();
 
@@ -133,17 +136,17 @@ public class UserService {
 				DBCursor<Invite> cursor2 = invitationCollection.find(query2);
 				while(cursor2.hasNext()){
 					Invite invite1 = cursor2.next();
-					String secondaryUserId = invite1.getSenderId();
-					User user1 = userCollection.findOneById(secondaryUserId);
+					ObjectId secondaryUserId = invite1.getSenderId();
+					User user1 = userCollection.findOneById(secondaryUserId.toString());
 					user1.setPoints(user1.getPoints()+10);
-					userCollection.updateById(secondaryUserId, user1);
+					userCollection.updateById(secondaryUserId.toString(), user1);
 					invitationCollection.remove(query2);
-					notificationservice.sendNotification(new ObjectId(secondaryUserId), "img/Referral.jpg", "Congratulation!!! You have earned 10 points reward on joining of "+registration.getName()+" invited by your friend ", link, "Referral points");
+					notificationservice.sendNotification(secondaryUserId, "img/Referral.jpg", "Congratulation!!! You have earned 10 points reward on joining of "+registration.getName()+" invited by your friend ", link, "Referral points");
 				}
 
 				System.out.println("REGISTRATION ID....................."+ registration.getId());
 
-				notificationservice.sendNotification(new ObjectId(userId), "img/Referral.jpg", "Congratulation!!! You have earned 50 points reward on joining of "+registration.getName(), link, "Referral points");
+				notificationservice.sendNotification(userId, "img/Referral.jpg", "Congratulation!!! You have earned 50 points reward on joining of "+registration.getName(), link, "Referral points");
 			}
 		}
 
@@ -1002,6 +1005,125 @@ public class UserService {
 		//User user = userCollection.findOneById(uid.toString());
 		
 	}
+	public String invite(ObjectId uid,String recieverEmail){
+
+		User user = userCollection.findOneById(uid.toString());
+		BasicDBObject query = new BasicDBObject();
+		query.put("email", recieverEmail);
+		DBCursor<User> cursor = userCollection.find(query);
+		if(cursor.hasNext())
+			return null;
+
+
+		InvitationDAO invitationDAO = new InvitationDAO();
+	
+		JacksonDBCollection<Invite, String> invitationCollection = invitationDAO.invitationDAO();
+		query.put("senderId", uid);
+		DBCursor<Invite> cursor1 = invitationCollection.find(query);
+		if(cursor1.hasNext()){
+			return "Already invited";
+		}
+		Invite invite = new Invite();
+		invite.setSenderId(uid);
+		invite.setRecieverEmail(recieverEmail);
+		invitationCollection.insert(invite);
+
+
+
+		return user.getName();
+
+	}
+public Map<String, Object> usertable(int limit, int skip,String ascending,String sortBy) {
+		
+		List<User> userList = new ArrayList<User>();
+		Map<String,Object> hmap = new HashMap<String, Object>();
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection = userdao.userDAO();
+		long totalCount = userCollection.getCount();
+		BasicDBObject query = new BasicDBObject();
+		if(ascending.equalsIgnoreCase("true")){
+			query.put(sortBy, -1);
+		}
+		else
+			query.put(sortBy, 1);
+		DBCursor<User> cursor = userCollection.find().skip(skip).limit(limit).sort(query);
+
+		
+		while(cursor.hasNext()){
+			User user = cursor.next();
+			userList.add(user);
+			System.out.println("Name ............. " + user.getName());
+		}
+		hmap.put("total", totalCount);
+		hmap.put("rows", userList);
+		return hmap;
+	}
+public void updateUser(String id,String name, String email, String lastLoggedIn, String country) {
+	try {	
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+		Date datetime = format.parse(lastLoggedIn);
+		System.out.println("Date time is ............. " + datetime);
+		System.out.println(id);
+		
+		User user = userCollection.findOneById(id);
+		System.out.println(email);
+		user.setName(name,"","");;
+		user.setEmail(email);;
+		user.setLastLoggedInAt(datetime);;
+		
+		user.setCountry(country);;
+		
+		userCollection.updateById(id, user);
+
+
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+
+}
+public void deleteUser(String id) {
+	
+	System.out.println(id);
+	userCollection.removeById(id);
+
+
+}
+public void editUser(String id, String field, String change) {
+	try {
+		
+		User user = userCollection.findOneById(id);
+		String fieldName = field.substring(0,1).toUpperCase() + field.substring(1);
+		System.out.println(fieldName);
+		
+		Class<?> classType = Email.class.getDeclaredField(field).getType();
+		
+		String	fieldType = classType.getSimpleName();
+		System.out.println(classType);
+		System.out.println(fieldType);
+
+		Object changes = change;
+		if(!fieldType.equalsIgnoreCase("String")){
+			Utility utility = new Utility();
+			changes = utility.changeType(fieldType.toString(), change);
+		}
+		System.out.println("Change is " + changes);
+		String callMethod = "set"+fieldName;
+
+		Method method = Email.class.getDeclaredMethod(callMethod,classType);
+
+		method.invoke(user,changes);
+
+		userCollection.updateById(id, user);
+	} 
+	catch (Exception e) {
+
+		e.printStackTrace();
+	} 
+}
+
 }
 
 
