@@ -46,7 +46,7 @@ public class Filters implements Filter{
 				System.out.println("friend");
 			}
 
-			else if(path.contains("list")||path.contains("List")||path.contains("table")||path.contains("Table")||path.contains("edit")||path.contains("delete")||path.contains("modify"))	{		
+			else if(path.contains("list")||path.contains("List")||path.contains("table")||path.contains("Table")||path.contains("edit")||path.contains("delete")||path.contains("modify")||path.contains("sitesetting"))	{		
 				request.getRequestDispatcher("/adminpaths" + path).forward(request, response);
 				System.out.println("admin");
 			}

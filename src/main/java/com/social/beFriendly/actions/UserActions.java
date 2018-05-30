@@ -18,6 +18,7 @@ import javax.servlet.http.Part;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
+import com.social.beFriendly.model.Points;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
@@ -39,6 +40,7 @@ public class UserActions extends HttpServlet {
 	Utility utility = new Utility();
 	ObjectId uid;
 	String templatePath = "C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib";
+	public static final String SALT = "my-salt-text";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -140,7 +142,11 @@ public class UserActions extends HttpServlet {
 			String dob = request.getParameter("dob");
 			String mobile =request.getParameter("mobile");
 
-
+			String saltedPassword = SALT + password;
+			String hashedPassword = utility.generateHash(saltedPassword);
+			
+			
+			
 			String reference = request.getParameter("reference");
 			if(reference==null)
 				reference = "No reference";
@@ -166,7 +172,7 @@ public class UserActions extends HttpServlet {
 				filePath = File.separator +"images/beFriendlyimages" + File.separator + "default.jpg";
 
 			UserService rs = new UserService();
-			Boolean result = rs.registerUser(fname, lname, mname,country,city,mobile,password,gender,dob,bgcolor,filePath,email,reference,referenceId);
+			Boolean result = rs.registerUser(fname, lname, mname,country,city,mobile,hashedPassword,gender,dob,bgcolor,filePath,email,reference,referenceId);
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			if(result == false){
 
@@ -217,8 +223,13 @@ public class UserActions extends HttpServlet {
 				referenceId="null";
 			System.out.println("reference is "+reference);
 			System.out.println("ref Id is "+referenceId);
+			
+			String saltedPassword = SALT + password;
+			String hashedPassword = utility.generateHash(saltedPassword);
+			
+			
 			UserService userservice = new UserService();
-			String result = userservice.checkValid(email,password,reference,referenceId);
+			String result = userservice.checkValid(email,hashedPassword,reference,referenceId);
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			//System.out.println(request.getParameter("firstname"));
 			System.out.println(result);
@@ -663,7 +674,9 @@ public class UserActions extends HttpServlet {
 			hmap.putAll(getUserDetails(request, response));
 			
 			uid = (ObjectId) hmap.get("uid");
-
+			UserService userService = new UserService();
+			List<Points> pointsList = userService.getPoints(uid);
+			hmap.put("pointsList", pointsList);
 			utility.getHbs(response,"points",hmap,templatePath);
 
 		}
@@ -719,6 +732,89 @@ public class UserActions extends HttpServlet {
 				//response.sendRedirect("points");
 			}
 
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void settings(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+			
+			utility.getHbs(response,"settings",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void changepassword(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+			String currentPass = request.getParameter("currentPass");
+			String newPass = request.getParameter("newPass");
+			String confirmPass = request.getParameter("confirmPass");
+			
+			String result = null;
+			if(!newPass.equals(confirmPass)){
+				result = "Not Matched";
+			}			
+			else{
+				String saltedPassword = SALT + currentPass;
+				String hashedCurrentPassword = utility.generateHash(saltedPassword);
+				
+				String saltedPassword1 = SALT + newPass;
+				String hashedNewPassword = utility.generateHash(saltedPassword1);
+				
+			UserService userService = new UserService();
+			result = userService.changePassword(hashedCurrentPassword,hashedNewPassword,uid);
+			hmap.put("result", result);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+			}
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void googlemap(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+			
+			utility.getHbs(response,"google_map",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void showmap(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			
+			uid = (ObjectId) hmap.get("uid");
+			
+			uid = (ObjectId) hmap.get("uid");
+			FriendService friendService = new FriendService();
+			List<User> friendList = friendService.getFriends(uid,30);
+			hmap.put("friendList", friendList);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			
+				response.getWriter().write(new Gson().toJson(hmap));
 		}
 		catch(Exception e){
 			e.printStackTrace();

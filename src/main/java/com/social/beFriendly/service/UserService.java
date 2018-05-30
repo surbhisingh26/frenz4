@@ -25,6 +25,8 @@ import com.social.beFriendly.DAO.CommentDAO;
 import com.social.beFriendly.DAO.FriendDAO;
 import com.social.beFriendly.DAO.HeartDAO;
 import com.social.beFriendly.DAO.InvitationDAO;
+import com.social.beFriendly.DAO.PointDAO;
+import com.social.beFriendly.DAO.PointSettingsDAO;
 import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.StatusDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
@@ -35,6 +37,8 @@ import com.social.beFriendly.model.Email;
 import com.social.beFriendly.model.Friend;
 import com.social.beFriendly.model.Heart;
 import com.social.beFriendly.model.Invite;
+import com.social.beFriendly.model.PointSettings;
+import com.social.beFriendly.model.Points;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.Status;
 import com.social.beFriendly.model.UploadPic;
@@ -117,11 +121,14 @@ public class UserService {
 		BasicDBObject query1 = new BasicDBObject();
 		query1.put("recieverEmail", email);
 		DBCursor<Invite> cursor1 = invitationCollection.find(query1);
+		
+		PointDAO pointdao = new PointDAO();
+		JacksonDBCollection<Points, String> pointCollection = pointdao.pointDAO();
 
 		while(cursor1.hasNext()){
 			Invite invite = cursor1.next();
 			ObjectId userId = invite.getSenderId();
-
+		
 			User user = userCollection.findOneById(userId.toString());
 			EmailService emailservice = new EmailService();
 			String mailStatus = emailservice.checkStatus(email, user.getEmail(),"inviteToJoin");
@@ -142,14 +149,32 @@ public class UserService {
 					userCollection.updateById(secondaryUserId.toString(), user1);
 					invitationCollection.remove(query2);
 					notificationservice.sendNotification(secondaryUserId, "img/Referral.jpg", "Congratulation!!! You have earned 10 points reward on joining of "+registration.getName()+" invited by your friend ", link, "Referral points");
+					
+					Points points = new Points();
+					points.setDate(date);
+					points.setPointReason("For joining of " + fname + " " + lname);
+					points.setUid(secondaryUserId);
+					points.setPointsEarn(10);
+					pointCollection.insert(points);
 				}
+				Points points = new Points();
+				points.setDate(date);
+				points.setPointReason("For joining of " + fname + " " + lname);
+				points.setUid(userId);
+				points.setPointsEarn(50);
+				pointCollection.insert(points);
 
 				System.out.println("REGISTRATION ID....................."+ registration.getId());
 
 				notificationservice.sendNotification(userId, "img/Referral.jpg", "Congratulation!!! You have earned 50 points reward on joining of "+registration.getName(), link, "Referral points");
 			}
 		}
-
+		Points points = new Points();
+		points.setDate(date);
+		points.setPointReason("To join our website");
+		points.setUid(new ObjectId(registration.getId()));
+		points.setPointsEarn(50);
+		pointCollection.insert(points);
 		notificationservice.sendNotification(new ObjectId(registration.getId()), "img/logo-icon.png", "Welcome "+fname+" "+lname+"\n You have been rewarded by 50 points in your account", link, "Welcome");
 
 		 
@@ -1037,8 +1062,7 @@ public Map<String, Object> usertable(int limit, int skip,String ascending,String
 		
 		List<User> userList = new ArrayList<User>();
 		Map<String,Object> hmap = new HashMap<String, Object>();
-		UserDAO userdao = new UserDAO();
-		JacksonDBCollection<User, String> userCollection = userdao.userDAO();
+		
 		long totalCount = userCollection.getCount();
 		BasicDBObject query = new BasicDBObject();
 		if(ascending.equalsIgnoreCase("true")){
@@ -1123,7 +1147,94 @@ public void editUser(String id, String field, String change) {
 		e.printStackTrace();
 	} 
 }
+public List<Points> getPoints(ObjectId uid) {
+	PointDAO pointdao = new PointDAO();
+	JacksonDBCollection<Points, String> pointCollection = pointdao.pointDAO();
+	List<Points> pointList = new ArrayList<Points>();
+	BasicDBObject query = new BasicDBObject();
+	query.put("uid", uid);
+	DBCursor<Points> cursor = pointCollection.find(query);
+	while(cursor.hasNext()){
+		Points points = cursor.next();
+		pointList.add(points);
+	}
+	return pointList;
+}
+public Map<String,Object> referraltable(int limit, int skip, String ascending, String sortBy) {
+	List<Object> referralList = new ArrayList<Object>();
+	Map<String,Object> hmap = new HashMap<String, Object>();
+	PointDAO pointdao = new PointDAO();
+	//JacksonDBCollection<Points, String> pointCollection = pointdao.pointDAO();
+	//long totalCount = pointCollection.getCount();
+	int sortOrder;
+	if(ascending.equalsIgnoreCase("true")){
+		sortOrder = -1;
+	}
+	else
+		sortOrder = 1;
+	referralList = pointdao.singleAggregation("user",sortOrder,limit,skip,sortBy);
+	
+	//hmap.put("total", totalCount);
+	hmap.put("rows", referralList);
+	return hmap;
 
 }
+public void saveSiteSettings(String type, String adminName, int points, Date date) {
+	
+	PointSettingsDAO settingsdao= new PointSettingsDAO();
+	JacksonDBCollection<PointSettings, String> pointsettingCollection = settingsdao.pointSettingsDAO();
+	PointSettings pointSettings = new PointSettings();
+	pointSettings.setAdminName(adminName);
+	pointSettings.setDate(date);
+	pointSettings.setPoints(points);
+	pointSettings.setType(type);
+	pointsettingCollection.insert(pointSettings);
+	
+}
+public Map<String,Object> getLatestPoints() {
+	Map<String,Object> hmap = new HashMap<String, Object>();
+	PointSettingsDAO settingsdao= new PointSettingsDAO();
+	int friendPoint = 0;
+	int fofPoint = 0;
+	int memberPoint = 0;
+	JacksonDBCollection<PointSettings, String> pointsettingCollection = settingsdao.pointSettingsDAO();
+	BasicDBObject query = new BasicDBObject();
+	query.put("type", "friendPoint");
+	BasicDBObject sort = new BasicDBObject();
+	sort.put("date", -1);
+	DBCursor<PointSettings> cursor = pointsettingCollection.find(query).sort(sort).limit(1);
+	if(cursor.hasNext()){
+		PointSettings pointSettings = cursor.next();
+		friendPoint = pointSettings.getPoints();
+	}
+	query.replace("type", "fofPoint");
+	DBCursor<PointSettings> cursor1 = pointsettingCollection.find(query).sort(sort).limit(1);
+	if(cursor1.hasNext()){
+		PointSettings pointSettings = cursor1.next();
+		fofPoint = pointSettings.getPoints();
+	}
+	query.put("type", "friendPoint");
+	DBCursor<PointSettings> cursor2 = pointsettingCollection.find(query).sort(sort).limit(1);
+	if(cursor2.hasNext()){
+		PointSettings pointSettings = cursor2.next();
+		memberPoint = pointSettings.getPoints();
+	}
+	hmap.put("friendPoint", friendPoint);
+	hmap.put("fofPoint", fofPoint);
+	hmap.put("memberPoint", memberPoint);
+	return hmap;
+}
+public String changePassword(String currentPass, String newPass, ObjectId uid) {
+	
+	User user = userCollection.findOneById(uid.toString());
+	String oldPass = user.getPassword();
+	if(!oldPass.equals(currentPass)){
+		return "wrong";
+	}
+	
+	user.setPassword(newPass);
+	userCollection.updateById(uid.toString(),user);
+	return "changed";
+}
 
-
+}
