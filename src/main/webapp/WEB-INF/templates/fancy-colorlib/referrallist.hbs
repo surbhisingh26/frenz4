@@ -1,0 +1,240 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+			<div class="card">
+	<div class="card-body text-center" style="padding:30px">
+<h1  style="text-align:center;color:black">Referral History</h1>
+ <div id="toolbar">
+        <button id="remove" class="btn btn-danger" disabled>
+            <i class="fa fa-remove"></i> Delete
+        </button>
+    </div>
+		 <table id="table" class="dataTables_wrapper"
+           data-toolbar="#toolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="false"
+           data-show-columns="true"
+           data-show-export="true"
+           data-detail-view="false"
+           
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[1, 10, 20, 30, ALL]"
+           data-page-size="10"
+		   data-side-pagination="server"
+           data-show-footer="false"
+		   data-url="referraltable"
+           data-response-handler="responseHandler">
+		   <!--data-side-pagination="server"
+		   data-detail-formatter="detailFormatter"-->
+           
+    </table>
+		</div>
+		</div>
+		</div>
+	
+
+
+
+
+{{>foot}}
+
+<script>
+    var $table = $('#table'),
+        $remove = $('#remove'),
+        selections = [];
+    function initTable() {
+	
+	
+        $table.bootstrapTable({
+            height: getHeight(),
+			
+            columns: [
+                 {
+                        title: 'User Name',
+                        field: 'user',						
+                        align: 'left',
+                        valign: 'middle',
+                        sortable: true,
+						formatter:'usernameFormatter'
+                      
+                    },
+					{
+                        title: 'User Email',
+                        field: 'user',
+                        
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+						formatter:'useremailFormatter'
+                    
+                    },
+					{
+                        title: 'Reason',
+                        field: 'pointReason',
+                       
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                   
+                    },
+					{
+                        title: 'Earn',
+                        field: 'pointsEarn',
+                        
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                  
+                    },
+					{
+                        title: 'Date',
+                        field: 'date',
+                       type:'combodate',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+												   
+								   
+                    }
+            ]
+			
+        });
+		
+	
+		
+        // sometimes footer render error.
+        setTimeout(function () {
+		console.log("setTimeout");
+            $table.bootstrapTable('resetView');
+        }, 200);
+        $table.on('check.bs.table uncheck.bs.table ' +
+                'check-all.bs.table uncheck-all.bs.table', function () {
+				console.log("table.on1");
+            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+            // save your data, here just save the current page
+            selections = getIdSelections();
+            // push or splice the selections if you want to save all data selections
+        });
+        $table.on('expand-row.bs.table', function (e, index, row, $detail) {
+		console.log("table.on2");
+            if (index % 2 == 1) {
+                $detail.html('Loading from ajax request...');
+                $.get('LICENSE', function (res) {
+				console.log(res);
+                    $detail.html(res.replace(/\n/g, '<br>'));
+                });
+            }
+        });
+        $table.on('all.bs.table', function (e, name, args) {
+		console.log("table.on3");
+            console.log(name, args);
+        });
+		
+		
+        
+        $(window).resize(function () {
+		console.log("window.resize");
+            $table.bootstrapTable('resetView', {
+                height: getHeight()
+            });
+        });
+		
+		
+    }
+    
+    function responseHandler(res) {
+	console.log("responseHandler");
+	console.log(res);
+       
+        return res;
+    }
+   
+	
+	function usernameFormatter(value, row, index, field){
+	
+	return value[0].name;
+	
+	}
+	function useremailFormatter(value, row, index, field){
+	
+	return value[0].email;
+	
+	}
+	
+    function getHeight() {
+        return $(window).height() - $('h1').outerHeight(true);
+    }
+    $(function () {
+	console.log("scripts");
+        var scripts = [
+                location.search.substring(1) || 
+                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js',
+				'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/export/bootstrap-table-export.js',
+                'http://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/editable/bootstrap-table-editable.js',
+                
+				
+            ],
+            eachSeries = function (arr, iterator, callback) {
+			console.log("eachSeries");
+                callback = callback || function () {};
+                if (!arr.length) {
+                    return callback();
+                }
+                var completed = 0;
+                var iterate = function () {
+				console.log("iterate");
+                    iterator(arr[completed], function (err) {
+                        if (err) {
+                            callback(err);
+                            callback = function () {};
+                        }
+                        else {
+                            completed += 1;
+                            if (completed >= arr.length) {
+                                callback(null);
+                            }
+                            else {
+                                iterate();
+                            }
+                        }
+                    });
+                };
+                iterate();
+            };
+        eachSeries(scripts, getScript, initTable);
+    });
+    function getScript(url, callback) {
+	console.log("getScript");
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = url;
+        var done = false;
+        // Attach handlers for all browsers
+        script.onload = script.onreadystatechange = function() {
+            if (!done && (!this.readyState ||
+                    this.readyState == 'loaded' || this.readyState == 'complete')) {
+                done = true;
+                if (callback)
+                    callback();
+                // Handle memory leak in IE
+                script.onload = script.onreadystatechange = null;
+            }
+        };
+        head.appendChild(script);
+        // We handle everything using the script element injection
+        return undefined;
+    }
+</script>
+
+
+{{>end}}

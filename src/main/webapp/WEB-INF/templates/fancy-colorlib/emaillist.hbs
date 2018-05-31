@@ -1,0 +1,467 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+			<div class="card">
+	<div class="card-body text-center" style="padding:30px">
+<h1  style="text-align:center;color:black">Email History</h1>
+ <div id="toolbar">
+        <button id="remove" class="btn btn-danger" disabled>
+            <i class="fa fa-remove"></i> Delete
+        </button>
+    </div>
+		 <table id="table" class="dataTables_wrapper"
+           data-toolbar="#toolbar"
+           data-search="true"
+           data-show-refresh="true"
+           data-show-toggle="false"
+           data-show-columns="true"
+           data-show-export="true"
+           data-detail-view="false"
+           
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-id-field="id"
+           data-page-list="[1, 10, 20, 30, ALL]"
+           data-page-size="10"
+		   data-side-pagination="server"
+           data-show-footer="false"
+		   data-url="emailtable"
+           data-response-handler="responseHandler">
+		   <!--data-side-pagination="server"
+		   data-detail-formatter="detailFormatter"-->
+           
+    </table>
+	
+		
+		<div class="modal fade" id="emailModal" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="background-color: #323232;color:white">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h2>Edit Email</h2>
+					</div>
+					<div class="modal-body" style="background-color: white;">
+						<form action="modifyemail">
+							<div class = "form-group" method="post">
+							<input type="hidden" id="id" name="id">
+								<label>Reciever Email</label>
+								<input type="text" class="form-control" name="recieverEmail">
+								<label>Subject</label>
+								<input type="text" class="form-control" name="subject">
+								<label>Purpose</label>
+								<input type="text" class="form-control" name="purpose">
+								<label>Mail from</label>
+								<input type="text" class="form-control" name="from">
+								<label>Date</label>
+								<input type="datetime-local" class="form-control" name = "date">
+								<label>Status</label>
+								
+								<select class="form-control" name="status">
+								<option>Sent</option>
+								<option>Failed</option>
+								<option>Pending</option>
+								</select>
+								
+
+								<label>View</label>
+								<input type="number" min= "0" class="form-control" name="viewCount">
+								<button type="submit" class="btn btn-default" value="Update" style="margin-top:20px">Update</button>
+								
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		</div>
+		</div>
+	
+
+
+
+
+{{>foot}}
+
+<script>
+    var $table = $('#table'),
+        $remove = $('#remove'),
+        selections = [];
+    function initTable() {
+	console.log("initTable");
+	
+        $table.bootstrapTable({
+            height: getHeight(),
+			
+            columns: [
+                 {
+                        field: 'state',
+                        checkbox: true,
+                       
+                        align: 'center',
+                        valign: 'middle'
+                    },{
+                        title: 'Reciever\'s Email',
+                        field: 'recieverEmail',
+                       
+                        align: 'left',
+                        valign: 'middle',
+                        sortable: true
+                      
+                    },
+					{
+                        title: 'Mail subject',
+                        field: 'subject',
+                        
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                    
+                    },
+					{
+                        title: 'Mail Purpose',
+                        field: 'purpose',
+                       
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                   
+                    },
+					{
+                        title: 'Mail from',
+                        field: 'from',
+                        
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true
+                  
+                    },
+					{
+                        title: 'Date',
+                        field: 'date',
+                       type:'combodate',
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+						//editable: {
+						//type:'combodate',
+						//method: "POST",
+						//url: "editemail",
+						///format : 'MMM D,YYYY HH:mm:ss',
+						//viewformat : 'MMM D,YYYY HH:mm:ss',
+						//inputclass : "datepick",
+						//template:"D MMM YYYY  HH:mm:ss",
+						//emptytext: '...',
+						
+						//combodate:{
+						//	showbuttons: true,
+						//	roundTime: false,
+						//	smartDays: true,
+						//	minuteStep: 1,
+						//	maxYear:(new Date()).getFullYear()
+							//		}     
+        
+						
+						//		}	  
+								   
+								   
+                    },{
+                        title: 'Status',
+                        field: 'status',
+                        
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+						
+					//	editable: {
+					//		type:'select',
+					// mode: 'inline',
+					//		source: [
+					//			{value: 'Sent', text: 'Sent'},
+						//		{value: 'Pending', text: 'Pending'},
+						//		{value: 'Failed', text: 'Failed'}
+						//			],
+						//	method: "POST",
+						//	url: "editemail",
+			
+					//		}			
+                    },{
+                        title: 'View',
+                        field: 'viewCount',
+                        
+                        align: 'center',
+                        valign: 'middle',
+                        sortable: true,
+                    // editable: {
+					 //mode: 'inline',
+					//		type:'number',
+								
+					//			min:'0',
+						//		method: "POST",
+                       //            url: "editemail"
+                      //            
+						//	}
+                    },
+					{
+					title: 'Actions',
+					align: 'center',
+					valign: 'middle',
+					events: operateEvents,
+                        formatter: operateFormatter
+					
+					}
+            ]
+			
+        });
+		
+	
+		
+        // sometimes footer render error.
+        setTimeout(function () {
+		console.log("setTimeout");
+            $table.bootstrapTable('resetView');
+        }, 200);
+        $table.on('check.bs.table uncheck.bs.table ' +
+                'check-all.bs.table uncheck-all.bs.table', function () {
+				console.log("table.on1");
+            $remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+            // save your data, here just save the current page
+            selections = getIdSelections();
+            // push or splice the selections if you want to save all data selections
+        });
+        $table.on('expand-row.bs.table', function (e, index, row, $detail) {
+		console.log("table.on2");
+            if (index % 2 == 1) {
+                $detail.html('Loading from ajax request...');
+                $.get('LICENSE', function (res) {
+				console.log(res);
+                    $detail.html(res.replace(/\n/g, '<br>'));
+                });
+            }
+        });
+        $table.on('all.bs.table', function (e, name, args) {
+		console.log("table.on3");
+            console.log(name, args);
+        });
+		
+		
+		
+		/*$table.on('editable-shown.bs.table', function (e, field, row,$element) {
+		console.log("table.on3");
+		
+           if(field=='status'){
+           $('.editable-input input').replaceWith('<form><select class="form-control statusselect" style="margin-bottom:5px"><option>Sent</option><option>Failed</option><option>Pending</option></select></form>');
+		   
+		   $('.statusselect').val(row.status);
+		   }
+		 else if(field=='date'){
+		 $('.editable-input input').replaceWith('<form><input type="datetime-local" class="form-control" id="datetime" style="margin-bottom:5px"></form>')
+		 $('#datetime').val(moment(row.date).format('YYYY-MM-DDTHH:mm'));
+		 }
+		 
+		 if(field=='viewCount'){
+		 $('.editable-input input').css('margin-bottom','5px');
+		 $('#view').val(row.viewCount);
+		 }
+			//window.location.href = "editemail";
+        });
+		
+		/*$table.on('editable-hidden.bs.table', function (e, field, row, old, $element) {
+		console.log("table.on3");
+            alert(field+old+row.recieverEmail+$element);
+			console.log(row)
+			console.log(old)
+			console.log(field)
+			console.log($element)
+			//window.location.href = "editemail";
+			
+        });*/
+		
+		
+		
+		/*editor.on( 'edit', function ( e, row, data ) {
+    alert( 'New row added' );
+} );*/
+        $remove.click(function () {
+		console.log("remove.click");
+            var ids = getIdSelections();
+            $table.bootstrapTable('remove', {
+                field: 'id',
+                values: ids
+            });
+			alert(ids);
+			window.location.href="deletemanyemail?ids="+ids;
+            $remove.prop('disabled', true);
+        });
+        $(window).resize(function () {
+		console.log("window.resize");
+            $table.bootstrapTable('resetView', {
+                height: getHeight()
+            });
+        });
+		
+		
+    }
+    function getIdSelections() {
+	console.log("getIdSelections");
+        return $.map($table.bootstrapTable('getSelections'), function (row) {
+		
+            return row.id
+        });
+    }
+    function responseHandler(res) {
+	console.log("responseHandler");
+	console.log(res);
+       
+        return res;
+    }
+   /* function detailFormatter(index, row) {
+        var html = [];
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }*/
+    function operateFormatter(value, row, index) {
+	console.log("operateFormatter");
+        return [
+            '<a class="edit" href="javascript:void(0)" title="Edit">',
+            '<i class="fa fa-pencil"></i>',
+            '</a>  ',
+            '<a class="remove" href="deleteemail?id='+row.id+'" title="Remove">',
+            '<i class="fa fa-remove"></i>',
+            '</a>'
+        ].join('');
+    }
+	
+    window.operateEvents = {
+        'click .edit': function (e, value, row, index,url) {
+		//console.log(moment(row.date).format(MM/DD/YY HH:mm));
+          //  alert('You click edit action, row: ' + JSON.stringify(row.recieverEmail));
+			//function openInParent(url) {
+			 $('#emailModal').modal();
+			$.each(row,function(k,v){
+			
+			
+			$('#emailModal input[name='+k+']').val(v);
+			$('#emailModal select[name='+k+']').val(v);
+			if(moment(v,'MMM DD, YYYY HH:mm:ss').isValid()){
+			date = moment(row.date).format('YYYY-MM-DDTHH:mm');
+			$('#emailModal input[name=date]').val(date);
+			}
+			console.log(k ,v);
+			});
+        },
+        'click .remove': function (e, value, row, index) {
+            $table.bootstrapTable('remove', {
+                field: 'id',
+                values: [row.id]
+            });
+			
+        }	
+		
+    };
+	//$('#emailModal').on('show.bs.modal', function (e) {
+	//alert(res);
+  // $("#email").val();
+//})
+	//}
+  /*  function totalTextFormatter(data) {
+	console.log("totalTextFormatter");
+	
+        return 'Total';
+    }
+    function totalNameFormatter(data) {
+        return data.length;
+    }
+    function totalPriceFormatter(data) {
+        var total = 0;
+        $.each(data, function (i, row) {
+            total += +(row.price.substring(1));
+        });
+        return '$' + total;
+    }*/
+	function myEditor(){
+	alert("g");
+	}
+	function dateFormatter(data){
+	alert(data);
+	
+	}
+	function statusFormat(data){
+	alert(data);
+	}
+    function getHeight() {
+        return $(window).height() - $('h1').outerHeight(true);
+    }
+    $(function () {
+	console.log("scripts");
+        var scripts = [
+                location.search.substring(1) || 
+                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.js',
+				'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/export/bootstrap-table-export.js',
+                'http://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/extensions/editable/bootstrap-table-editable.js',
+                
+				
+            ],
+            eachSeries = function (arr, iterator, callback) {
+			console.log("eachSeries");
+                callback = callback || function () {};
+                if (!arr.length) {
+                    return callback();
+                }
+                var completed = 0;
+                var iterate = function () {
+				console.log("iterate");
+                    iterator(arr[completed], function (err) {
+                        if (err) {
+                            callback(err);
+                            callback = function () {};
+                        }
+                        else {
+                            completed += 1;
+                            if (completed >= arr.length) {
+                                callback(null);
+                            }
+                            else {
+                                iterate();
+                            }
+                        }
+                    });
+                };
+                iterate();
+            };
+        eachSeries(scripts, getScript, initTable);
+    });
+    function getScript(url, callback) {
+	console.log("getScript");
+        var head = document.getElementsByTagName('head')[0];
+        var script = document.createElement('script');
+        script.src = url;
+        var done = false;
+        // Attach handlers for all browsers
+        script.onload = script.onreadystatechange = function() {
+            if (!done && (!this.readyState ||
+                    this.readyState == 'loaded' || this.readyState == 'complete')) {
+                done = true;
+                if (callback)
+                    callback();
+                // Handle memory leak in IE
+                script.onload = script.onreadystatechange = null;
+            }
+        };
+        head.appendChild(script);
+        // We handle everything using the script element injection
+        return undefined;
+    }
+</script>
+
+
+{{>end}}

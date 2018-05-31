@@ -1,0 +1,71 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+<div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+			<div class="">
+                                <button class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
+                            </div>
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Settings</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Settings</li>
+                        </ol>
+                    </div>
+                   
+                </div>
+				<div class="card" style="font-style:bold">
+				<div class="card-body" style="padding:30px">
+	<h2 style="padding-bottom:15px">Password Settings</h2>
+	<div class="card-body" style="padding:15px">
+	
+	<div class="row">
+	
+	
+	<div class="col-md-8">
+	<input type="hidden" value="{{password}}">
+		<input type="password" placeholder="Current Password" class="form-control form-control-primary" style="margin:10px" id="currentPass">
+		<p style="color:green;margin:10px;display:none" id="wrongOldPass">Incorrect Password</p>
+		<input type="password" placeholder="New Password" class="form-control form-control-primary" style="margin:10px" id="newPass">
+		<p id="notmatch" style="color:green"></p>
+		<input type="password" placeholder="Confirm Password" class="form-control form-control-primary" style="margin:10px" id="confirmPass">
+		
+		
+		<button type="button" class="btn friend-btn pull-right" onclick="ajaxRequest('changepassword','POST',{newPass:$('#newPass').val(),confirmPass:$('#confirmPass').val(),currentPass:$('#currentPass').val()}, {dataType:'json', callback:changePass})" id="passSave">Save</button>
+		</div>
+		</div>
+	
+	 
+	
+</div>
+</div>
+
+</div>
+</div>
+</div>
+{{>right_sidebar}}
+{{>foot}}
+<script>
+function changePass(data,extraInfo,response){
+
+if(response.result=='wrong'){
+$('#wrongOldPass').css('display','inline');
+}
+else if(response.result=='not matched'){
+$('#notmatch').text('Passwords do not match');
+}
+else if(response.result=='changed'){
+
+$('#passSave').replaceWith('<i class="mdi mdi-check md-50 pull-right" style="color:green;font-size:50px"></i>');
+}
+}
+</script>
+{{>end}}

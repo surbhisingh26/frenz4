@@ -1,0 +1,131 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+<div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Site Settings</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Site Settings</li>
+                        </ol>
+                    </div>
+                   
+                </div>
+				<div class="card" style="font-style:bold">
+				<div class="card-body" style="padding:30px">
+	<h2 style="padding-bottom:15px">Referral Settings</h2>
+	<div class="card-body" style="padding:15px">
+	
+	<div class="row">
+	<div class="col-md-7"><strong><h5>Referral points on joining of invited friend</h5></strong></div>
+	<div class="col-md-1">	:</div> 
+	<div class="col-md-2 form-group" id="friendPoint"><h5 >	{{friendPoint}}</h5>
+	<input type="hidden" class="form-control">
+	</div> 
+	<div class="col-md-1" id="friendPointEdit"><a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
+	<button type="button" class="btn friend-btn" style="display:none" onclick="ajaxRequest('savesitesettings','POST',{type:'friendPoint',adminName:'{{#loggedInUser}}{{name}}{{/loggedInUser}}',point:$('#friendPoint input').val()}, {dataType:'json', callback:pointsetting})">Save</button>
+	</div> 
+	</div>
+	</div>
+	
+	<div class="card-body" style="padding:15px">
+	<div class="row">
+	<div class="col-md-7"><strong><h5>Referral points on joining of invited friend's invite</h5></strong></div>
+	<div class="col-md-1">	:</div> 
+	<div class="col-md-2 form-group" id="fofPoint"><h5>	{{fofPoint}}</h5>
+	<input type="hidden" class="form-control">
+	</div> 
+	<div class="col-md-1" id="fofPointEdit"><a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
+	<button type="button" class="btn friend-btn" style="display:none" onclick="ajaxRequest('savesitesettings','POST',{type:'fofPoint',adminName:'{{#loggedInUser}}{{name}}{{/loggedInUser}}',point:$('#fofPoint input').val()}, {dataType:'json', callback:pointsetting})">Save</button>
+	</div> 
+	</div>
+	</div>
+	<div class="card-body" style="padding:15px">
+	<div class="row">
+	<div class="col-md-7"><strong><h5>Referral points on becoming our member</h5></strong></div>
+	<div class="col-md-1">	:</div> 
+	<div class="col-md-2 form-group" id="memberPoint"><h5 >	{{memberPoint}}</h5>
+	<input type="hidden" class="form-control">
+	</div> 
+	<div class="col-md-1" id="memberPointEdit"><a href="javascript:void(0)" ><i class="fa fa-edit"></i></a>
+	<button type="button" class="btn friend-btn" style="display:none" onclick="ajaxRequest('savesitesettings','POST',{type:'memberPoint',adminName:'{{#loggedInUser}}{{name}}{{/loggedInUser}}',point:$('#memberPoint input').val()}, {dataType:'json', callback:pointsetting})">Save</button>
+	</div> 
+	</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+{{>right_sidebar}}
+{{>foot}}
+<script>
+$('#friendPointEdit').click(function(){
+	$('#friendPoint h5').hide();
+	$('#friendPoint input').attr('type','number');
+	$('#friendPointEdit button').css('display','inline');
+	$('#friendPointEdit a').hide();
+	
+	$('#fofPoint h5').show();
+	$('#fofPoint input').attr('type','hidden');
+	$('#fofPointEdit button').css('display','none');
+	$('#fofPointEdit a').show();
+	
+	$('#memberPoint h5').show();
+	$('#memberPoint input').attr('type','hidden');
+	$('#memberPointEdit button').css('display','none');
+	$('#memberPointEdit a').show();
+	
+});
+
+
+$('#fofPointEdit').click(function(){
+$('#friendPoint h5').show();
+	$('#friendPoint input').attr('type','hidden');
+	$('#friendPointEdit button').css('display','none');
+	$('#friendPointEdit a').show();
+	
+	$('#fofPoint h5').hide();
+	$('#fofPoint input').attr('type','number');
+	$('#fofPointEdit button').css('display','inline');
+	$('#fofPointEdit a').hide();
+	
+	$('#memberPoint h5').show();
+	$('#memberPoint input').attr('type','hidden');
+	$('#memberPointEdit button').css('display','none');
+	$('#memberPointEdit a').show();
+});
+$('#memberPointEdit').click(function(){
+$('#friendPoint h5').show();
+	$('#friendPoint input').attr('type','hidden');
+	$('#friendPointEdit button').css('display','none');
+	$('#friendPointEdit a').show();
+
+	$('#memberPoint h5').hide();
+	$('#memberPoint input').attr('type','number');
+	$('#memberPointEdit button').css('display','inline');
+	$('#memberPointEdit a').hide();
+	
+	$('#fofPoint h5').show();
+	$('#fofPoint input').attr('type','hidden');
+	$('#fofPointEdit button').css('display','none');
+	$('#fofPointEdit a').show();
+});
+function pointsetting(data,extraInfo,response){
+console.log("type " , data.type);
+$('#'+ data.type + ' h5').text($('#'+ data.type + ' input').val());
+$('#'+ data.type + ' h5').show();
+$('#'+ data.type + ' input').attr('type','hidden');
+$('#'+ data.type + 'Edit button').css('display','none');
+$('#'+ data.type + 'Edit a').show();
+}
+</script>
+{{>end}}

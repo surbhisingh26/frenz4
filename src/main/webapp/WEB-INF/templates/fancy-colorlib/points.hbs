@@ -1,0 +1,82 @@
+{{>head}}
+{{>header}}
+{{>side_navbar}}
+
+<div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Invite</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Invite</li>
+                        </ol>
+                    </div>
+                   
+                </div>
+				<div class="card">
+	<div class="card-body text-center" style="padding:30px">
+	<h1 class="text-center" style="color:black">Invite Friends</h1>
+	</div>
+                   
+                </div>
+	<div class="row">
+	<div class="card">
+	<div class="card-body" style="padding:30px">
+	<div class="col-md-10 col-md-offset-1" style="margin-top:30px">
+	
+		<ul class="list-group list-group-flush" style="list-style-type:circle">
+			<li class="list-group-item">This is an opportunity to get discounts offers...</li>
+			<li class="list-group-item">One free ticket can be earned for 500 points.</li>
+			<li class="list-group-item">Invite your friends and family to register on our website from the link below and earn 50 points for each friend who join this website from your referral.</li>
+			<li class="list-group-item">If your referral after joining, refer our website to their friends then on their joining also you will get 10 points </li>
+			<li class="list-group-item">You will also earn 50 points for each ticket you book from our website.</li>
+			</ul>
+			<h4 style="color:{{#loggedInUser}}{{bgcolor}}{{/loggedInUser}};margin-top:20px"><b>So refer as much as you can to get discounts and more exciting offers...</b></h4>
+			
+			<hr>
+			
+			<a href="javascript:void(0)" onclick="send()" id="send" style="margin-top:10px">Send Invitation To</a>
+			<p id = "registered">{{mailMessage}}</p>
+			<form class="form-inline" action="invite">
+			<div class="form-group">
+			<input type="hidden" id="email" style="margin-top:10px" name="inviteEmail" placeholder="Your friend's email">
+			</div></form>
+			<hr>
+			
+			<h1 class="text-center">Points History</h1>
+			<ul class="list-group" style="margin:15px">
+			{{#pointsList}}
+			<li class="list-group-item"><p class="col-md-6" >{{pointReason}}</p><p class="col-md-3">:</p><p class="col-md-3"> {{pointsEarn}}</p></li>
+			{{/pointsList}}
+			</ul>
+			<h3>Your Total Score : {{#loggedInUser}}{{points}}{{/loggedInUser}}</h3>
+			
+			
+			</div>
+			
+		</div>
+	</div>
+	</div>
+</div>
+</div>
+
+{{>right_sidebar}}
+{{>foot}}
+
+<script>
+function send(){
+$('#email').attr('type','email');
+$('#email').after('<button type="hidden" class="btn btn-secondary" style="margin-left:10px; margin-top:0px !important">Invite</button>');
+$('#email').before('<br>');
+$('a').attr('onclick','');
+$('#registered').text('');
+}
+</script>
+{{>end}}

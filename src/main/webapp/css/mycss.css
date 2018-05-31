@@ -1,0 +1,14 @@
+.table td input[type="checkbox"] {
+    text-align: center;
+	    position: relative ;
+     left: 0 ; 
+     opacity: 1 ;
+}
+.table th input[type="checkbox"] {
+    text-align: center;
+	    position: relative;
+     left: 0 ;
+     opacity: 1 ;
+}
+
+

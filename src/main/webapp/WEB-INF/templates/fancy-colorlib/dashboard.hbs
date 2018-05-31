@@ -6,6 +6,9 @@
             <!-- Container fluid  -->
             <!-- ============================================================== -->
             <div class="container-fluid">
+			<div class="">
+                                <button class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
+                            </div>
                 <!-- ============================================================== -->
                 <!-- Bread crumb and right sidebar toggle -->
                 <!-- ============================================================== -->
@@ -48,24 +51,38 @@
 												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{uploadTime}}</small></div>
                                                 <div class="sl-right text-center timeline{{_id}}">
                                                           <img class = "img-thumbnail img-fluid" src = "{{path}}" width="350" height="350">
-                                             <div class="like-comm btn-group">
+                                             <div class="like-comm btn-group" style="margin-top:5px">
 											
 											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})" >
-												<a href="javascript:void(0)" class="link m-r-10 comment">Comment</a>
+												<a href="javascript:void(0)" class="link m-r-10 comment">{{comments}} Comment</a>
 											</button>
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="fa fa-heart text-danger"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heart </button>
-											</button>
+											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartIncrease})">
+											{{#if noAction}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{else}}
+											{{^broken}}
+											<i class="fa fa-heart text-danger"></i>
+											{{/broken}}
+											{{#if broken}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{/if}}
+											{{/if}}</button>
+												<button type="button" class="btn btn-secondary heartCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{hearts}} Heart </button>				
+											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartIncrease})">
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="mdi mdi-heart-broken text-default"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heartbreak 
+												{{#if broken}}
+												<i class="mdi mdi-heart-broken"></i>
+												{{else}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+												{{/if}}
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{heartBreaks}} Heartbreak 
 											</button>
 											
 										</div>
 										<div style="display:none;" class="divBox">
 											<ul class="list-group" style="margin-top:5px">
-											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View All Comments</a></li>
+											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View More Comments</a></li>
 											</ul>
 											
 											<textarea class="form-control" placeholder="Type Your Comment" rows="2" style="background-color:#fff;margin-top:5px" id ="commentMessage{{_id}}"></textarea>
@@ -87,24 +104,38 @@
 												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{uploadTime}}</small></div>
                                                 <div class="sl-right text-center timeline{{_id}}">
                                                     <img class = "img-thumbnail img-fluid" src = "{{path}}" width="350" height="350">
-                                             <div class="like-comm btn-group">
+                                             <div class="like-comm btn-group" style="margin-top:5px">
 											
 											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})" >
-												<a href="javascript:void(0)" class="link m-r-10 comment">Comment</a>
+												<a href="javascript:void(0)" class="link m-r-10 comment">{{comments}} Comment</a>
 											</button>
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="fa fa-heart text-danger"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heart </button>
-											</button>
+											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartIncrease})">
+											{{#if noAction}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{else}}
+											{{^broken}}
+											<i class="fa fa-heart text-danger"></i>
+											{{/broken}}
+											{{#if broken}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{/if}}
+											{{/if}}</button>
+												<button type="button" class="btn btn-secondary heartCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{hearts}} Heart </button>				
+											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartIncrease})">
 											
-											<button type="button" class="btn btn-secondary" data-container="body">
-												<i class="mdi mdi-heart-broken text-default"></i></button><button type="button" class="btn btn-secondary" data-container="body"> 5 Heartbreak 
+												{{#if broken}}
+												<i class="mdi mdi-heart-broken"></i>
+												{{else}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+												{{/if}}
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{heartBreaks}} Heartbreak 
 											</button>
 											
 										</div>
 										<div style="display:none;" class="divBox">
 											<ul class="list-group" style="margin-top:5px">
-											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json',callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View All Comments</a></li>
+											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json',callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allComments" class="model_img img-responsive">View More Comments</a></li>
 											</ul>
 											
 											<textarea class="form-control" placeholder="Type Your Comment" rows="2" style="background-color:#fff;margin-top:5px" id ="commentMessage{{_id}}"></textarea>
@@ -129,6 +160,59 @@
                                             </div>
 											<hr>
 										{{/friend}}
+										{{#status}}
+									<div class="sl-item">
+									<div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
+												<h4 style="padding-bottom:15px"><strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong> Changed display image</h4><br>
+												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{date}}</small></div>
+                                            <div class="sl-right timeline{{_id}}">
+                                                <div class="note-editable" >
+                                    
+                                    <div class="card card-body" style="    padding-top: 1.25rem;  margin-right: 2.25rem;padding: 1.25rem">
+										<p style="font-family:courier;font-size:15px">{{statusText}}</p>
+										</div>
+											</div>
+											<div class="like-comm btn-group mr-2" style="margin-top:5px">
+											<button type="button" class="btn btn-secondary comment" data-container="body" onclick="ajaxRequest('showcomments','POST',  {activityId:'{{_id}}' }, {dataType:'json', callback:commentBox})" >
+												<a href="javascript:void(0)" class="link m-r-10 comment">{{comments}} Comment</a>
+											</button>
+											
+											<button type="button" class="btn btn-secondary heart" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:false,fid:'{{uid}}'},{dataType:'json',callback:heartIncrease})">
+											{{#if noAction}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{else}}
+											{{^broken}}
+											<i class="fa fa-heart text-danger"></i>
+											{{/broken}}
+											{{#if broken}}
+											<i class="fa fa-heart-o text-danger"></i>
+											{{/if}}
+											{{/if}}</button>
+												<button type="button" class="btn btn-secondary heartCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:false},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{hearts}} Heart </button>				
+											<button type="button" class="btn btn-secondary heartBreak" data-container="body" onclick="ajaxRequest('heartincrease','POST',{activityId:'{{_id}}',broken:true,fid:'{{uid}}'},{dataType:'json',callback:heartIncrease})">
+											
+												{{#if broken}}
+												<i class="mdi mdi-heart-broken"></i>
+												{{else}}
+												<div data-icon="X" class="linea-icon linea-basic"></div>
+												{{/if}}
+												</button><button type="button" class="btn btn-secondary heartBreakCount" data-container="body" onclick="ajaxRequest('heartfriend','POST',{activityId:'{{_id}}',broken:true},{dataType:'json',callback:heartFriend})" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">{{heartBreaks}} Heartbreak 
+											</button>
+											
+										</div>
+										<div style="display:none;" class="divBox">
+											<ul class="list-group" style="margin-top:5px">
+											<li class="list-group-item viewAll" style="display:none;background-color:#E5E7EA"><a href="javascript:void(0)" onclick="ajaxRequest('showcomments','POST', { activityId:'{{_id}}',skip:'0',limit:'15'}, {dataType:'json', callback:allComment})" class="text-center text-center" data-toggle="modal" data-target=".allFriends" class="model_img img-responsive">View More Comments</a></li>
+											</ul>
+											
+											<textarea class="form-control" placeholder="Type Your Comment" rows="2" style="background-color:#fff;margin-top:5px" id ="commentMessage{{_id}}"></textarea>
+											<button type="button" class="btn btn-secondary" onclick="ajaxRequest('addcomment','POST', {fid:'{{#activity}}{{uid}}{{/activity}}', activityId:'{{_id}}', comment:$('#commentMessage{{_id}}').val()}, {dataType:'json', callback:postComment})">Post</button>
+											
+											</div>
+											</div>
+                                        </div>
+									<hr>
+									{{/status}}
 										{{/myActivityList}}
                                             
                                             </div>
@@ -244,7 +328,33 @@
 					
                         
                     <div class="col-lg-4 col-md-5">
-                        <div class="card">
+                        
+						 <div class="card">
+                            <div class="card-block bg-info">
+                                <h4 class="text-white card-title">Recent Contacts</h4>
+                                <h6 class="card-subtitle text-white m-b-0 op-5">Checkout my contacts here</h6>
+                            </div>
+                            <div class="card-block">
+                                <div class="message-box contact-box">
+                                    <h2 class="add-ct-btn"><a href="friends"><button type="button" class="btn btn-circle btn-lg btn-success waves-effect waves-dark friend-btn" data-toggle="tooltip" title="View all friends">+</button></a></h2>
+                                    <div class="message-widget contact-widget">
+                                        <!-- Message -->
+										{{#friendList}}
+										{{#friend}}
+                                        <a href="friendprofile?fid={{id}}">
+										
+                                            <div class="user-img"> <img src="{{imagepath}}" alt="user" class="img-circle"> <span class="profile-status {{#if loggedIn}}online pull-right{{/if}}"></span> </div>
+                                            <div class="mail-content">
+                                                <h5>{{name}}</h5> <span class="mail-desc">{{email}}</span></div>
+                                        </a>
+										{{/friend}}
+										{{/friendList}}
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+						<div class="card">
                             <div class="card-block">
                                 <h3 class="card-title">Our Visitors </h3>
                                 <h6 class="card-subtitle">Different Devices Used to Visit</h6>
@@ -264,103 +374,12 @@
                                 </ul>
                             </div>
                         </div>
-						<div class="card">
-                            <img class="card-img-top" src="img/background/profile-bg.jpg" alt="Card image cap">
-                            <div class="card-block little-profile text-center">
-                                <div class="pro-img"><img src="img/users/4.jpg" alt="user" /></div>
-                                <h3 class="m-b-0">Angela Dominic</h3>
-                                <p>Web Designer &amp; Developer</p>
-                                <a href="javascript:void(0)" class="m-t-10 waves-effect waves-dark btn btn-primary btn-md btn-rounded">Follow</a>
-                                <div class="row text-center m-t-20">
-                                    <div class="col-lg-4 col-md-4 m-t-20">
-                                        <h3 class="m-b-0 font-light">1099</h3><small>Articles</small></div>
-                                    <div class="col-lg-4 col-md-4 m-t-20">
-                                        <h3 class="m-b-0 font-light">2,469</h3><small>Followers</small></div>
-                                    <div class="col-lg-4 col-md-4 m-t-20">
-                                        <h3 class="m-b-0 font-light">6035</h3><small>Following</small></div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 					
                 </div>
                 <!-- Row -->
                 <!-- Row -->
-                <div class="row">
-                    <!-- Column -->
-                    <div class="col-lg-4 col-xlg-3 col-md-5">
-                        <!-- Column -->
-                        
-                        <!-- Column -->
-                        <div class="card">
-                            <div class="card-block bg-info">
-                                <h4 class="text-white card-title">My Contacts</h4>
-                                <h6 class="card-subtitle text-white m-b-0 op-5">Checkout my contacts here</h6>
-                            </div>
-                            <div class="card-block">
-                                <div class="message-box contact-box">
-                                    <h2 class="add-ct-btn"><a href="friends"><button type="button" class="btn btn-circle btn-lg btn-success waves-effect waves-dark">+</button></a></h2>
-                                    <div class="message-widget contact-widget">
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img"> <img src="img/users/1.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
-                                            <div class="mail-content">
-                                                <h5>Pavan kumar</h5> <span class="mail-desc">info@wrappixel.com</span></div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img"> <img src="img/users/2.jpg" alt="user" class="img-circle"> <span class="profile-status busy pull-right"></span> </div>
-                                            <div class="mail-content">
-                                                <h5>Sonu Nigam</h5> <span class="mail-desc">pamela1987@gmail.com</span></div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img"> <span class="round">A</span> <span class="profile-status away pull-right"></span> </div>
-                                            <div class="mail-content">
-                                                <h5>Arijit Sinh</h5> <span class="mail-desc">cruise1298.fiplip@gmail.com</span></div>
-                                        </a>
-                                        <!-- Message -->
-                                        <a href="#">
-                                            <div class="user-img"> <img src="img/users/4.jpg" alt="user" class="img-circle"> <span class="profile-status offline pull-right"></span> </div>
-                                            <div class="mail-content">
-                                                <h5>Pavan kumar</h5> <span class="mail-desc">kat@gmail.com</span></div>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-					<div class="">
-                                <button class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
-                            </div>
-                    <div class="col-lg-8 col-xlg-9 col-md-7">
-					
-                        <div class="card">
-                            <div class="card-block">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="d-flex flex-wrap">
-                                            <div>
-                                                <h3 class="card-title">Sales Overview</h3>
-                                                <h6 class="card-subtitle">Ample Admin Vs Pixel Admin</h6> </div>
-                                            <div class="ml-auto">
-                                                <ul class="list-inline">
-                                                    <li>
-                                                        <h6 class="text-muted text-success"><i class="fa fa-circle font-10 m-r-10 "></i>Ample</h6> </li>
-                                                    <li>
-                                                        <h6 class="text-muted  text-info"><i class="fa fa-circle font-10 m-r-10"></i>Pixel</h6> </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="amp-pxl" style="height: 360px;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    </div>
+               
                 </div>
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
