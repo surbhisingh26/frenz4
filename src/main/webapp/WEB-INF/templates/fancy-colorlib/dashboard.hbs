@@ -337,12 +337,14 @@
                                     <div class="message-widget contact-widget">
                                         <!-- Message -->
 										{{#friendList}}
+										{{#friend}}
                                         <a href="friendprofile?fid={{id}}">
 										
                                             <div class="user-img"> <img src="{{imagepath}}" alt="user" class="img-circle"> <span class="profile-status {{#if loggedIn}}online pull-right{{/if}}"></span> </div>
                                             <div class="mail-content">
                                                 <h5>{{name}}</h5> <span class="mail-desc">{{email}}</span></div>
                                         </a>
+										{{/friend}}
 										{{/friendList}}
                                         
                                     </div>

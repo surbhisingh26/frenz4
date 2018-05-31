@@ -31,6 +31,7 @@ import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.StatusDAO;
 import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
+import com.social.beFriendly.DAO.UserInfoDAO;
 import com.social.beFriendly.model.Activity;
 import com.social.beFriendly.model.Comment;
 import com.social.beFriendly.model.Email;
@@ -43,6 +44,7 @@ import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.Status;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
+import com.social.beFriendly.model.UserInfo;
 import com.social.scframework.App.Utility;
 import com.social.scframework.highchart.Chart;
 import com.social.scframework.highchart.Column;
@@ -1026,8 +1028,34 @@ public class UserService {
 		return highcharts;
 		
 	}
-	public void updateProfile(ObjectId uid) {
-		//User user = userCollection.findOneById(uid.toString());
+	public void updateProfile(ObjectId uid, String name, String email, String address, String mobile, String aboutme, String country, String city) {
+		User user = userCollection.findOneById(uid.toString());
+		user.setName(name, "", "");
+		user.setCity(city);
+		user.setCountry(country);
+		user.setEmail(email);
+		user.setMobile(mobile);
+		userCollection.updateById(uid.toString(), user);
+		
+		UserInfo userinfo = new UserInfo();
+		UserInfoDAO userinfodao = new UserInfoDAO();
+		JacksonDBCollection<UserInfo, String> userinfoCollection = userinfodao.userInfoDAO();
+		BasicDBObject query = new BasicDBObject();
+		query.put("uid", uid);
+		DBCursor<UserInfo> cursor = userinfoCollection.find(query);
+		boolean nextCursor = cursor.hasNext();
+		if(nextCursor){
+			userinfo = cursor.next();
+		}
+		userinfo.setAboutme(aboutme);
+		userinfo.setUid(uid);
+		userinfo.setAddress(address);
+		if(nextCursor){
+			userinfoCollection.updateById(userinfo.getId(), userinfo);
+		}
+		else{
+			userinfoCollection.insert(userinfo);
+		}
 		
 	}
 	public String invite(ObjectId uid,String recieverEmail){
@@ -1235,6 +1263,15 @@ public String changePassword(String currentPass, String newPass, ObjectId uid) {
 	user.setPassword(newPass);
 	userCollection.updateById(uid.toString(),user);
 	return "changed";
+}
+public UserInfo getmyInfo(ObjectId uid) {
+	UserInfoDAO userInfoDAO = new UserInfoDAO();
+	JacksonDBCollection<UserInfo, String> userinfoCollection = userInfoDAO.userInfoDAO();
+	BasicDBObject query = new BasicDBObject();
+	query.put("uid", uid);
+	UserInfo userInfo = userinfoCollection.findOne(query);
+	return userInfo;
+	
 }
 
 }

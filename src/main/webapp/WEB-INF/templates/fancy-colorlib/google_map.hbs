@@ -39,19 +39,23 @@
         $(document).ready(function() {
             // execute
 			
-            (function map() {
+            (function maps(data,extraInfo,response) {
+			
+			
                 /////////////// Addresses ///////////////////
-                var locations = ['L,Riversea: office Loc1,1 Wallace Lane Mosman Park WA 6012','E,Wearne: office Loc2,3 Gibney St Cottesloe WA 6011','S,Beachside: office Loc3,621 Two Rocks Rd Yanchep WA 6035'];
+                var locations = [{{#friendList}}'S,{{#friend}}{{name}}{{/friend}},{{#friendinfo}}{{address}} {{/friendinfo}}{{#friend}} {{city}} {{country}}{{/friend}}',{{/friendList}}{{#loggedInUser}}'E,Me:{{name}},{{#myInfo}}{{address}}{{/myInfo}} {{city}} {{country}}',{{/loggedInUser}}];
                // var i = 0;
                 
+				console.log("locations",locations);
                 /////// Addresses/////////
                 var total_locations = locations.length;
                 i = 0;
                 console.log('About to look up ' + total_locations + ' locations');
+				//alert("{{#loggedInUser}}{{city}}{{/loggedInUser}}");
                 // map options
                 var options = {
-                    zoom: 10,
-                    center: new google.maps.LatLng(-31.982484, 115.789329),//Bethanie  
+                    zoom: 5,
+                    center: new google.maps.LatLng(28.7041, 77.1025),//Bethanie  
                     mapTypeId: google.maps.MapTypeId.HYBRID,//TERRAIN/ ROADMAP/ SATELLITE
                     mapTypeControl: true
                 };
@@ -69,10 +73,14 @@
                         if (i < locations.length) 
                        {
                             var customer = locations[i];
-                            var parts = customer.split(','); // split line into parts (fields)
+                            var parts = customer.split(',');
+console.log("parts",parts)			;				// split line into parts (fields)
                             var type= parts.splice(0,1);    // type from location line (remove)
+							console.log("type",type)			;
                             var name = parts.splice(0,1);    // name from location line(remove)
-                            var address =parts.join(',');   // combine remaining parts
+							console.log("name",name)			;
+                            var address =parts.join(',');  
+console.log("address",address)			;							// combine remaining parts
                             console.log('Looking up ' + name + ' at address ' + address);
                             geocoder.geocode({ 'address': address }, makeCallback(name, type));
                             i++; // next location in list
@@ -125,8 +133,8 @@
                 }
 
             })();
-			ajaxRequest('showmap','POST',{}, {dataType:'json', callback:map})
-
+			
+	ajaxRequest('showmap','POST',{}, {dataType:'json', callback:maps});
         });
 
         </script>

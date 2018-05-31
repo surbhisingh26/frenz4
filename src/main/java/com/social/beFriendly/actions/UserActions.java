@@ -22,6 +22,7 @@ import com.social.beFriendly.model.Points;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
+import com.social.beFriendly.model.UserInfo;
 import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.FriendService;
 import com.social.beFriendly.service.NotificationService;
@@ -297,7 +298,7 @@ public class UserActions extends HttpServlet {
 			hmap.putAll(getUserDetails(request, response));
 			UserService userService = new UserService();
 			uid = (ObjectId) hmap.get("uid");
-			List<User> friendList = new ArrayList<User>();
+			List<Object> friendList = new ArrayList<Object>();
 			hmap.putAll(userService.myActivity(uid));
 			FriendService friendService = new FriendService();
 			friendList = friendService.getFriends(uid, 6);
@@ -317,11 +318,10 @@ public class UserActions extends HttpServlet {
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));			
-			
-			utility.getHbs(response,"profile",hmap,templatePath);
-		} catch (ServletException e) {
-
-			e.printStackTrace();
+			UserService userService = new UserService();
+			UserInfo myinfo = userService.getmyInfo(uid);
+			hmap.put("myinfo", myinfo);
+			response.sendRedirect("profile");
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -657,12 +657,18 @@ public class UserActions extends HttpServlet {
 			hmap.putAll(getUserDetails(request, response));
 			
 			uid = (ObjectId) hmap.get("uid");
-			UserService userService = new UserService();
-			userService.updateProfile(uid);
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			String address = request.getParameter("address");
+			String mobile = request.getParameter("mobile");
+			String aboutme = request.getParameter("aboutme");
+			String country = request.getParameter("country");
+			String city = request.getParameter("city");
 			
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(new Gson().toJson(hmap));
+			UserService userService = new UserService();
+			userService.updateProfile(uid,name,email,address,mobile,aboutme,country,city);
+			utility.getHbs(response,"profile",hmap,templatePath);
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -792,7 +798,13 @@ public class UserActions extends HttpServlet {
 			hmap.putAll(getUserDetails(request, response));
 			
 			uid = (ObjectId) hmap.get("uid");
-			
+
+			FriendService friendService = new FriendService();
+			List<Object> friendList = friendService.getFriends(uid,30);
+			hmap.put("friendList", friendList);
+			UserService userService = new UserService();
+			UserInfo myInfo  = userService.getmyInfo(uid);
+			hmap.put("myInfo", myInfo);
 			utility.getHbs(response,"google_map",hmap,templatePath);
 
 		}
@@ -800,26 +812,7 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	public void showmap(HttpServletRequest request, HttpServletResponse response){
-		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
-			
-			uid = (ObjectId) hmap.get("uid");
-			
-			uid = (ObjectId) hmap.get("uid");
-			FriendService friendService = new FriendService();
-			List<User> friendList = friendService.getFriends(uid,30);
-			hmap.put("friendList", friendList);
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			
-				response.getWriter().write(new Gson().toJson(hmap));
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-	}
+	
 }
 
 
