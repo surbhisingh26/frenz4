@@ -352,6 +352,28 @@ public class FriendService {
 		hmap.put("skip", skip+limit);
 		hmap.put("friendList", friendList);
 		return hmap;
+	}
+	public Map<String,Object> onlineFriends(ObjectId uid) {
+		
+		Map<String,Object> hmap = new HashMap<String, Object>();
+		List<User> friendList = new ArrayList<User>();
+		BasicDBObject query = new BasicDBObject();
+		query.put("uid", uid);
+		query.put("friends", true);
+		DBCursor<Friend> cursor = friendCollection.find(query);
+		System.out.println("Friend finding");
+		while(cursor.hasNext()){
+			Friend friend = cursor.next();
+			System.out.println("Friend found " + friend.getFid());
+			User user = userCollection.findOneById(friend.getFid().toString());
+			System.out.println("User " + user.getName() + user.getLoggedIn());
+			if(user.getLoggedIn()){
+				friendList.add(user);
+			}
+		}
+		
+		hmap.put("friendList", friendList);
+		return hmap;
 	}	
 
 

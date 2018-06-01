@@ -3,10 +3,12 @@ package com.social.beFriendly.actions;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.AsyncContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -17,13 +19,19 @@ import javax.servlet.http.Part;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
+import com.social.beFriendly.app.AsyncRunnable;
+import com.social.beFriendly.model.Points;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
 import com.social.beFriendly.model.User;
+import com.social.beFriendly.model.UserInfo;
 import com.social.beFriendly.service.EmailService;
+import com.social.beFriendly.service.FriendService;
 import com.social.beFriendly.service.NotificationService;
 import com.social.beFriendly.service.UserService;
+import com.social.scframework.App.Email;
 import com.social.scframework.App.Utility;
+import com.social.scframework.highchart.HighChart;
 
 
 
@@ -35,6 +43,7 @@ public class UserActions extends HttpServlet {
 	Utility utility = new Utility();
 	ObjectId uid;
 	String templatePath = "C:/soft/apache-tomcat-8.5.23/webapps/beFriendly/WEB-INF/templates/fancy-colorlib";
+	public static final String SALT = "my-salt-text";
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -86,6 +95,9 @@ public class UserActions extends HttpServlet {
 		uid = new ObjectId(utility.getSession(request));
 		UserService userservice = new UserService();
 		User user = userservice.findOneById(uid.toString());
+		if(user.getuType().equals("Admin")){
+			hmap.put("admin", true);
+		}
 		hmap.put("loggedInUser", user);
 		hmap.put("uid", uid);
 		if(uid!=null)
@@ -133,6 +145,10 @@ public class UserActions extends HttpServlet {
 			String dob = request.getParameter("dob");
 			String mobile =request.getParameter("mobile");
 
+			String saltedPassword = SALT + password;
+			String hashedPassword = utility.generateHash(saltedPassword);
+
+
 
 			String reference = request.getParameter("reference");
 			if(reference==null)
@@ -159,7 +175,7 @@ public class UserActions extends HttpServlet {
 				filePath = File.separator +"images/beFriendlyimages" + File.separator + "default.jpg";
 
 			UserService rs = new UserService();
-			Boolean result = rs.registerUser(fname, lname, mname,country,city,mobile,password,gender,dob,bgcolor,filePath,email,reference,referenceId);
+			Boolean result = rs.registerUser(fname, lname, mname,country,city,mobile,hashedPassword,gender,dob,bgcolor,filePath,email,reference,referenceId);
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			if(result == false){
 
@@ -210,8 +226,13 @@ public class UserActions extends HttpServlet {
 				referenceId="null";
 			System.out.println("reference is "+reference);
 			System.out.println("ref Id is "+referenceId);
+
+			String saltedPassword = SALT + password;
+			String hashedPassword = utility.generateHash(saltedPassword);
+
+
 			UserService userservice = new UserService();
-			String result = userservice.checkValid(email,password,reference,referenceId);
+			String result = userservice.checkValid(email,hashedPassword,reference,referenceId);
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			//System.out.println(request.getParameter("firstname"));
 			System.out.println(result);
@@ -232,8 +253,8 @@ public class UserActions extends HttpServlet {
 			}
 
 			else if(result.equals("Register First")){
-				//hmap.put("register", true);
-				//utility.getHbs(response,"registration",hmap);
+				hmap.put("register", true);
+
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().write(new Gson().toJson(hmap));
@@ -257,7 +278,7 @@ public class UserActions extends HttpServlet {
 				response.getWriter().write(new Gson().toJson(hmap));
 				if(referenceId.equals("null")){
 
-					response.sendRedirect("dashboard");
+					response.sendRedirect("friendactivity");
 				}
 
 			}
@@ -279,9 +300,12 @@ public class UserActions extends HttpServlet {
 			hmap.putAll(getUserDetails(request, response));
 			UserService userService = new UserService();
 			uid = (ObjectId) hmap.get("uid");
-			System.out.println("DASHBOARD.......");
+			List<Object> friendList = new ArrayList<Object>();
 			hmap.putAll(userService.myActivity(uid));
-			System.out.println("DASHBOARD.......");
+			FriendService friendService = new FriendService();
+			friendList = friendService.getFriends(uid, 6);
+			hmap.put("friendList", friendList);
+
 			utility.getHbs(response,"dashboard",hmap,templatePath);
 		} catch (ServletException e) {
 
@@ -295,13 +319,16 @@ public class UserActions extends HttpServlet {
 
 		try {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
-			utility.getHbs(response,"profile",hmap,templatePath);
-		} catch (ServletException e) {
-
-			e.printStackTrace();
+			hmap.putAll(getUserDetails(request, response));			
+			UserService userService = new UserService();
+			UserInfo myinfo = userService.getmyInfo(uid);
+			hmap.put("myinfo", myinfo);
+			utility.getHbs(response, "profile", hmap, templatePath);
 		} catch (IOException e) {
 
+			e.printStackTrace();
+		} catch (ServletException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -320,7 +347,7 @@ public class UserActions extends HttpServlet {
 			//System.out.println(request.getContextPath());
 			//request.getRequestDispatcher("").forward(request, response);
 			if(reference==null)
-				response.sendRedirect("/beFriendly");
+				response.sendRedirect("login");
 			return;
 		}
 		catch(Exception e){
@@ -489,7 +516,7 @@ public class UserActions extends HttpServlet {
 			userService.addComment(comment,uid,activityId);
 			NotificationService notiService = new NotificationService();
 			if(fid!=uid){
-			notiService.sendNotification(fid, user.getImagepath(), user.getName() + " commented on your post","post?activityId="+activityId+"&" , "New comment");
+				notiService.sendNotification(fid, user.getImagepath(), user.getName() + " commented on your post","post?activityId="+activityId+"&" , "New comment");
 			}
 		}
 		catch(Exception e){
@@ -530,18 +557,311 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap = new HashMap<String, Object>();
 			hmap.putAll(getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
-			
+
 			UserService userservice = new UserService();
 			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
-			hmap.putAll(userservice.post(activityId));
-			
+			String read = request.getParameter("read");
+			if(read==null)
+				read = request.getParameter("?read");
+			String id = request.getParameter("id");
+			NotificationService notificationService = new NotificationService();
+
+			if(read!=null&&read.equals("true")){
+				notificationService.markRead(id);
+			}
+
+			hmap.putAll(userservice.post(activityId,uid));
+
 			utility.getHbs(response, "post", hmap, templatePath);
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
+	public void heartincrease(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			User user = (User) hmap.get("loggedInUser");
+			UserService userservice = new UserService();
+			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			String fidStr = request.getParameter("fid");
+			String brokenStr = request.getParameter("broken");
+			boolean broken = Boolean.parseBoolean(brokenStr);
+			System.out.println("Broken..........." + broken);
+			hmap.putAll(userservice.heartIncrease(activityId,uid,broken));
+			//System.out.println("fid.......... " + fid);
+			if(fidStr!=null&&!fidStr.equals(uid.toString())){
+				ObjectId fid = new ObjectId(fidStr);
+				NotificationService notiservice = new NotificationService();
+				String notification = null;
+				if(broken){
+					notification = "You have a HeartBreak from " + user.getName();
+				}
+				else{
+					notification = "You have a Heart from " + user.getName();
+				}
+
+				notiservice.sendNotification(fid, user.getImagepath(), notification, "post?activityId="+activityId+"&", "New Reaction");
+			}
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void addstatus(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+
+			UserService userservice = new UserService();
+			String status = request.getParameter("status");
+			userservice.addStatus(uid, status);
+			response.sendRedirect("friendactivity");
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void gethighcharts(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			List<HighChart> highcharts = new ArrayList<HighChart>();
+			uid = (ObjectId) hmap.get("uid");
+			String fidStr = request.getParameter("fid");
+
+			if(fidStr!=null){
+				ObjectId fid = new ObjectId(fidStr);
+				uid=fid;
+			}
+			UserService userservice = new UserService();
+			highcharts.add(userservice.requestpiechart(uid));
+			highcharts.add(userservice.stackedgraph(uid));
+
+			hmap.put("highcharts",highcharts);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void updateprofile(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+
+			uid = (ObjectId) hmap.get("uid");
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			String address = request.getParameter("address");
+			String mobile = request.getParameter("mobile");
+			String aboutme = request.getParameter("aboutme");
+			String country = request.getParameter("country");
+			String city = request.getParameter("city");
+
+			UserService userService = new UserService();
+			userService.updateProfile(uid,name,email,address,mobile,aboutme,country,city);
+			response.sendRedirect("profile");
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void earnpoints(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+
+			uid = (ObjectId) hmap.get("uid");
+			UserService userService = new UserService();
+			List<Points> pointsList = userService.getPoints(uid);
+			hmap.put("pointsList", pointsList);
+			utility.getHbs(response,"points",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void invite(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+
+			uid = (ObjectId) hmap.get("uid");
+			String inviteEmail = request.getParameter("inviteEmail");
+			System.out.println(inviteEmail);
+			UserService userservice = new UserService();
+			String from = userservice.invite(uid,inviteEmail);
+			if(from==null){
+				String msg = "User with this email is already our member!!! Try another";
+				System.out.println(msg);
+				hmap.put("mailMessage", msg);
+				utility.getHbs(response,"points",hmap,templatePath);
+				//response.sendRedirect("points");
+				System.out.println("Message is .... "+hmap.get("mailMessage"));
+			}
+			else if (from.equalsIgnoreCase("Already Invited")){
+				String msg = "You already invited this user";
+				hmap.put("mailMessage", msg);
+				utility.getHbs(response,"points",hmap,templatePath);
+			}
+			else{
+				Email email = new Email();
+				EmailService emailservice = new EmailService();
+				Boolean subscription = emailservice.checkSubscription(inviteEmail);
+				String subject = "Get more connected with your friends..";
+				String purpose = "inviteToJoin";
+				String status = "Pending...";
+				System.out.println("Subscription for "+ inviteEmail +"...."+subscription);
+
+				String id = emailservice.email(from, purpose, inviteEmail, status, subject);
+				if(subscription==true){
+
+					email.send(inviteEmail, inviteEmail, subject, "invitationTemplate" , id, hmap);
+					status = "Sent";
+				}
+				else{
+					status="Failed";
+				}
+				emailservice.updateEmail(id,status);
+				String msg = "Mail Sent...";
+				hmap.put("mailMessage", msg);
+				utility.getHbs(response,"points",hmap,templatePath);
+				//response.sendRedirect("points");
+			}
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void settings(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+
+			uid = (ObjectId) hmap.get("uid");
+
+			utility.getHbs(response,"settings",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void changepassword(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+
+			uid = (ObjectId) hmap.get("uid");
+			String currentPass = request.getParameter("currentPass");
+			String newPass = request.getParameter("newPass");
+			String confirmPass = request.getParameter("confirmPass");
+
+			String result = null;
+			if(!newPass.equals(confirmPass)){
+				result = "Not Matched";
+			}			
+			else{
+				String saltedPassword = SALT + currentPass;
+				String hashedCurrentPassword = utility.generateHash(saltedPassword);
+
+				String saltedPassword1 = SALT + newPass;
+				String hashedNewPassword = utility.generateHash(saltedPassword1);
+
+				UserService userService = new UserService();
+				result = userService.changePassword(hashedCurrentPassword,hashedNewPassword,uid);
+				hmap.put("result", result);
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(new Gson().toJson(hmap));
+			}
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void googlemap(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+
+			uid = (ObjectId) hmap.get("uid");
+
+			FriendService friendService = new FriendService();
+			List<Object> friendList = friendService.getFriends(uid,30);
+			hmap.put("friendList", friendList);
+			UserService userService = new UserService();
+			UserInfo myInfo  = userService.getmyInfo(uid);
+			hmap.put("myInfo", myInfo);
+			utility.getHbs(response,"google_map",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void sendmessage(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			String text = request.getParameter("text");
+			ObjectId fid = new ObjectId(request.getParameter("fid"));
+			UserService userservice = new UserService();
+			
+			userservice.storeChat(uid,fid,text);
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void checkmessage(HttpServletRequest request,HttpServletResponse response){
+		try{
+			Map<String, Object> hmap = new HashMap<String, Object>();
+			hmap.putAll(getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			System.out.println("LongPollingServlet.doGet()");
+			 
+	        boolean asyncSupported = request.isAsyncSupported();
+	        System.out.println("asyncSupported 1: " + asyncSupported);
+	        // Tomcat only
+	        request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+	        asyncSupported = request.isAsyncSupported();
+	        System.out.println("asyncSupported 2: " + asyncSupported);
+	        if (asyncSupported) {
+	            AsyncContext asyncCtx = request.startAsync(request, response);  // req.startAsync();
+	            asyncCtx.setTimeout(0); // => disable timeout
+	            AsyncRunnable thread = new AsyncRunnable(asyncCtx);
+	            asyncCtx.start(thread);
+	        }
+			
+		}
+	       
+		
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
 }
 
 

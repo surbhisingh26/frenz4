@@ -62,6 +62,7 @@
 	
 	
 	<script src="js/highcharts.js"></script>
+	
 
 	<script>
 	$('.notification').click(function(){
@@ -151,8 +152,6 @@ getTimeAgo('.timeAgo');
 </script>
 
 
-
-
 <script>
 
 function ajaxRequest(url, method, data, extraInfo) {
@@ -222,8 +221,6 @@ var id = data.fid;
 	}
 	
 	
-</script>
-<script>
 function commentBox(data, extraInfo, response){
 	console.log(data);
 	console.log(response);
@@ -370,11 +367,71 @@ function commentBox(data, extraInfo, response){
 	$('.allfriends').empty();
 	});
 		
+	function onlineFriends(data,extraInfo,response){
 	
+	$.each(response.friendList, function(k, v){
+	console.log(v)
+	$('.chatonline').append('<li class="chat-panel-open"><a href="friendchatwindow?fid='+v.id+'"><img src="'+v.imagepath+'" alt="user-img" class="img-circle"> <span>'+v.name+' <small class="text-success">online</small></span></a></li>');
+	});
+
+	}
+	$('.close-chat').click(function(){
+	$('.chatonline').empty();
+	});
+	
+	function messageSent(data,extraInfo,response){
+	
+	}
+
 </script>
 
 
-
+<script>
+            $(document).ready(function() {
+              //console.log(event);
+                 //   event.preventDefault();
+                    longPolling.stop = false;
+                    longPolling.poll();
+                
+                $("#stopPolling").click(function(event) {
+                    event.preventDefault();
+                    longPolling.stop = true;
+                });
+            });
+ 
+            var longPolling = {
+                stop: false,
+                poll: function() {
+                    if (longPolling.stop === true) {
+                        console.log("Stopping the long polling process");
+                        return;
+                    }
+                    $.ajax(
+                            {
+                                type: 'GET',
+                                url: "checkmessage",
+                                data: {},
+                                //contentType: "application/json; charset=utf-8",
+                                dataType: "json",
+                                // crossDomain: true,
+                                timeout: 25000
+                            }
+                    ).done(function(data, textStatus, jqXHR) {
+                        console.log("data: " , data);
+                        console.log("data: " , jqXHR);
+                        console.log("data: " , textStatus);
+                        
+                        
+                        $("#serverResponseDiv").html(serverDate);
+                    }).fail(function(jqxhr, textStatus, errorThrown) {
+                        console.log("jqxhr.statusText: " , jqxhr.statusText);
+                        console.log("status: " , jqxhr.status);
+                        console.log("textStatus: " , textStatus); //null, "timeout", "error", "abort", and "parsererror"
+                        console.log("errorThrown: " , errorThrown);
+                    }).always(longPolling.poll);
+                }
+            };
+        </script>
 
 <script>
 var reference;
@@ -555,5 +612,7 @@ $('input[value='+gender+']').prop('checked',true);
 	 }
   
 	}
+	
   
 </script>
+<script src="js/myjs.js"></script>

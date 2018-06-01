@@ -16,8 +16,7 @@ public class Filters implements Filter{
 
 
 	public void init(FilterConfig filterConfig) throws ServletException {
-		System.out.println("Filter init called");
-		System.out.println("Task scheduled");
+		
 		//Reminder reminder = new Reminder(5);
 		//	int n=2;
 		/* for(int i=0;i<n;i++){
@@ -28,7 +27,7 @@ public class Filters implements Filter{
 	}
 
 	public void destroy() {
-		System.out.println("Filter destroy called");
+		
 
 	}
 
@@ -37,7 +36,7 @@ public class Filters implements Filter{
 
 		HttpServletRequest req = (HttpServletRequest) request;
 		String path = req.getRequestURI().substring(req.getContextPath().length());
-		System.out.println("filtering path: " + path);
+		
 
 		if(!path.contains(".")) {
 			if(path.contains("friend")||path.contains("Friend")){

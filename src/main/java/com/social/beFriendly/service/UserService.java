@@ -21,6 +21,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.beFriendly.DAO.ActivityDAO;
+import com.social.beFriendly.DAO.ChatDAO;
 import com.social.beFriendly.DAO.CommentDAO;
 import com.social.beFriendly.DAO.FriendDAO;
 import com.social.beFriendly.DAO.HeartDAO;
@@ -33,6 +34,7 @@ import com.social.beFriendly.DAO.UploadPicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.DAO.UserInfoDAO;
 import com.social.beFriendly.model.Activity;
+import com.social.beFriendly.model.Chat;
 import com.social.beFriendly.model.Comment;
 import com.social.beFriendly.model.Email;
 import com.social.beFriendly.model.Friend;
@@ -1273,5 +1275,35 @@ public UserInfo getmyInfo(ObjectId uid) {
 	return userInfo;
 	
 }
+public void storeChat(ObjectId uid, ObjectId fid, String text) {
+	ChatDAO chatdao = new ChatDAO();
+	Date sentAt = new Date();
+	JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+	Chat chat = new Chat();
+	chat.setDelivered(false);
+	chat.setSenderId(uid);
+	chat.setRecieverId(fid);
+	chat.setSentAt(sentAt);
+	chat.setDeliveredAt(null);
+	chat.setText(text);
+	chatCollection.insert(chat);
+	
+}
+public List<Chat> getmessage(ObjectId recieverId) {
+	
+	ChatDAO chatdao = new ChatDAO();
+	JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+	List<Chat> chatList = new ArrayList<Chat>();
+	BasicDBObject query = new BasicDBObject();
+	query.put("recieverId", recieverId);
+	query.put("isDelivered", false);
+	DBCursor<Chat> cursor = chatCollection.find(query);
+	while(cursor.hasNext()){
+		Chat chat = new Chat();
+		chatList.add(chat);
+	}
+	return chatList;
+}
+
 
 }

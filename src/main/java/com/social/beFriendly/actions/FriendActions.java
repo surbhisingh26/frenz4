@@ -117,7 +117,7 @@ public class FriendActions extends HttpServlet {
 			hmap.putAll(useraction.getUserDetails(request, response));
 			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
-			List<User> friendList = friendService.getFriends(uid);
+			List<Object> friendList = friendService.getFriends(uid,30);
 			System.out.println("................."+hmap);
 
 			hmap.put("friendList", friendList);
@@ -318,6 +318,41 @@ public class FriendActions extends HttpServlet {
 			System.out.println("..............." + uid);
 			utility.getHbs(response, "friends_activity", hmap, templatePath);
 			System.out.println("end");
+
+		}
+		catch(Exception e){
+
+		}
+	}
+	public void onlinefriends(HttpServletRequest request,HttpServletResponse response){
+		try{
+			UserActions useraction = new UserActions();
+			System.out.println("Friends Activity");
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			FriendService friendService = new FriendService();
+			hmap.putAll(friendService.onlineFriends(uid));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
+			
+		}
+		catch(Exception e){
+
+		}
+	}
+	public void friendchatwindow(HttpServletRequest request,HttpServletResponse response){
+		try{
+			UserActions useraction = new UserActions();
+			
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			String fid = request.getParameter("fid");
+			UserService userService = new UserService();
+			User userFriend = userService.findOneById(fid);
+			hmap.put("userFriend", userFriend);
+			utility.getHbs(response, "chat_panel", hmap, templatePath);
+			
 
 		}
 		catch(Exception e){
