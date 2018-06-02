@@ -13,7 +13,9 @@ public class Chat extends BaseObject {
 	private String text;
 	private Date sentAt;
 	private Date deliveredAt;
-	private boolean isDelivered;
+	private boolean delivered;
+	private boolean me;
+	
 	public ObjectId getSenderId() {
 		return senderId;
 	}
@@ -45,11 +47,18 @@ public class Chat extends BaseObject {
 		this.deliveredAt = deliveredAt;
 	}
 	public boolean isDelivered() {
-		return isDelivered;
+		return delivered;
 	}
-	public void setDelivered(boolean isDelivered) {
-		this.isDelivered = isDelivered;
+	public void setDelivered(boolean delivered) {
+		this.delivered = delivered;
 	}
+	public boolean isMe() {
+		return me;
+	}
+	public void setMe(boolean me) {
+		this.me = me;
+	}
+	
 	
 	
 }

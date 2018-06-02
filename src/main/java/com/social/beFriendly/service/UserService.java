@@ -1289,20 +1289,61 @@ public void storeChat(ObjectId uid, ObjectId fid, String text) {
 	chatCollection.insert(chat);
 	
 }
-public List<Chat> getmessage(ObjectId recieverId) {
+public List<Object> getmessage(ObjectId recieverId) {
 	
 	ChatDAO chatdao = new ChatDAO();
+	Date deliveredAt = new Date();
 	JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
-	List<Chat> chatList = new ArrayList<Chat>();
+	List<Object> chatList = new ArrayList<Object>();
+	
+	chatList = chatdao.singleAggregation("user", 30, recieverId, "recieverId");
+	
 	BasicDBObject query = new BasicDBObject();
 	query.put("recieverId", recieverId);
-	query.put("isDelivered", false);
+	query.put("delivered", false);
 	DBCursor<Chat> cursor = chatCollection.find(query);
 	while(cursor.hasNext()){
-		Chat chat = new Chat();
-		chatList.add(chat);
+		Chat chat = cursor.next();
+		
+		chat.setDeliveredAt(deliveredAt);
+		chat.setDelivered(true);
+		chatCollection.updateById(chat.getId(), chat);
 	}
 	return chatList;
+}
+public Map<String,Object> getChat(ObjectId uid, ObjectId fid) {
+	
+	List<Chat> mychat = new ArrayList<Chat>();
+	Map<String,Object> hmap = new HashMap<String, Object>();
+	ChatDAO chatdao = new ChatDAO();
+	JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+	
+	
+	
+	BasicDBObject query = new BasicDBObject("$or",Arrays.asList(new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",uid)
+			.append("senderId", fid))),new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",fid)
+			.append("senderId", uid)))));
+		//db.chat.find({ "$or" : [ { "$and" : [ { "recieverId" : ObjectId("5af547cde2e9a70900b73338") , "senderId" : ObjectId("5af16a61e2e9a708c090917e")}]},{ "$and" : [ { "senderId" : ObjectId("5af547cde2e9a70900b73338") , "recieverId" : ObjectId("5af16a61e2e9a708c090917e")}]}] , "delivered" : true}).pretty()
+
+	
+	query.put("delivered", true);
+	
+	DBCursor<Chat> cursor = chatCollection.find(query).limit(30);
+	while(cursor.hasNext()){
+		Chat chat = cursor.next();
+		
+		if(chat.getRecieverId().equals(uid)) {
+			chat.setMe(true);
+		}
+		
+		mychat.add(chat);
+	}
+	
+	
+	
+	hmap.put("mychat", mychat);
+	//hmap.put("friendchat", friendchat);
+	return hmap;
 }
 
 

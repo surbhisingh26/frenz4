@@ -118,7 +118,7 @@
     float: left;
 	display:block;
 position:relative;	
-z-index:99999 !important;
+
 	height:20%;
 	}
     .chat-right-aside .chat-list {

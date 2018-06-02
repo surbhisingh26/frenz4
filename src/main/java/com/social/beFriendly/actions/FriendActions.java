@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
+import com.social.beFriendly.model.Chat;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.FriendService;
@@ -350,6 +351,8 @@ public class FriendActions extends HttpServlet {
 			String fid = request.getParameter("fid");
 			UserService userService = new UserService();
 			User userFriend = userService.findOneById(fid);
+			hmap.putAll(userService.getChat(uid,new ObjectId(fid)));
+			hmap.put("fid", fid);
 			hmap.put("userFriend", userFriend);
 			utility.getHbs(response, "chat_panel", hmap, templatePath);
 			

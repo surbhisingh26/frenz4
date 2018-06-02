@@ -409,8 +409,8 @@ public class UserActions extends HttpServlet {
 			String fileName = request.getParameter("filename");
 			System.out.println("File is ................ " + fileName);
 			Part file = request.getPart("file");
-			System.out.println("File is ................ " + file);
-
+			System.out.println("File is ................ " + file.getName());
+			
 			hmap.put("file", file);
 			hmap.put("filename",fileName);
 			file.write(fileSaveDir + File.separator + fileName);
@@ -850,7 +850,7 @@ public class UserActions extends HttpServlet {
 	        if (asyncSupported) {
 	            AsyncContext asyncCtx = request.startAsync(request, response);  // req.startAsync();
 	            asyncCtx.setTimeout(0); // => disable timeout
-	            AsyncRunnable thread = new AsyncRunnable(asyncCtx);
+	            AsyncRunnable thread = new AsyncRunnable(asyncCtx,uid);
 	            asyncCtx.start(thread);
 	        }
 			
