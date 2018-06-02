@@ -74,7 +74,7 @@
 							<target>
 								<copy
 									file="${project.build.directory}/${project.build.finalName}.war"
-									todir="/soft/apache-tomcat-8.5.23/webapps" /> 
+									todir="D:/apps/apache-tomcat-8.5.5/webapps" /> 
 									
 							</target>
 						</configuration>
