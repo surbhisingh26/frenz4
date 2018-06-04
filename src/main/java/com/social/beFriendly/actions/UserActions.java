@@ -38,6 +38,7 @@ import com.social.scframework.highchart.HighChart;
 /**
  * Servlet implementation class UserActions
  */
+
 public class UserActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
@@ -407,9 +408,13 @@ public class UserActions extends HttpServlet {
 				fileSaveDir.mkdirs();
 			}
 			String fileName = request.getParameter("filename");
+			//for(Map.Entry<String, String[]> entry : request.getParameterMap().entrySet()) {
+			//	System.out.println("key " + entry.getKey() +  " --- "  + entry.getValue());
+		//	}
 			System.out.println("File is ................ " + fileName);
+			System.out.println("File is ................ " + request.getParameter("file"));
 			Part file = request.getPart("file");
-			System.out.println("File is ................ " + file.getName());
+//			System.out.println("File is ................ " + file.getName());
 			
 			hmap.put("file", file);
 			hmap.put("filename",fileName);

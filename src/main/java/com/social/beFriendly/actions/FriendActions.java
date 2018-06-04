@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
-import com.social.beFriendly.model.Chat;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.FriendService;
@@ -355,6 +354,33 @@ public class FriendActions extends HttpServlet {
 			hmap.put("fid", fid);
 			hmap.put("userFriend", userFriend);
 			utility.getHbs(response, "chat_panel", hmap, templatePath);
+			
+
+		}
+		catch(Exception e){
+
+		}
+	}
+	public void heartfriend(HttpServletRequest request,HttpServletResponse response){
+		try{
+			UserActions useraction = new UserActions();
+			System.out.println("Friends Activity");
+			hmap.putAll(useraction.getUserDetails(request, response));
+			uid = (ObjectId) hmap.get("uid");
+			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			String skipStr = request.getParameter("skip");
+			String broken = request.getParameter("broken");
+			int skip = 0;
+			int limit = 15;
+			if(skipStr!=null&&!skipStr.equals("")){
+				skip=Integer.parseInt(skipStr);
+			}
+			
+			FriendService friendService = new FriendService();
+			hmap.putAll(friendService.heartFriend(activityId,skip,limit,Boolean.parseBoolean(broken)));
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
 			
 
 		}

@@ -1421,6 +1421,8 @@
       for (_i = 0, _len = files.length; _i < _len; _i++) {
         file = files[_i];
         file.status = Dropzone.SUCCESS;
+        console.log('file ' , file);
+        console.log('file ' , responseText);
         this.emit("success", file, responseText, e);
         this.emit("complete", file);
       }

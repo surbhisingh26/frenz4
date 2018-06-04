@@ -9,6 +9,9 @@
 			<div class="">
                                 <button class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
                             </div>
+                         <div class="">
+                                <button class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10" onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})"><i class="mdi mdi-wechat text-white"></i></button>
+                            </div>
                 <!-- ============================================================== -->
                 <!-- Bread crumb and right sidebar toggle -->
                 <!-- ============================================================== -->
@@ -45,8 +48,9 @@
 										{{#myActivityList}}
 										{{#profilepic}}
 										<div class="sl-item">
-												
+												<div>
                                                 <div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
+												</div>
 												<h4 style="padding-bottom:15px"><strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong> Changed display image</h4><br>
 												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{uploadTime}}</small></div>
                                                 <div class="sl-right text-center timeline{{_id}}">
@@ -98,8 +102,9 @@
 										{{/profilepic}}
 										{{#uploadpic}}
 										<div class="sl-item">
-												
+												<div>
                                                 <div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
+												</div>
 												<h4 style="padding-bottom:15px"><strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong> Uploaded new Image</h4><br>
 												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{uploadTime}}</small></div>
                                                 <div class="sl-right text-center timeline{{_id}}">
@@ -151,8 +156,9 @@
 										{{/uploadpic}}
 										{{#friend}}
 										<div class="sl-item">
-												
+												<div>
                                                 <div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
+												</div>
 												<h4><strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong> Sent Request to <a href="friendprofile?fid={{#userFriend}}{{id}}{{/userFriend}}"><img src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="user" class="img-circle" width="40" height="40"> <strong>{{#userFriend}}{{name}}{{/userFriend}}</strong> </a></h4><br>
 												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{date}}</small></div>
                                                 
