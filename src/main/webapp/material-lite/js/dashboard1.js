@@ -4,7 +4,7 @@ Author: Themedesigner
 Email: niravjoshi87@gmail.com
 File: js
 */
-$(function () {
+/*$(function () {
     "use strict";
     // ============================================================== 
     // Sales overview
@@ -217,4 +217,4 @@ $(function () {
     sparklineLogin();
     
     
-});
+});*/

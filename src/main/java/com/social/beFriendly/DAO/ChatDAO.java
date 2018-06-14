@@ -34,7 +34,7 @@ public List<Object> singleAggregation(String db1, int limit, ObjectId match, Str
 		
 List<Object> chatList = new ArrayList<Object>();
 	
-	
+System.out.println("Step1 service");
 	List<DBObject> pipeline = new ArrayList<DBObject>();
 	DBObject matchRecieverId = new BasicDBObject("$match",
 			new BasicDBObject(matchField , match)
@@ -44,16 +44,20 @@ List<Object> chatList = new ArrayList<Object>();
 			new BasicDBObject("delivered" , false)
 
 			);
+	System.out.println("Step2 service");
 	pipeline.add(matchRecieverId);
 	pipeline.add(matchDelivered);
+	System.out.println("Step3 service");
 	DBObject lookupFields = new BasicDBObject("from", "user");
 	lookupFields.put("localField","senderId");
 	lookupFields.put("foreignField","_id");
 	lookupFields.put("as", "friend");  
 	pipeline.add(new BasicDBObject("$lookup",lookupFields));
+	System.out.println("Step4 service");
 	//DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
 	//pipeline.add(unwindFriend);
 	AggregationOutput output = chatCollectionDAO().aggregate(pipeline);
+	System.out.println("Step5 service");
 	for (DBObject result : output.results()) {
 		
 		chatList.add(result);

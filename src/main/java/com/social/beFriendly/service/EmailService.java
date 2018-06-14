@@ -84,6 +84,7 @@ public class EmailService {
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		
 		long totalCount = emailCollection.getCount();
+		System.out.println("total..................." + totalCount);
 		BasicDBObject query = new BasicDBObject();
 		if(ascending.equalsIgnoreCase("true")){
 			query.put(sortBy, -1);
@@ -92,7 +93,7 @@ public class EmailService {
 			query.put(sortBy, 1);
 		DBCursor<Email> cursor = emailCollection.find().skip(skip).limit(limit).sort(query);
 
-		
+		System.out.println("Cursor..........");
 		while(cursor.hasNext()){
 			Email email = cursor.next();
 			emailList.add(email);

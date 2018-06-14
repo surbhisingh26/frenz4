@@ -98,13 +98,15 @@ public class AdminActions extends HttpServlet {
 			if(sort==null){
 				sort = "date";
 			}
+			System.out.println("................sort " + sort );
+			System.out.println("................order " + order );
 			String ascending = "false";
 			if (order!=null && order.equalsIgnoreCase("asc")) {
 				ascending = "true";
 			} else {
 				ascending = "false";
 			}
-
+			System.out.println("Calling..........");
 			hmap.putAll(emailservice.emailtable(limit,skip,ascending,sort));
 			System.out.println(hmap);
 			response.setContentType("application/json");

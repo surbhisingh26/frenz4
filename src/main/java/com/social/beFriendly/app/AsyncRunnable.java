@@ -34,13 +34,16 @@ public class AsyncRunnable implements Runnable {
             
            UserService userService = new UserService();
            List<Object> chatList = userService.getmessage(recieverId);
+           System.out.println("step1 run");
            hmap.put("chatList", chatList);
           // hmap.put("date", new Date().toString());
             System.out.println("After calling complete");
             response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(new Gson().toJson(hmap));
+			System.out.println("step1 run");
 			asyncContext.complete();
+			System.out.println("step1 run");
         } 
         catch (Exception e) {
             e.printStackTrace();

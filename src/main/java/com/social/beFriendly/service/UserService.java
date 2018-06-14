@@ -73,6 +73,7 @@ public class UserService {
 	JacksonDBCollection<UploadPic, String> uploadCollection =  uploadpicdao.uploadPicDAO();
 	ActivityDAO activitydao = new ActivityDAO();
 	JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
+	
 	public Boolean registerUser(String fname, String lname, String mname, String country, String city, String mobile,
 			String password, String gender, String dob, String bgcolor, String filePath, String email, String reference,
 			String referenceId) {
@@ -1292,23 +1293,25 @@ public void storeChat(ObjectId uid, ObjectId fid, String text) {
 public List<Object> getmessage(ObjectId recieverId) {
 	
 	ChatDAO chatdao = new ChatDAO();
-	Date deliveredAt = new Date();
 	JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
 	List<Object> chatList = new ArrayList<Object>();
-	
+	System.out.println("Step1 dao");
 	chatList = chatdao.singleAggregation("user", 30, recieverId, "recieverId");
-	
+	System.out.println("Step2 dao");
+	Date deliveredAt = new Date();
 	BasicDBObject query = new BasicDBObject();
+	System.out.println("Step3 dao");
 	query.put("recieverId", recieverId);
 	query.put("delivered", false);
 	DBCursor<Chat> cursor = chatCollection.find(query);
 	while(cursor.hasNext()){
 		Chat chat = cursor.next();
-		
+		System.out.println("Step4 dao");
 		chat.setDeliveredAt(deliveredAt);
 		chat.setDelivered(true);
 		chatCollection.updateById(chat.getId(), chat);
 	}
+	System.out.println("Step5 dao");
 	return chatList;
 }
 public Map<String,Object> getChat(ObjectId uid, ObjectId fid) {

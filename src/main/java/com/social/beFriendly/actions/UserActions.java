@@ -853,6 +853,7 @@ public class UserActions extends HttpServlet {
 	        asyncSupported = request.isAsyncSupported();
 	        System.out.println("asyncSupported 2: " + asyncSupported);
 	        if (asyncSupported) {
+	        	System.out.println("async");
 	            AsyncContext asyncCtx = request.startAsync(request, response);  // req.startAsync();
 	            asyncCtx.setTimeout(0); // => disable timeout
 	            AsyncRunnable thread = new AsyncRunnable(asyncCtx,uid);
