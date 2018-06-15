@@ -22,29 +22,26 @@ import com.social.beFriendly.DAO.ActivityDAO;
 
 import com.social.beFriendly.DAO.FriendDAO;
 import com.social.beFriendly.DAO.HeartDAO;
-import com.social.beFriendly.DAO.ProfilePicDAO;
 import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.model.Activity;
 
 import com.social.beFriendly.model.Friend;
 import com.social.beFriendly.model.Heart;
-import com.social.beFriendly.model.ProfilePic;
+
 import com.social.beFriendly.model.User;
 
 public class FriendService {
-	FriendDAO frienddao = new FriendDAO();
-	JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
+	
 
-	UserDAO userdao = new UserDAO();
-	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
+	
 
-	ProfilePicDAO profilepicdao = new ProfilePicDAO();
-	JacksonDBCollection<ProfilePic, String> dpCollection =  profilepicdao.profilePicDAO();
-
-	ActivityDAO activitydao = new ActivityDAO();
-	JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
-
+	
 	public void beFriend(ObjectId uid, ObjectId fid) {
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
+
 		Date requestDate = new Date();
 
 		Friend user = new Friend();
@@ -71,7 +68,8 @@ public class FriendService {
 		activityCollection.insert(activity);
 	}
 	public String checkStatus(ObjectId uid, ObjectId objectId) {
-
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid",uid);
 		query.put("fid",objectId);
@@ -90,6 +88,8 @@ public class FriendService {
 		return "Not Friends";
 	}
 	public void friendResponse(ObjectId uid, ObjectId fid, String requestResponse) {
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		Date date = new Date();
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
@@ -125,6 +125,8 @@ public class FriendService {
 
 	}
 	public void cancelRequest(ObjectId uid, ObjectId fid) {
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid",uid);
 		query.put("fid", fid);
@@ -137,6 +139,8 @@ public class FriendService {
 
 	}
 	public void removeFriend(ObjectId uid, ObjectId fid) {
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid",uid);
 		query.put("fid", fid);
@@ -152,12 +156,15 @@ public class FriendService {
 
 	}
 	public List<Object> getFriends(ObjectId uid,int limit) {
+		FriendDAO frienddao = new FriendDAO();
 		
 		List<Object> friendList = frienddao.doubleAggregation("user","userinfo",limit,uid,"uid");
 
 		return friendList;
 	}
 	public List<User> getFriendRequests(ObjectId uid) {
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		BasicDBObject query = new BasicDBObject();
 		List<User> requestList = new ArrayList<User>();
 		query.put("uid", uid);
@@ -173,6 +180,7 @@ public class FriendService {
 
 	}
 	public Map<String,Object> friendsActivity(ObjectId uid) {
+		UserDAO userdao = new UserDAO();
 		
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = userdao.userCollectionDAO();
@@ -354,7 +362,10 @@ public class FriendService {
 		return hmap;
 	}
 	public Map<String,Object> onlineFriends(ObjectId uid) {
-		
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		List<User> friendList = new ArrayList<User>();
 		BasicDBObject query = new BasicDBObject();

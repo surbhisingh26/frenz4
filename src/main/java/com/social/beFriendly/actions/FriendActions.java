@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
+import com.social.beFriendly.app.RequestResponseUtility;
 import com.social.beFriendly.model.User;
 import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.FriendService;
@@ -33,7 +34,7 @@ public class FriendActions extends HttpServlet {
 	 */
 	public FriendActions() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -75,9 +76,10 @@ public class FriendActions extends HttpServlet {
 	public void befriend(HttpServletRequest request, HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
 			UserService userservice = new UserService();
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 
@@ -113,8 +115,10 @@ public class FriendActions extends HttpServlet {
 	public void friends(HttpServletRequest request,HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
-			hmap.putAll(useraction.getUserDetails(request, response));
+			
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			List<Object> friendList = friendService.getFriends(uid,30);
@@ -132,7 +136,7 @@ public class FriendActions extends HttpServlet {
 			try {
 				response.getWriter().write(new Gson().toJson(hmap));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}
 		}
@@ -140,9 +144,11 @@ public class FriendActions extends HttpServlet {
 	public void friendresponse(HttpServletRequest request,HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
+			
 			UserService userservice = new UserService();
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 			String requestResponse = request.getParameter("response");
@@ -184,7 +190,7 @@ public class FriendActions extends HttpServlet {
 			try {
 				response.getWriter().write(new Gson().toJson(hmap));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}
 		}
@@ -192,8 +198,10 @@ public class FriendActions extends HttpServlet {
 	public void cancelfriendrequest(HttpServletRequest request,HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
-			hmap.putAll(useraction.getUserDetails(request, response));
+			
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 			ObjectId fid = new ObjectId(request.getParameter("fid"));
@@ -217,7 +225,7 @@ public class FriendActions extends HttpServlet {
 			try {
 				response.getWriter().write(new Gson().toJson(hmap));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}
 		}
@@ -225,8 +233,9 @@ public class FriendActions extends HttpServlet {
 	public void removefriend(HttpServletRequest request,HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			System.out.println(fid);
@@ -247,7 +256,7 @@ public class FriendActions extends HttpServlet {
 			try {
 				response.getWriter().write(new Gson().toJson(hmap));
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				
 				e1.printStackTrace();
 			}
 		}
@@ -255,9 +264,11 @@ public class FriendActions extends HttpServlet {
 	public void friendprofile(HttpServletRequest request,HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
+			
 			UserService userservice = new UserService();
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			System.out.println(fid);
@@ -283,9 +294,9 @@ public class FriendActions extends HttpServlet {
 	public void friendrequest(HttpServletRequest request,HttpServletResponse response){
 		try{
 
-			UserActions useraction = new UserActions();
-
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 
 			FriendService friendService = new FriendService();
@@ -309,9 +320,11 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendactivity(HttpServletRequest request,HttpServletResponse response){
 		try{
-			UserActions useraction = new UserActions();
+		
 			System.out.println("Friends Activity");
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			hmap.putAll(friendService.friendsActivity(uid));
@@ -326,9 +339,11 @@ public class FriendActions extends HttpServlet {
 	}
 	public void onlinefriends(HttpServletRequest request,HttpServletResponse response){
 		try{
-			UserActions useraction = new UserActions();
+			
 			System.out.println("Friends Activity");
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			FriendService friendService = new FriendService();
 			hmap.putAll(friendService.onlineFriends(uid));
@@ -343,9 +358,10 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendchatwindow(HttpServletRequest request,HttpServletResponse response){
 		try{
-			UserActions useraction = new UserActions();
 			
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			String fid = request.getParameter("fid");
 			UserService userService = new UserService();
@@ -363,9 +379,11 @@ public class FriendActions extends HttpServlet {
 	}
 	public void heartfriend(HttpServletRequest request,HttpServletResponse response){
 		try{
-			UserActions useraction = new UserActions();
+			
 			System.out.println("Friends Activity");
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
 			String skipStr = request.getParameter("skip");

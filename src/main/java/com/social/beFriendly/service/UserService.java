@@ -61,23 +61,13 @@ import com.social.scframework.highchart.ToolTip;
 import com.social.scframework.highchart.XAxis;
 import com.social.scframework.highchart.YAxis;
 
-
-
-
 public class UserService {
-	UserDAO userdao = new UserDAO();
-	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
-	ProfilePicDAO profilepicdao = new ProfilePicDAO();
-	JacksonDBCollection<ProfilePic, String> dpCollection =  profilepicdao.profilePicDAO();
-	UploadPicDAO uploadpicdao = new UploadPicDAO();
-	JacksonDBCollection<UploadPic, String> uploadCollection =  uploadpicdao.uploadPicDAO();
-	ActivityDAO activitydao = new ActivityDAO();
-	JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
 	
 	public Boolean registerUser(String fname, String lname, String mname, String country, String city, String mobile,
 			String password, String gender, String dob, String bgcolor, String filePath, String email, String reference,
 			String referenceId) {
-
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		if(!mname.equals(""))
 			mname = mname + " ";
 		User registration = new User();
@@ -187,7 +177,8 @@ public class UserService {
 		return true;
 	}
 	public String checkValid(String email, String password, String reference, String referenceId) {
-
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		if(email!=""){
 			BasicDBObject query = new BasicDBObject();
 			query.put("email", email);
@@ -229,7 +220,8 @@ public class UserService {
 
 	}
 	public Boolean login(String uid){
-
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		User user = userCollection.findOneById(uid);
 		System.out.println(uid);
 		System.out.println(user.getName());
@@ -239,13 +231,16 @@ public class UserService {
 
 	}
 	public User findOneById(String uid) {
-
+		System.out.println("user findOneById " );
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		User user = userCollection.findOneById(uid);
 		return user;
 	}
 
 	public void logout(ObjectId uid){
-
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		Date date = new Date();		
 
 		//System.out.println("Date is "+now);
@@ -255,6 +250,8 @@ public class UserService {
 		userCollection.updateById(uid.toString(), user);
 	}
 	public Map<String,Object> searchUser(String search,ObjectId uid) {
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("name", new BasicDBObject("$regex" , "(?i).*"+search+".*"));
@@ -339,6 +336,13 @@ public class UserService {
 		return hmap;
 	}
 	public User updatePic(String filePath, ObjectId uid) {
+		ProfilePicDAO profilepicdao = new ProfilePicDAO();
+		JacksonDBCollection<ProfilePic, String> dpCollection =  profilepicdao.profilePicDAO();
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
+		
 		User user = userCollection.findOneById(uid.toString());
 		System.out.println("uid is ..."+uid);
 		user.setImagepath(filePath);
@@ -379,7 +383,8 @@ public class UserService {
 		return user;
 	}
 	public List<ProfilePic> getProfilePic(ObjectId uid) {
-
+		ProfilePicDAO profilepicdao = new ProfilePicDAO();
+		JacksonDBCollection<ProfilePic, String> dpCollection =  profilepicdao.profilePicDAO();
 		List<ProfilePic> profilePicList = new ArrayList<ProfilePic>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
@@ -393,7 +398,11 @@ public class UserService {
 		return profilePicList;
 	}
 	public void uploadPic(String filePath, ObjectId uid) {
-
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
+		
+		UploadPicDAO uploadpicdao = new UploadPicDAO();
+		JacksonDBCollection<UploadPic, String> uploadCollection =  uploadpicdao.uploadPicDAO();
 		Date time = new Date();
 		UploadPic upload = new UploadPic();
 		upload.setPath(filePath);
@@ -415,7 +424,8 @@ public class UserService {
 
 	}
 	public List<UploadPic> getUploadPic(ObjectId uid) {
-
+		UploadPicDAO uploadpicdao = new UploadPicDAO();
+		JacksonDBCollection<UploadPic, String> uploadCollection =  uploadpicdao.uploadPicDAO();
 		List<UploadPic> uploadPicList = new ArrayList<UploadPic>();
 		BasicDBObject query = new BasicDBObject();
 		BasicDBObject sort = new BasicDBObject();
@@ -434,6 +444,8 @@ public class UserService {
 	}
 
 	public Map<String,Object> myActivity(ObjectId uid) {
+		ActivityDAO activitydao = new ActivityDAO();
+		
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = activitydao.activityCollectionDAO();
 		List<Object> myActivityList = new ArrayList<Object>();
@@ -535,6 +547,8 @@ public class UserService {
 		comment.setFid(fid);
 		comment.setTime(date);
 		commentCollection.insert(comment);
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
 		
 		BasicDBObject query = new BasicDBObject();
 		query.put("activityId", activityId);
@@ -548,6 +562,8 @@ public class UserService {
 
 	}
 	public Map<String,Object> showComments(ObjectId activityId,int skip,int limit) {
+		ActivityDAO activitydao = new ActivityDAO();
+		
 		Map<String, Object> hmap = new HashMap<String, Object>();
 		DBCollection coll = activitydao.activityCollectionDAO();
 		CommentDAO commentdao = new CommentDAO();
@@ -684,6 +700,9 @@ public class UserService {
 		return hmap;
 	}
 	public Map<String, Object> heartIncrease(ObjectId activityId, ObjectId uid, boolean broken) {
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
+		
 		Map<String, Object> hmap = new HashMap<String, Object>();
 		HeartDAO heartdao = new HeartDAO();
 		JacksonDBCollection<Heart, String> heartCollection = heartdao.heartDAO();
@@ -739,6 +758,9 @@ public class UserService {
 		return hmap;
 	}
 	public void addStatus(ObjectId uid, String statusText) {
+		ActivityDAO activitydao = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection =  activitydao.activityDAO();
+		
 		StatusDAO statusdao = new StatusDAO();
 		JacksonDBCollection<Status, String> statusCollection = statusdao.statusDAO();
 		Date date = new Date();
@@ -1032,6 +1054,8 @@ public class UserService {
 		
 	}
 	public void updateProfile(ObjectId uid, String name, String email, String address, String mobile, String aboutme, String country, String city) {
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		User user = userCollection.findOneById(uid.toString());
 		user.setName(name, "", "");
 		user.setCity(city);
@@ -1062,7 +1086,8 @@ public class UserService {
 		
 	}
 	public String invite(ObjectId uid,String recieverEmail){
-
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		User user = userCollection.findOneById(uid.toString());
 		BasicDBObject query = new BasicDBObject();
 		query.put("email", recieverEmail);
@@ -1090,7 +1115,8 @@ public class UserService {
 
 	}
 public Map<String, Object> usertable(int limit, int skip,String ascending,String sortBy) {
-		
+	UserDAO userdao = new UserDAO();
+	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		List<User> userList = new ArrayList<User>();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		
@@ -1115,7 +1141,8 @@ public Map<String, Object> usertable(int limit, int skip,String ascending,String
 	}
 public void updateUser(String id,String name, String email, String lastLoggedIn, String country) {
 	try {	
-
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 		Date datetime = format.parse(lastLoggedIn);
 		System.out.println("Date time is ............. " + datetime);
@@ -1140,7 +1167,8 @@ public void updateUser(String id,String name, String email, String lastLoggedIn,
 
 }
 public void deleteUser(String id) {
-	
+	UserDAO userdao = new UserDAO();
+	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 	System.out.println(id);
 	userCollection.removeById(id);
 
@@ -1148,7 +1176,8 @@ public void deleteUser(String id) {
 }
 public void editUser(String id, String field, String change) {
 	try {
-		
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		User user = userCollection.findOneById(id);
 		String fieldName = field.substring(0,1).toUpperCase() + field.substring(1);
 		System.out.println(fieldName);
@@ -1256,7 +1285,8 @@ public Map<String,Object> getLatestPoints() {
 	return hmap;
 }
 public String changePassword(String currentPass, String newPass, ObjectId uid) {
-	
+	UserDAO userdao = new UserDAO();
+	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 	User user = userCollection.findOneById(uid.toString());
 	String oldPass = user.getPassword();
 	if(!oldPass.equals(currentPass)){
@@ -1268,6 +1298,7 @@ public String changePassword(String currentPass, String newPass, ObjectId uid) {
 	return "changed";
 }
 public UserInfo getmyInfo(ObjectId uid) {
+	
 	UserInfoDAO userInfoDAO = new UserInfoDAO();
 	JacksonDBCollection<UserInfo, String> userinfoCollection = userInfoDAO.userInfoDAO();
 	BasicDBObject query = new BasicDBObject();
@@ -1311,6 +1342,7 @@ public List<Object> getmessage(ObjectId recieverId) {
 		chat.setDelivered(true);
 		chatCollection.updateById(chat.getId(), chat);
 	}
+	
 	System.out.println("Step5 dao");
 	return chatList;
 }

@@ -20,6 +20,7 @@ import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
 import com.social.beFriendly.app.AsyncRunnable;
+import com.social.beFriendly.app.RequestResponseUtility;
 import com.social.beFriendly.model.Points;
 import com.social.beFriendly.model.ProfilePic;
 import com.social.beFriendly.model.UploadPic;
@@ -89,25 +90,7 @@ public class UserActions extends HttpServlet {
 			} 
 		}
 	}
-	public Map<String, Object> getUserDetails(HttpServletRequest request,HttpServletResponse response){
-
-
-		Map<String, Object> hmap = new HashMap<String, Object>();
-		uid = new ObjectId(utility.getSession(request));
-		UserService userservice = new UserService();
-		User user = userservice.findOneById(uid.toString());
-		if(user.getuType().equals("Admin")){
-			hmap.put("admin", true);
-		}
-		hmap.put("loggedInUser", user);
-		hmap.put("uid", uid);
-		if(uid!=null)
-			hmap.put("login", true);
-		NotificationService notificationService = new NotificationService();
-		hmap.putAll(notificationService.notificationRead(uid));
-
-		return hmap;
-	}
+	
 	public void login(HttpServletRequest request,HttpServletResponse response){
 
 		try {
@@ -297,8 +280,9 @@ public class UserActions extends HttpServlet {
 	public void dashboard(HttpServletRequest request,HttpServletResponse response){
 
 		try {
+			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			hmap.putAll(rrutility.getUserDetails(request));
 			UserService userService = new UserService();
 			uid = (ObjectId) hmap.get("uid");
 			List<Object> friendList = new ArrayList<Object>();
@@ -308,6 +292,7 @@ public class UserActions extends HttpServlet {
 			hmap.put("friendList", friendList);
 
 			utility.getHbs(response,"dashboard",hmap,templatePath);
+			return;
 		} catch (ServletException e) {
 
 			e.printStackTrace();
@@ -319,8 +304,9 @@ public class UserActions extends HttpServlet {
 	public void profile(HttpServletRequest request,HttpServletResponse response){
 
 		try {
+			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));			
+			hmap.putAll(rrutility.getUserDetails(request));
 			UserService userService = new UserService();
 			UserInfo myinfo = userService.getmyInfo(uid);
 			hmap.put("myinfo", myinfo);
@@ -358,8 +344,9 @@ public class UserActions extends HttpServlet {
 
 	public void gallery(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			UserService userservice = new UserService();
 			uid = (ObjectId) hmap.get("uid");
 
@@ -379,8 +366,9 @@ public class UserActions extends HttpServlet {
 
 	public void search(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			UserService userservice = new UserService();
 			String search = request.getParameter("search");
@@ -397,8 +385,9 @@ public class UserActions extends HttpServlet {
 
 	public void profilepic(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			System.out.println("profile pic "+uid);
 			String rootPath = System.getProperty("catalina.home");
@@ -436,8 +425,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void addPictures(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			String rootPath = System.getProperty("catalina.home");
 			String savePath = rootPath + File.separator + "webapps/images/beFriendlyimages/"+uid+"/uploads";
@@ -479,8 +469,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void notifications(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			NotificationService notifyservice = new NotificationService();
 			hmap.putAll(notifyservice.getNotification(uid));
@@ -495,8 +486,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void allnotifications(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			NotificationService notifyservice = new NotificationService();
 			hmap.putAll(notifyservice.getNotification(uid));
@@ -508,8 +500,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void addcomment(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 			String comment = request.getParameter("comment");
@@ -530,8 +523,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void showcomments(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			String skipStr = request.getParameter("skip");
 			String limitStr = request.getParameter("limit");
@@ -559,8 +553,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void post(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 
 			UserService userservice = new UserService();
@@ -585,8 +580,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void heartincrease(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			User user = (User) hmap.get("loggedInUser");
 			UserService userservice = new UserService();
@@ -621,8 +617,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void addstatus(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 
 			UserService userservice = new UserService();
@@ -638,8 +635,9 @@ public class UserActions extends HttpServlet {
 
 	public void gethighcharts(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			List<HighChart> highcharts = new ArrayList<HighChart>();
 			uid = (ObjectId) hmap.get("uid");
 			String fidStr = request.getParameter("fid");
@@ -663,8 +661,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void updateprofile(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 
 			uid = (ObjectId) hmap.get("uid");
 			String name = request.getParameter("name");
@@ -686,8 +685,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void earnpoints(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 
 			uid = (ObjectId) hmap.get("uid");
 			UserService userService = new UserService();
@@ -702,8 +702,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void invite(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 
 			uid = (ObjectId) hmap.get("uid");
 			String inviteEmail = request.getParameter("inviteEmail");
@@ -755,8 +756,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void settings(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 
 			uid = (ObjectId) hmap.get("uid");
 
@@ -769,8 +771,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void changepassword(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 
 			uid = (ObjectId) hmap.get("uid");
 			String currentPass = request.getParameter("currentPass");
@@ -804,9 +807,9 @@ public class UserActions extends HttpServlet {
 
 	public void googlemap(HttpServletRequest request, HttpServletResponse response){
 		try {
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
-
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 
 			FriendService friendService = new FriendService();
@@ -825,8 +828,9 @@ public class UserActions extends HttpServlet {
 
 	public void sendmessage(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			String text = request.getParameter("text");
 			ObjectId fid = new ObjectId(request.getParameter("fid"));
@@ -841,8 +845,9 @@ public class UserActions extends HttpServlet {
 	}
 	public void checkmessage(HttpServletRequest request,HttpServletResponse response){
 		try{
-			Map<String, Object> hmap = new HashMap<String, Object>();
-			hmap.putAll(getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			System.out.println("LongPollingServlet.doGet()");
 			 

@@ -21,14 +21,11 @@ import com.social.beFriendly.model.Email;
 import com.social.beFriendly.model.Unsubscribe;
 import com.social.scframework.App.Utility;
 
-
 public class EmailService {
-	EmailDAO emaildao = new EmailDAO();
-	JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
-	UnsubscribeDAO unsubscribedao = new UnsubscribeDAO();
-	JacksonDBCollection<Unsubscribe, String> unsubscribeCollection = unsubscribedao.unsubscribeDAO();
+	
 	public String email(String from, String purpose, String recieverEmail, String status, String subject) {
-
+		EmailDAO emaildao = new EmailDAO();
+		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		Date date = new Date();
 		Email email = new Email();
 		email.setDate(date);
@@ -44,12 +41,16 @@ public class EmailService {
 
 	}
 	public void updateEmail(String id, String status) {
+		EmailDAO emaildao = new EmailDAO();
+		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		Email email = emailCollection.findOneById(id);
 		email.setStatus(status);
 		emailCollection.updateById(id, email);
 
 	}
 	public Boolean checkSubscription(String email){
+		UnsubscribeDAO unsubscribedao = new UnsubscribeDAO();
+		JacksonDBCollection<Unsubscribe, String> unsubscribeCollection = unsubscribedao.unsubscribeDAO();
 		BasicDBObject query = new BasicDBObject();
 		query.put("email", email);
 		DBCursor<Unsubscribe> cursor = unsubscribeCollection.find(query);
@@ -59,6 +60,8 @@ public class EmailService {
 		return false;
 	}
 	public void unsubscribe(String email) {
+		UnsubscribeDAO unsubscribedao = new UnsubscribeDAO();
+		JacksonDBCollection<Unsubscribe, String> unsubscribeCollection = unsubscribedao.unsubscribeDAO();
 		Unsubscribe unsubscribe = new Unsubscribe();
 		Date date = new Date();
 		unsubscribe.setEmails(email);
@@ -67,7 +70,8 @@ public class EmailService {
 	}
 	public String checkStatus(String recieverEmail, String username,String purpose ){
 		
-		
+		EmailDAO emaildao = new EmailDAO();
+		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		BasicDBObject query = new BasicDBObject();
 		query.put("recieverEmails", recieverEmail);
 		query.put("from", username);
@@ -79,7 +83,8 @@ public class EmailService {
 
 	}
 	public Map<String,Object> emailtable(int limit, int skip,String ascending,String sortBy) {
-		
+		EmailDAO emaildao = new EmailDAO();
+		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		List<Email> emailList = new ArrayList<Email>();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		
@@ -105,7 +110,8 @@ public class EmailService {
 	}
 	public void updateEmail(String id,String recieverEmail, String subject, String purpose, String from, String date, String status,String view) {
 		try {	
-
+			EmailDAO emaildao = new EmailDAO();
+			JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 			Date datetime = format.parse(date);
 			System.out.println("Date time is ............. " + datetime);
@@ -131,7 +137,8 @@ public class EmailService {
 
 	}
 	public void deleteeEmail(String id) {
-		
+		EmailDAO emaildao = new EmailDAO();
+		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		System.out.println(id);
 		emailCollection.removeById(id);
 
@@ -139,7 +146,8 @@ public class EmailService {
 	}
 	public void editemail(String id, String field, String change) {
 		try {
-			
+			EmailDAO emaildao = new EmailDAO();
+			JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 			Email email = emailCollection.findOneById(id);
 			String fieldName = field.substring(0,1).toUpperCase() + field.substring(1);
 			System.out.println(fieldName);

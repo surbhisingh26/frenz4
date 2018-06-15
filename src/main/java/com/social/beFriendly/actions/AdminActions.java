@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
+import com.social.beFriendly.app.RequestResponseUtility;
 import com.social.beFriendly.service.EmailService;
 import com.social.beFriendly.service.UserService;
 import com.social.scframework.App.Utility;
@@ -73,9 +74,10 @@ public class AdminActions extends HttpServlet {
 	}
 	public void emaillist(HttpServletRequest request, HttpServletResponse response){
 		try {
-			UserActions useraction = new UserActions();
-
-			hmap.putAll(useraction.getUserDetails(request, response));
+			
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");			
 			utility.getHbs(response, "emaillist", hmap,templatePath);
 		}
@@ -120,9 +122,10 @@ public class AdminActions extends HttpServlet {
 	}
 	public void userlist(HttpServletRequest request, HttpServletResponse response){
 		try {
-			UserActions useraction = new UserActions();
-
-			hmap.putAll(useraction.getUserDetails(request, response));
+			
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");			
 			utility.getHbs(response, "userlist", hmap,templatePath);
 		}
@@ -331,9 +334,9 @@ public class AdminActions extends HttpServlet {
 	public void sitesettings(HttpServletRequest request, HttpServletResponse response){
 		try {
 
-			UserActions useraction = new UserActions();
-			
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");			
 			UserService userService = new UserService();
 			hmap.putAll(userService.getLatestPoints());
@@ -368,7 +371,9 @@ public class AdminActions extends HttpServlet {
 
 			UserActions useraction = new UserActions();
 
-			hmap.putAll(useraction.getUserDetails(request, response));
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");			
 			utility.getHbs(response, "referrallist", hmap,templatePath);
 
