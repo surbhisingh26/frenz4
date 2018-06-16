@@ -11,6 +11,7 @@ import com.social.beFriendly.DAO.UserDAO;
 import com.social.beFriendly.app.RequestResponseUtility;
 import com.social.beFriendly.service.FriendService;
 import com.social.beFriendly.service.UserService;
+import com.social.scframework.service.DBConnection;
 
 public class QueryTool {
 	public static void main(String args[]){
@@ -18,15 +19,12 @@ public class QueryTool {
 
 //		UserService userService = new UserService();
 //		userService.getChat(new ObjectId("5af16a61e2e9a708c090917e"),new ObjectId("5af547cde2e9a70900b73338"));
-		RequestResponseUtility rrutility = new RequestResponseUtility();
-		Map<String, Object> hmap  = new HashMap<String, Object>();
-		hmap.putAll(rrutility.getUserDetails(null));
-		UserService userService = new UserService();
-		uid = (ObjectId) hmap.get("uid");
-		List<Object> friendList = new ArrayList<Object>();
-		hmap.putAll(userService.myActivity(uid));
-		FriendService friendService = new FriendService();
-		friendList = friendService.getFriends(uid, 6);
-		hmap.put("friendList", friendList);
+		DBConnection conn = new DBConnection();
+
+		for(int i = 0; i<5;i++) {
+			conn.getDB("user");
+			conn.getDB("friend");
+
+		}
 	}
 }

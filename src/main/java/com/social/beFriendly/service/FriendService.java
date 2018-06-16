@@ -37,6 +37,7 @@ public class FriendService {
 
 	
 	public void beFriend(ObjectId uid, ObjectId fid) {
+		System.out.println("beFriend");
 		FriendDAO frienddao = new FriendDAO();
 		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		ActivityDAO activitydao = new ActivityDAO();

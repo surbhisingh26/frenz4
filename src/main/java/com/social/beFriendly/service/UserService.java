@@ -231,7 +231,7 @@ public class UserService {
 
 	}
 	public User findOneById(String uid) {
-		System.out.println("user findOneById " );
+		System.out.println("user findOneById " + uid);
 		UserDAO userdao = new UserDAO();
 		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		User user = userCollection.findOneById(uid);

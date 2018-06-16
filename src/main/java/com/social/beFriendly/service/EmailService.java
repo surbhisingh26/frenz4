@@ -24,6 +24,7 @@ import com.social.scframework.App.Utility;
 public class EmailService {
 	
 	public String email(String from, String purpose, String recieverEmail, String status, String subject) {
+		System.out.println("EmailService email");
 		EmailDAO emaildao = new EmailDAO();
 		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		Date date = new Date();
@@ -41,6 +42,7 @@ public class EmailService {
 
 	}
 	public void updateEmail(String id, String status) {
+		System.out.println("updateEmail");
 		EmailDAO emaildao = new EmailDAO();
 		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		Email email = emailCollection.findOneById(id);

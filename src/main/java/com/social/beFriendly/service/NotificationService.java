@@ -18,6 +18,7 @@ public class NotificationService {
 	
 
 	public void sendNotification(ObjectId fid, String image, String notifications,String link,String subject) {
+		System.out.println("sendNotification");
 		NotificationDAO notificationdao = new NotificationDAO();
 		JacksonDBCollection<Notification,String> notifyCollection = notificationdao.notificationDAO();
 		Date date = new Date();

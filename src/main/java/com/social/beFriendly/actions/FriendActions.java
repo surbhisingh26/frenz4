@@ -74,6 +74,7 @@ public class FriendActions extends HttpServlet {
 		}
 	}
 	public void befriend(HttpServletRequest request, HttpServletResponse response){
+		System.out.println("befriend");
 		try{
 
 			UserService userservice = new UserService();
@@ -100,6 +101,7 @@ public class FriendActions extends HttpServlet {
 				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","requestTemplate",templatePath+"/EmailTemplates", hmap);
 				status = "Sent";
 			}
+			System.out.println("status " + status);
 			emailservice.updateEmail(id,status);
 			String notification = user.getName()+ " wants to be your friend";
 			notify.sendNotification(fid,user.getImagepath(),notification,"friendrequest","Friend Request");
@@ -107,6 +109,7 @@ public class FriendActions extends HttpServlet {
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(new Gson().toJson(hmap));
+			return;
 		}
 		catch(Exception e){
 			e.printStackTrace();
