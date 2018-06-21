@@ -1380,6 +1380,19 @@ public Map<String,Object> getChat(ObjectId uid, ObjectId fid) {
 	//hmap.put("friendchat", friendchat);
 	return hmap;
 }
+public void forgotPass(String password, String recoveryEmail) {
+	UserDAO userdao = new UserDAO();
+	JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
+	BasicDBObject query = new BasicDBObject();
+	System.out.println("email in service is " + recoveryEmail);
+	query.put("email", recoveryEmail);
+	User user = userCollection.findOne(query);
+	System.out.println(user);
+	user.setPassword(password);
+	userCollection.updateById(user.getId(),user);
+	
+	
+}
 
 
 }

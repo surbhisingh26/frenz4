@@ -1,122 +1,122 @@
 {{>head}}
 
-<div class="limiter">
-<p>{{message}}</p>
-		<div class="container-login100" >
-		
-			<div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-				<form class="login100-form validate-form" action = "adduser">
-				<input type="hidden" id="reference" name="reference">
-				<input type="hidden" id="referenceId" name="referenceId">
-				<input type="hidden" id="picUrl" name="picUrl">
-					<span class="login100-form-title p-b-49">
-						Create New Account
-					</span>
 
-					<div class="wrap-input100 validate-input m-b-23" data-validate = "Fisrt name is required">	
-						<span class="label-input100">First Name</span>					
-						<input class="input100" type="text" name="fname" id="fname" placeholder="First Name" onkeyup="fnames()">
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-					</div>
-					
-					<div class="wrap-input100 m-b-23" >	
-				<span class="label-input100">Middle Name</span>					
-						<input class="input100" type="text" name="mname" id="mname" placeholder="Middle Name" onkeyup="mnames()">
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-					</div>
-					
-					<div class="wrap-input100 validate-input m-b-23" data-validate = "Last name is required">	
-					<span class="label-input100">Last Name</span>
-					
-						<input class="input100" type="text" name="lname" id="lname" placeholder="Last Name" onkeyup="lnames()">
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-					</div>
-					
-					<div class="wrap-input100 validate-input m-b-23" data-validate = "Email is required">		
-				<span class="label-input100">Email</span>					
-						<input class="input100" type="email" name="email" placeholder="Email" id="email">
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-					</div>
-					
-				<p id="len" style="color:green"></p>
-					<div class="wrap-input100 validate-input m-b-23" data-validate="Password is required">
-					<span class="label-input100">Password</span>
-						<input class="input100" type="password" name="pass" id="pass" placeholder="Password" onkeydown="passLength()">
-						<span class="focus-input100" data-symbol="&#xf190;"></span>
-					</div>
-					
+ <section id="wrapper">
+ <p>{{message}}</p>
+        <div class="login-register" style="background-image:url(img/bg-image.jpg);">  
+<div class="slimscrollright">		
+            <div class="login-box card">
+            <div class="card-body" style="padding:20px">
+                <form class="form-horizontal form-material" id="loginform" action="adduser">
+                    <h3 class="box-title m-b-20">Sign Up</h3>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+						<input class="form-control" type="text" name="fname" id="fname" placeholder="First Name" onkeyup="fnames()" required="">
+                           
+                        </div>
+						<div class="col-xs-12">
+						<input class="form-control" type="text" name="mname" id="mname" placeholder="Middle Name" onkeyup="mnames()">
+                           
+                        </div>
+						<div class="col-xs-12">
+						<input class="form-control" type="text" name="lname" id="lname" placeholder="Last Name" onkeyup="lnames()">
+                           
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <div class="col-xs-12">
+                            
+							<input class="form-control" type="email" name="email" placeholder="Email" id="email" required="">
+                        </div>
+                    </div>
+                    <div class="form-group ">
+					<p id="len" style="color:green"></p>
+                        <div class="col-xs-12">
+                           
+							<input class="form-control" type="password" name="pass" id="pass" placeholder="Password" onkeydown="passLength()" required="">
+                        </div>
+                    </div>
+                    <div class="form-group">
 					<p id="wrong" style="color: red;"></p>
-					<div class="wrap-input100 validate-input m-b-23" data-validate="Please confirm your password">
-					<span class="label-input100">Confirm Password</span>
-							<input
-								type="password" class="input100" name="passConfirm"
-								placeholder="Re-Type Your Password" id="passConfirm"><span class="focus-input100" data-symbol="&#xf190;"></span>
-							
-					</div>
+                        <div class="col-xs-12">
+						<input type="password" class="form-control" name="passConfirm"
+								placeholder="Re-Type Your Password" id="passConfirm" required="">
+                            
+                        </div>
+                    </div>
+					<div class="form-group">
+                        <div class="col-xs-12">
+						<input class="form-control" type="date" name="dob" data-format="DD/MM/YY" placeholder="DOB">
+                            
+                        </div>
+                    </div>
 					
-					
-					<div class="wrap-input100 validate-input m-b-23" >
-					<span class="label-input100">D.O.B.</span>
-						<input class="input100" type="date" name="dob" data-format="DD/MM/YY">
-						
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-						
-					</div>
-					
-
-						
-						<!--<div class="date_picker wrap-input100">
-							<input type="text" id="dob" name="dob" class="input100"
-								placeholder="D.O.B"> 
-
-						</div>-->
-						
-						
-					<span class="label-input100">Gender</span>
-					<div class="radio" >					
-						<label><input class="input100" type="radio" id="female" name="gender">Female</label>			
+					<div class="form-group demo-radio-button ">
+                        <div class="col-xs-12">
+						<div class="radio" >					
+						<label><input class="form-control radio-col-cyan"" type="radio" id="female" name="gender">Female</label>			
 					</div>
 					<div class="radio">
-						<label><input class="input100" type="radio" id="male" name="gender" >Male</label>							
+						<label><input class="form-control" type="radio" id="male" name="gender" >Male</label>							
 					</div>
+                            
+                        </div>
+                    </div>
+					<div class="form-group">
+					<p id="nan" style="color:red"></p>
+                        <div class="col-xs-12">
+						<input class="form-control" type="text" name="mobile" id="mobile" placeholder="Mobile Number">
+                            
+                        </div>
+                    </div>
+					
+					<div class="form-group">
+					<p id="nan" style="color:red"></p>
+                        <div class="col-xs-12">
 						
-							<p id="nan" style="color:red"></p>			
-					<div class="wrap-input100 validate-input m-b-23" data-validate="Mobile number is required">
-					<span class="label-input100">Mobile</span>
-						<input class="input100" type="text" name="mobile" id="mobile" placeholder="Mobile Number">
-						<span class="focus-input100" data-symbol="&#x260F;"></span>
-					</div>
+						<select class="form-control form-control-line selectCountry" name="country">
+						<option>India</option>
+                                                <option>London</option>  
+                                                <option>Usa</option>
+                                                <option>Canada</option>
+                                                <option>Thailand</option>
+                                            </select>
+                            
+                        </div>
+                    </div>
+					<div class="form-group">
 					
-					
-					<div class="wrap-input100 validate-input m-b-23" data-validate="Country is required">
-					<span class="label-input100">Country</span>
-						<input class="input100" type="text" name="country" placeholder="Country">
-						
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-					</div>
-					
-					<div class="wrap-input100 validate-input m-b-23" data-validate="City is required">
-					<span class="label-input100">City</span>
-						<input class="input100" type="text" name="city" placeholder="City">
-						<span class="focus-input100" data-symbol="&#xf206;"></span>
-					</div>
-					
-					
-					
-					<div class="container-login100-form-btn">
-						<div class="wrap-login100-form-btn">
-							<div class="login100-form-bgbtn"></div>
-							<button type="submit" class="login100-form-btn" onclick="return check()">
-								Create
-							</button>
-						</div>
-					</div>
-
-					
-				</form>
-			</div>
-		</div>
-	</div>
-
-{{>footer}}
+                        <div class="col-xs-12">
+						<input class="form-control" type="text" name="city" placeholder="City">
+                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input id="checkbox-signup" type="checkbox">
+                                <label for="checkbox-signup"> I agree to all <a href="#">Terms</a></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group text-center m-t-20">
+                        <div class="col-xs-12">
+                            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" onclick="return check()">Sign Up</button>
+                        </div>
+                    </div>
+                    <div class="form-group m-b-0">
+                        <div class="col-sm-12 text-center">
+                            <p>Already have an account? <a href="login" class="text-info m-l-5"><b>Sign In</b></a></p>
+                        </div>
+                    </div>
+                </form>
+                
+            </div>
+          </div>
+        </div>
+        </div>
+        
+    </section>			
+		
 {{>foot}}
+{{>end}}

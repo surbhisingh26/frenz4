@@ -48,6 +48,12 @@
 										{{#myActivityList}}
 										{{#profilepic}}
 										<div class="sl-item">
+										 <button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
+										 <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>										 
+										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:deletePost})">Delete Forever</button>
+                                        
+                                    </div>
 												<div>
                                                 <div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
 												</div>
@@ -102,6 +108,12 @@
 										{{/profilepic}}
 										{{#uploadpic}}
 										<div class="sl-item">
+										<button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
+										 <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>										 
+										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:deletePost})">Delete Forever</button>
+                                        
+                                    </div>
 												<div>
                                                 <div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
 												</div>
@@ -155,6 +167,12 @@
 										<hr>
 										{{/uploadpic}}
 										{{#friend}}
+										<button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
+										 <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>										 
+										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:deletePost})">Cancel Request</button>
+                                        
+                                    </div>
 										<div class="sl-item">
 												<div>
                                                 <div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
@@ -168,8 +186,14 @@
 										{{/friend}}
 										{{#status}}
 									<div class="sl-item">
+									<button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
+										 <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>										 
+										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:deletePost})">Delete Forever</button>
+                                        
+                                    </div>
 									<div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
-												<h4 style="padding-bottom:15px"><strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong> Changed display image</h4><br>
+												<h4 style="padding-bottom:15px"><strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong> shared status</h4><br>
 												<div class="text-center"><i class="fa fa-clock-o" style="margin-right:5px"></i><small class="timeAgo">{{date}}</small></div>
                                             <div class="sl-right timeline{{_id}}">
                                                 <div class="note-editable" >

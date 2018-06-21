@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
@@ -214,7 +215,7 @@ public class UserActions extends HttpServlet {
 			String saltedPassword = SALT + password;
 			String hashedPassword = utility.generateHash(saltedPassword);
 
-
+			System.out.println("en pass " +hashedPassword);
 			UserService userservice = new UserService();
 			String result = userservice.checkValid(email,hashedPassword,reference,referenceId);
 			Map<String, Object> hmap  = new HashMap<String, Object>();
@@ -872,7 +873,27 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	public void resetpassword(HttpServletRequest request, HttpServletResponse response){
+		try {
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			String recoveryEmail = request.getParameter("remail");
+			System.out.println("Email is  " + recoveryEmail);
+			String generatedString = RandomStringUtils.randomAlphanumeric(7);
+			
+			UserService userService = new UserService();
+			String saltedPassword = SALT + generatedString;
+			String hashedPassword = utility.generateHash(saltedPassword);
+			userService.forgotPass(hashedPassword,recoveryEmail);
+		    hmap.put("pass", generatedString);
+			
+			Email email = new Email();
+			email.send("", recoveryEmail, "Reset Password", "reset_passTemplate", templatePath+"/EmailTemplates", hmap);
 
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
 
 
