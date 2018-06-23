@@ -7,7 +7,7 @@
   <display-name>Archetype Created Web Application</display-name>
    <filter>
 	<filter-name>Call</filter-name>
-	<filter-class>com.social.beFriendly.actions.Filters</filter-class>
+	<filter-class>com.social.frenz4.actions.Filters</filter-class>
 	</filter>
   
   <filter-mapping>
@@ -18,19 +18,19 @@
   	<servlet-name>UserActions</servlet-name>
   	<display-name>UserActions</display-name>
   	<description></description>
-  	<servlet-class>com.social.beFriendly.actions.UserActions</servlet-class>
+  	<servlet-class>com.social.frenz4.actions.UserActions</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>FriendActions</servlet-name>
   	<display-name>FriendActions</display-name>
   	<description></description>
-  	<servlet-class>com.social.beFriendly.actions.FriendActions</servlet-class>
+  	<servlet-class>com.social.frenz4.actions.FriendActions</servlet-class>
   </servlet>
   <servlet>
   	<servlet-name>AdminActions</servlet-name>
   	<display-name>AdminActions</display-name>
   	<description></description>
-  	<servlet-class>com.social.beFriendly.actions.AdminActions</servlet-class>
+  	<servlet-class>com.social.frenz4.actions.AdminActions</servlet-class>
   </servlet>
   <servlet-mapping>
   	<servlet-name>UserActions</servlet-name>

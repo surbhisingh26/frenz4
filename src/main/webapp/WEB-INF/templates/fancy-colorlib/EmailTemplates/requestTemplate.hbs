@@ -1,21 +1,21 @@
 <html>
 <body>
-<div style="background-color:#3284D8;margin:30px;padding:10px; margin-right:150px" class="container">
-	<h1><center>Be Friendly</center></h1>
+<div style="background-color:#1e88e5;margin:30px;padding:0px" class="container">
+	<h1><center>Frenz4</center></h1>
 </div>
-<div style="margin:30px;padding:10px; margin-bottom:30px;background-color:#D8E9FA;margin-right:150px">
+<div style="margin:30px;padding:10px; margin-bottom:30px;margin-right:150px">
 <p>Hey {{#reciever}}{{name}}{{/reciever}}</p>
 <p>You have a Friend request from {{#loggedInUser}}{{name}}{{/loggedInUser}}</p>
 <p>Make a new friend in just one move</p>
 <img src = "{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" width="40px" height:"40px">
-<form action = "http://localhost:8080/beFriendly/friendresponse">
+<form action = "http://localhost:8080/frenz4/friendresponse">
 <input type="hidden" value="{{#loggedInUser}}{{id}}{{/loggedInUser}}">
-<button name="response" value="Accept">Accept</button>
-<button name="response" valus="Reject">Reject</button>
+<button name="response" value="Accept" style="border-radius:10px">Accept</button>
+<button name="response" value="Reject" style="border-radius:10px">>Reject</button>
 </form>
 </div>
-<div style="margin:30px;padding:10px; margin-top:30px;background-color:#3284D8; margin-right:150px">
-<h6>If you don't want to recieve such emails<a href="http://localhost:8080/beFriendly/unsubscribe?email={{#reciever}}{{email}}{{/reciever}}">Unsubscribe here</a></h6>
+<div style="margin:30px;padding:1px; margin-top:30px;background-color:#1e88e5;">
+<h6>If you don't want to recieve such emails<a href="http://localhost:8080/frenz4/unsubscribe?email={{#reciever}}{{email}}{{/reciever}}">Unsubscribe here</a></h6>
 </div>
 </body>
 </html>

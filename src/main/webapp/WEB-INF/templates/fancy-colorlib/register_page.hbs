@@ -3,22 +3,28 @@
 
  <section id="wrapper">
  <p>{{message}}</p>
-        <div class="login-register" style="background-image:url(img/bg-image.jpg);">  
-<div class="slimscrollright">		
-            <div class="login-box card">
+        <div class="row" style="background-image:url(img/connect1.jpg);background-size: cover;background-repeat:no-repeat;
+  background-position: center center;">
+<div class="col-lg-2">		
+</div>
+<div class="col-lg-8">		
+            <div class="card" >
             <div class="card-body" style="padding:20px">
                 <form class="form-horizontal form-material" id="loginform" action="adduser">
-                    <h3 class="box-title m-b-20">Sign Up</h3>
-                    <div class="form-group">
-                        <div class="col-xs-12">
+				 <input type="hidden" id="reference" name="reference">
+				<input type="hidden" id="referenceId" name="referenceId">
+				<input type="hidden" id="picUrl" name="picUrl">
+                    <h3 class="box-title m-b-20 font-weight-bold">Frenz4</h3>
+                    <div class="form-group row">
+                        <div class="col-md-4">
 						<input class="form-control" type="text" name="fname" id="fname" placeholder="First Name" onkeyup="fnames()" required="">
                            
                         </div>
-						<div class="col-xs-12">
+						<div class="col-md-4">
 						<input class="form-control" type="text" name="mname" id="mname" placeholder="Middle Name" onkeyup="mnames()">
                            
                         </div>
-						<div class="col-xs-12">
+						<div class="col-md-4">
 						<input class="form-control" type="text" name="lname" id="lname" placeholder="Last Name" onkeyup="lnames()">
                            
                         </div>
@@ -29,50 +35,48 @@
 							<input class="form-control" type="email" name="email" placeholder="Email" id="email" required="">
                         </div>
                     </div>
-                    <div class="form-group ">
+                    <div class="form-group row">
 					<p id="len" style="color:green"></p>
-                        <div class="col-xs-12">
+                        <div class="col-md-6">
                            
 							<input class="form-control" type="password" name="pass" id="pass" placeholder="Password" onkeydown="passLength()" required="">
                         </div>
-                    </div>
-                    <div class="form-group">
+                   
+                    
 					<p id="wrong" style="color: red;"></p>
-                        <div class="col-xs-12">
+                        <div class="col-md-6">
 						<input type="password" class="form-control" name="passConfirm"
 								placeholder="Re-Type Your Password" id="passConfirm" required="">
                             
                         </div>
                     </div>
-					<div class="form-group">
-                        <div class="col-xs-12">
+					<div class="form-group row">
+                        <div class="col-md-4">
 						<input class="form-control" type="date" name="dob" data-format="DD/MM/YY" placeholder="DOB">
                             
                         </div>
-                    </div>
-					
-					<div class="form-group demo-radio-button ">
-                        <div class="col-xs-12">
-						<div class="radio" >					
-						<label><input class="form-control radio-col-cyan"" type="radio" id="female" name="gender">Female</label>			
-					</div>
-					<div class="radio">
-						<label><input class="form-control" type="radio" id="male" name="gender" >Male</label>							
-					</div>
-                            
-                        </div>
-                    </div>
-					<div class="form-group">
+                   
+					<div class="col-md-4">
+					 <div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" class="custom-control-input" id="female" name="gender" value="female">
+							<label class="custom-control-label" for="female">Female</label>
+						</div>
+					  <div class="custom-control custom-radio custom-control-inline">
+						<input type="radio" class="custom-control-input" id="male" name="gender" value="male">
+						<label class="custom-control-label" for="male">Male</label>
+					  </div> 
+					 </div>
+
 					<p id="nan" style="color:red"></p>
-                        <div class="col-xs-12">
+                        <div class="col-md-4">
 						<input class="form-control" type="text" name="mobile" id="mobile" placeholder="Mobile Number">
                             
                         </div>
                     </div>
 					
-					<div class="form-group">
-					<p id="nan" style="color:red"></p>
-                        <div class="col-xs-12">
+					<div class="form-group row">
+					
+                        <div class="col-md-6">
 						
 						<select class="form-control form-control-line selectCountry" name="country">
 						<option>India</option>
@@ -83,10 +87,9 @@
                                             </select>
                             
                         </div>
-                    </div>
-					<div class="form-group">
+                    
 					
-                        <div class="col-xs-12">
+                        <div class="col-md-6">
 						<input class="form-control" type="text" name="city" placeholder="City">
                             
                         </div>
@@ -114,6 +117,8 @@
             </div>
           </div>
         </div>
+		<div class="col-lg-2">		
+</div>
         </div>
         
     </section>			

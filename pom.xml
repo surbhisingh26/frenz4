@@ -62,7 +62,7 @@
 </dependency>
   </dependencies>
   <build>
-    <finalName>beFriendly</finalName>
+    <finalName>frenz4</finalName>
     <plugins>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>

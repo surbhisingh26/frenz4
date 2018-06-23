@@ -507,13 +507,13 @@ $('input[value='+gender+']').prop('checked',true);
 	$('#referenceId').val(id);
 	$('#picUrl').val(picUrl);
 	
-	if(window.location!="http://localhost:8080/beFriendly/register"){
+	if(window.location!="http://localhost:8080/frenz4/register"){
 	window.location = 'register';
 	}
 	}
 	else
-		if(window.location=="http://localhost:8080/beFriendly/login")
-	window.location = '/beFriendly/friendactivity';
+		if(window.location=="http://localhost:8080/frenz4/login")
+	window.location = '/frenz4/friendactivity';
 
 	
   })
@@ -549,7 +549,7 @@ $('input[value='+gender+']').prop('checked',true);
 	 });
 	request.done(function(response){
 		if(reference=='fb')
-		window.location="/beFriendly/friendactivity";
+		window.location="/frenz4/friendactivity";
 	console.log( "success ", response );
 	});
 	 });
