@@ -52,7 +52,7 @@ public class NotificationService {
 		BasicDBObject sortQuery = new BasicDBObject();
 		sortQuery.put("date", -1);
 		long count = notifyCollection.count(query);
-		DBCursor<Notification> cursor = notifyCollection.find(query).sort(sortQuery);
+		DBCursor<Notification> cursor = notifyCollection.find(query).sort(sortQuery).limit(10);
 		while(cursor.hasNext()){
 			Notification notification = cursor.next();
 			

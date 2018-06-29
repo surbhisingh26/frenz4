@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import com.google.gson.Gson;
 import com.social.frenz4.app.RequestResponseUtility;
 import com.social.frenz4.service.EmailService;
+import com.social.frenz4.service.FriendService;
 import com.social.frenz4.service.UserService;
 import com.social.scframework.App.Utility;
 
@@ -78,8 +79,16 @@ public class AdminActions extends HttpServlet {
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
-			uid = (ObjectId) hmap.get("uid");			
-			utility.getHbs(response, "emaillist", hmap,templatePath);
+			uid = (ObjectId) hmap.get("uid");		
+			if(uid!=null){
+				utility.getHbs(response, "emaillist", hmap,templatePath);
+
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -126,8 +135,15 @@ public class AdminActions extends HttpServlet {
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
-			uid = (ObjectId) hmap.get("uid");			
-			utility.getHbs(response, "userlist", hmap,templatePath);
+			uid = (ObjectId) hmap.get("uid");		
+			if(uid!=null){
+				utility.getHbs(response, "userlist", hmap,templatePath);
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -337,12 +353,17 @@ public class AdminActions extends HttpServlet {
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
-			uid = (ObjectId) hmap.get("uid");			
-			UserService userService = new UserService();
-			hmap.putAll(userService.getLatestPoints());
-			utility.getHbs(response, "site_settings", hmap,templatePath);
+			uid = (ObjectId) hmap.get("uid");		
+			if(uid!=null){
+				UserService userService = new UserService();
+				hmap.putAll(userService.getLatestPoints());
+				utility.getHbs(response, "site_settings", hmap,templatePath);
 
-
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
 
 		}
 		catch(Exception e){
@@ -372,8 +393,16 @@ public class AdminActions extends HttpServlet {
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
-			uid = (ObjectId) hmap.get("uid");			
-			utility.getHbs(response, "referrallist", hmap,templatePath);
+			uid = (ObjectId) hmap.get("uid");	
+			if(uid!=null){
+				utility.getHbs(response, "referrallist", hmap,templatePath);
+
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
+			
 
 		}
 		catch(Exception e){

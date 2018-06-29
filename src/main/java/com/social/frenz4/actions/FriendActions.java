@@ -123,13 +123,20 @@ public class FriendActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
-			FriendService friendService = new FriendService();
-			List<Object> friendList = friendService.getFriends(uid,30);
-			System.out.println("................."+hmap);
+			if(uid!=null){
+				FriendService friendService = new FriendService();
+				List<Object> friendList = friendService.getFriends(uid,30);
+				System.out.println("................."+hmap);
 
-			hmap.put("friendList", friendList);
-			System.out.println("................."+hmap);
-			utility.getHbs(response,"friends",hmap,templatePath);
+				hmap.put("friendList", friendList);
+				System.out.println("................."+hmap);
+				utility.getHbs(response,"friends",hmap,templatePath);
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -273,22 +280,29 @@ public class FriendActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
-			ObjectId fid = new ObjectId(request.getParameter("fid"));
-			System.out.println(fid);
-			User friend = userservice.findOneById(fid.toString());
-			String read = request.getParameter("read");
-			if(read==null)
-				read = request.getParameter("?read");
-			String id = request.getParameter("id");
-			NotificationService notificationService = new NotificationService();
+			if(uid!=null){
+				ObjectId fid = new ObjectId(request.getParameter("fid"));
+				System.out.println(fid);
+				User friend = userservice.findOneById(fid.toString());
+				String read = request.getParameter("read");
+				if(read==null)
+					read = request.getParameter("?read");
+				String id = request.getParameter("id");
+				NotificationService notificationService = new NotificationService();
 
-			if(read!=null&&read.equals("true")){
-				notificationService.markRead(id);
+				if(read!=null&&read.equals("true")){
+					notificationService.markRead(id);
+				}
+				System.out.println(friend.getName());
+				hmap.put("friend", friend);
+				utility.getHbs(response, "friend_profile", hmap, templatePath);
+
 			}
-			System.out.println(friend.getName());
-			hmap.put("friend", friend);
-			utility.getHbs(response, "friend_profile", hmap, templatePath);
-
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -329,11 +343,19 @@ public class FriendActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
-			FriendService friendService = new FriendService();
-			hmap.putAll(friendService.friendsActivity(uid));
-			System.out.println("..............." + uid);
-			utility.getHbs(response, "friends_activity", hmap, templatePath);
-			System.out.println("end");
+			if(uid!=null){
+				FriendService friendService = new FriendService();
+				hmap.putAll(friendService.friendsActivity(uid));
+				System.out.println("..............." + uid);
+				utility.getHbs(response, "friends_activity", hmap, templatePath);
+				System.out.println("end");
+
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
+			
 
 		}
 		catch(Exception e){
@@ -366,13 +388,20 @@ public class FriendActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
-			String fid = request.getParameter("fid");
-			UserService userService = new UserService();
-			User userFriend = userService.findOneById(fid);
-			hmap.putAll(userService.getChat(uid,new ObjectId(fid)));
-			hmap.put("fid", fid);
-			hmap.put("userFriend", userFriend);
-			utility.getHbs(response, "chat_panel", hmap, templatePath);
+			if(uid!=null){
+				String fid = request.getParameter("fid");
+				UserService userService = new UserService();
+				User userFriend = userService.findOneById(fid);
+				hmap.putAll(userService.getChat(uid,new ObjectId(fid)));
+				hmap.put("fid", fid);
+				hmap.put("userFriend", userFriend);
+				utility.getHbs(response, "chat_panel", hmap, templatePath);
+
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				response.sendRedirect("login");
+			}
 			
 
 		}
@@ -388,7 +417,7 @@ public class FriendActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
-			ObjectId activityId = new ObjectId(request.getParameter("activityId"));
+			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
 			String skipStr = request.getParameter("skip");
 			String broken = request.getParameter("broken");
 			int skip = 0;
@@ -398,7 +427,7 @@ public class FriendActions extends HttpServlet {
 			}
 			
 			FriendService friendService = new FriendService();
-			hmap.putAll(friendService.heartFriend(activityId,skip,limit,Boolean.parseBoolean(broken)));
+			hmap.putAll(friendService.heartFriend(typeId,skip,limit,Boolean.parseBoolean(broken)));
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write(new Gson().toJson(hmap));

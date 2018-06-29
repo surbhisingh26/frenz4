@@ -10,7 +10,7 @@ public class Comment extends BaseObject{
 	
 private String comment;
 private Date time;
-private ObjectId activityId;
+private ObjectId typeId;
 private ObjectId fid;
 public String getComment() {
 	return comment;
@@ -24,11 +24,13 @@ public Date getTime() {
 public void setTime(Date time) {
 	this.time = time;
 }
-public ObjectId getActivityId() {
-	return activityId;
+
+
+public ObjectId getTypeId() {
+	return typeId;
 }
-public void setActivityId(ObjectId activityId) {
-	this.activityId = activityId;
+public void setTypeId(ObjectId typeId) {
+	this.typeId = typeId;
 }
 public ObjectId getFid() {
 	return fid;

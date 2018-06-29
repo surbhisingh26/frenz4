@@ -57,7 +57,7 @@ public class FriendService {
 
 		Activity activity = new Activity();
 		activity.setUid(uid);
-		activity.setActivityId(new ObjectId(user.getId()));
+		activity.setTypeId(new ObjectId(user.getId()));
 		activity.setDate(requestDate);
 		activity.setType("befriend");
 		activityCollection.insert(activity);
@@ -217,26 +217,26 @@ public class FriendService {
 		pipeline.add(unwindActivity);
 
 		DBObject uploadpicFields = new BasicDBObject("from", "uploadpic");
-		uploadpicFields.put("localField","activity.activityId");
+		uploadpicFields.put("localField","activity.typeId");
 		uploadpicFields.put("foreignField","_id");
 		uploadpicFields.put("as", "uploadpic");
 		pipeline.add(new BasicDBObject("$lookup",uploadpicFields));
 
 		DBObject profilepicFields = new BasicDBObject("from", "profilepic");
-		profilepicFields.put("localField","activity.activityId");
+		profilepicFields.put("localField","activity.typeId");
 		profilepicFields.put("foreignField","_id");
 		profilepicFields.put("as", "profilepic");
 		pipeline.add(new BasicDBObject("$lookup",profilepicFields));
 		
 		DBObject statusFields = new BasicDBObject("from", "status");
-		statusFields.put("localField","activity.activityId");
+		statusFields.put("localField","activity.typeId");
 		statusFields.put("foreignField","_id");
 		statusFields.put("as", "status");
 		pipeline.add(new BasicDBObject("$lookup",statusFields));		
 		
 		DBObject heartFields = new BasicDBObject("from", "heart");
-		heartFields.put("localField","activity.activityId");
-		heartFields.put("foreignField","activityId");
+		heartFields.put("localField","activity.typeId");
+		heartFields.put("foreignField","typeId");
 		heartFields.put("as", "heart");
 		pipeline.add(new BasicDBObject("$lookup",heartFields));
 		
@@ -248,11 +248,13 @@ public class FriendService {
 			new BasicDBObject("name", 1).append("email", 1).append("imagepath", 1).append("friend.uid", 1).append("friend._id", 1)
 			.append("friend.fid", 1).append("friend.friends", 1).append("friendInfo.name", 1).append("friendInfo._id", 1)
 			.append("friendInfo.email", 1).append("friendInfo.imagepath", 1).append("activity._id", 1).append("activity.uid", 1)
-			.append("activity.type", 1).append("activity.date", 1).append("activity.activityId", 1).append("activity.hearts", 1)
+			.append("activity.type", 1).append("activity.date", 1).append("activity.typeId", 1).append("activity.hearts", 1)
 			.append("activity.comments", 1).append("activity.heartBreaks", 1).append("uploadpic._id", 1).append("uploadpic.uid", 1)
 			.append("uploadpic.path", 1).append("profilepic._id", 1).append("profilepic.uid", 1).append("profilepic.path", 1)
-			.append("profilepic.current", 1).append("heart._id", 1).append("heart.fid",1).append("heart.activityId", 1)
-			.append("heart.broken", 1).append("status.statusText", 1)
+			.append("profilepic.current", 1).append("heart._id", 1).append("heart.fid",1).append("heart.typeId", 1)
+			.append("heart.broken", 1).append("status.statusText", 1).append("status._id", 1)
+			
+			
 				);
 		
 		pipeline.add(project);
@@ -261,7 +263,7 @@ public class FriendService {
 		
 		pipeline.add(sort);
 
-		System.out.println(pipeline);
+		//System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
 		
@@ -300,13 +302,13 @@ public class FriendService {
 			System.out.println(result);
 			count++;
 		}
-		System.out.println("SIZE IS ......................" +activityList.size());
+		//System.out.println("SIZE IS ......................" +activityList.size());
 		
 		
 		hmap.put("activityList", activityList);
 		return hmap;
 	}
-	public Map<String,Object> heartFriend(ObjectId activityId,int skip,int limit,Boolean broken) {
+	public Map<String,Object> heartFriend(ObjectId typeId,int skip,int limit,Boolean broken) {
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		List<Object>friendList = new ArrayList<Object>();
 		
@@ -315,7 +317,7 @@ public class FriendService {
 		JacksonDBCollection<Heart, String> heartColl = heartdao.heartDAO();
 		List<DBObject> pipeline = new ArrayList<DBObject>();
 		DBObject match = new BasicDBObject("$match",
-				new BasicDBObject("activityId" , activityId));
+				new BasicDBObject("typeId" , typeId));
 		
 		pipeline.add(match);
 		DBObject matchHeart = new BasicDBObject("$match",
@@ -341,7 +343,7 @@ public class FriendService {
 		System.out.println(result);		
 	}
 		BasicDBObject query = new BasicDBObject();
-		query.put("activityId", activityId);
+		query.put("typeId", typeId);
 		query.put("broken", broken);
 		
 		if(skip+limit<heartColl.count(query)){

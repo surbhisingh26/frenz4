@@ -10,7 +10,7 @@ public class Activity extends BaseObject{
 private ObjectId uid;
 private String type;
 private Date date;
-private ObjectId activityId;
+private ObjectId typeId;
 private long hearts;
 private long heartBreaks;
 private long comments;
@@ -51,11 +51,12 @@ public Date getDate() {
 public void setDate(Date date) {
 	this.date = date;
 }
-public ObjectId getActivityId() {
-	return activityId;
+public ObjectId getTypeId() {
+	return typeId;
 }
-public void setActivityId(ObjectId activityId) {
-	this.activityId = activityId;
+public void setTypeId(ObjectId typeId) {
+	this.typeId = typeId;
 }
+
 
 }

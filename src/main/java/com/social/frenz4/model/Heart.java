@@ -5,16 +5,15 @@ import org.bson.types.ObjectId;
 import com.social.scframework.model.BaseObject;
 
 public class Heart extends BaseObject{
-private ObjectId activityId;
+private ObjectId typeId;
 private ObjectId fid;
 private Boolean broken;
 
-
-public ObjectId getActivityId() {
-	return activityId;
+public ObjectId getTypeId() {
+	return typeId;
 }
-public void setActivityId(ObjectId activityId) {
-	this.activityId = activityId;
+public void setTypeId(ObjectId typeId) {
+	this.typeId = typeId;
 }
 public ObjectId getFid() {
 	return fid;

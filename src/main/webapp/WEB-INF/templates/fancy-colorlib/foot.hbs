@@ -4,34 +4,12 @@
         <script src="js/popper.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
         <!-- Rev slider js -->
-        <script src="fancy/vendors/revolution/js/jquery.themepunch.tools.min.js"></script>
-        <script src="fancy/vendors/revolution/js/jquery.themepunch.revolution.min.js"></script>
-        <script src="fancy/vendors/revolution/js/extensions/revolution.extension.actions.min.js"></script>
-        <script src="fancy/vendors/revolution/js/extensions/revolution.extension.video.min.js"></script>
-        <script src="fancy/vendors/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
-        <script src="fancy/vendors/revolution/js/extensions/revolution.extension.layeranimation.min.js"></script>
-        <script src="fancy/vendors/revolution/js/extensions/revolution.extension.navigation.min.js"></script>
-        <script src="fancy/vendors/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
-        <!-- Extra plugin css -->
-        <script src="fancy/vendors/counterup/jquery.waypoints.min.js"></script>
-        <script src="fancy/vendors/counterup/jquery.counterup.min.js"></script>
-        <script src="fancy/vendors/counterup/apear.js"></script>
-        <script src="fancy/vendors/counterup/countto.js"></script>
-        <script src="fancy/vendors/owl-carousel/owl.carousel.min.js"></script>
-        <script src="fancy/vendors/parallaxer/jquery.parallax-1.1.3.js"></script>
+        
         <!--Tweets-->
        <!-- <script src="fancy/vendors/tweet/tweetie.min.js"></script>
         <script src="fancy/vendors/tweet/script.js"></script>-->
-
-        <script src="fancy/js/theme.js"></script>
-		
-		<script src="login/vendor/animsition/js/animsition.min.js"></script>
+	
 		<script src="js/popper.js"></script>
-		
-		<script src="login/vendor/select2/select2.min.js"></script>
-		<script src="login/vendor/daterangepicker/moment.min.js"></script>
-		<script src="login/vendor/daterangepicker/daterangepicker.js"></script>
-		<script src="login/vendor/countdowntime/countdowntime.js"></script>
 		<script src="js/main.js"></script>
 		<script src="js/check.js"></script>
 		
@@ -62,6 +40,7 @@
 	
 	
 	<script src="js/highcharts.js"></script>
+	<script src="js/moment.js"></script>
 	
 
 	<script>
@@ -73,8 +52,7 @@
 	});
 	request.done(function(response) {
 	var now = moment();
-	if(response.count>10)
-	response.count=10;
+
 	for(var count = 0;count<response.count;count++){
 	console.log(response.notifyList[count].purpose);
 	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc">'+response.notifyList[count].notification+'</span><small class="time notiTime'+response.notifyList[count].id+'"></small> </div></a>')
@@ -91,9 +69,9 @@ var Seconds =  moment.duration(now - time).seconds();
 
 if(Days!=0){
 if(Days==1)
-$('.notiTime'+response.notifyList[count].id).text("yesterday at " + notiTime+response.notifyList[count].id.format('HH:mm a'));
+$('.notiTime'+response.notifyList[count].id).text("yesterday at " + time.format('HH:mm a'));
 else if(Days>1)
-$('.notiTime'+response.notifyList[count].id).text(notiTime+response.notifyList[count].id.format('DD MMM YYYY HH:mm a'));
+$('.notiTime'+response.notifyList[count].id).text(time.format('DD MMM YYYY HH:mm a'));
 }
 else if(Hours!=0){
 if(Hours==1)
@@ -227,27 +205,27 @@ function commentBox(data, extraInfo, response){
 	console.log(data);
 	console.log(response);
 
-	if($('.timeline' + data.activityId + ' .divBox').css('display')=='none'){
-			$('.timeline' + data.activityId + ' .divBox').css('display','inline');
+	if($('.timeline' + data.typeId + ' .divBox').css('display')=='none'){
+			$('.timeline' + data.typeId + ' .divBox').css('display','inline');
 			if(response.count==1)
-			$('.timeline' + data.activityId + ' .comment').text(response.count + " Comment");
+			$('.timeline' + data.typeId + ' .comment').text(response.count + " Comment");
 			else if(response.count>1)
-			$('.timeline' + data.activityId + ' .comment').text(response.count + " Comments");
+			$('.timeline' + data.typeId + ' .comment').text(response.count + " Comments");
 			$.each(response.commentList, function(k, v){
 			
 			//console.log("k = " , k , "v = ", v)	;
 						
-			$('.timeline' + data.activityId + ' .divBox ul').prepend('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
+			$('.timeline' + data.typeId + ' .divBox ul').prepend('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
 			});
 			
 			if(response.showMore){
 			
-			$('.timeline' + data.activityId + ' .viewAll').css('display','inline');
+			$('.timeline' + data.typeId + ' .viewAll').css('display','inline');
 			}
 	}		
 	else {
-			$('.timeline' + data.activityId + ' .divBox').css('display','none');
-			$('.timeline' + data.activityId + ' .divBox ul').html('');
+			$('.timeline' + data.typeId + ' .divBox').css('display','none');
+			$('.timeline' + data.typeId + ' .divBox ul').html('');
 			
 	}
 	
@@ -255,9 +233,9 @@ function commentBox(data, extraInfo, response){
 						
 	}
 	function postComment(data, extraInfo, response){
-		$('.timeline' + data.activityId + ' .divBox textarea').val('');
-		$('.timeline' + data.activityId + ' .divBox ul').html('');
-		$('.timeline' + data.activityId + ' .divBox').css('display','none');
+		$('.timeline' + data.typeId + ' .divBox textarea').val('');
+		$('.timeline' + data.typeId + ' .divBox ul').html('');
+		$('.timeline' + data.typeId + ' .divBox').css('display','none');
 		ajaxRequest("showcomments",'POST',data,{dataType:'json', callback:commentBox});
 	}
 	function allComment(data, extraInfo, response){
@@ -271,7 +249,7 @@ function commentBox(data, extraInfo, response){
 			if($('.allcomments .showMore').length>0)
 			$('.allcomments .showMore').remove();
 			if(response.showMore){
-			$('.allcomments').append('<li class="list-group-item showMore" style="background-color:#E5E7EA;margin-bottom:5px"><a href="#" onclick="ajaxRequest(\'showcomments\',\'POST\', {activityId:\''+data.activityId+'\', skip:\''+response.skip+'\',limit:\''+response.limit+'\'},{dataType:\'json\',callback:allComment})">Show More</a></li>');
+			$('.allcomments').append('<li class="list-group-item showMore" style="background-color:#E5E7EA;margin-bottom:5px"><a href="#" onclick="ajaxRequest(\'showcomments\',\'POST\', {typeId:\''+data.typeId+'\', skip:\''+response.skip+'\',limit:\''+response.limit+'\'},{dataType:\'json\',callback:allComment})">Show More</a></li>');
 			}
 	}
 	$('.close').click(function(){
@@ -287,66 +265,66 @@ function commentBox(data, extraInfo, response){
 				//$('.heart i').removeClass('fa-heart-o');
 				//$('.heart i').addClass('fa-heart');
 				
-				$('.timeline' + data.activityId + ' .heartBreak i').replaceWith('<div data-icon="X" class="linea-icon linea-basic"></div>');
+				$('.timeline' + data.typeId + ' .heartBreak i').replaceWith('<div data-icon="X" class="linea-icon linea-basic"></div>');
 				if(response.brokenCount < 2){
-					$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
+					$('.timeline' + data.typeId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
 				}
 				else{
-					$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
+					$('.timeline' + data.typeId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
 				}
 			}
 			
-			$('.timeline' + data.activityId + ' .heart i').removeClass('fa-heart-o');
-			$('.timeline' + data.activityId + ' .heart i').addClass('fa-heart');
+			$('.timeline' + data.typeId + ' .heart i').removeClass('fa-heart-o');
+			$('.timeline' + data.typeId + ' .heart i').addClass('fa-heart');
 			
 			if(response.heartCount < 2){
-				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Heart')
+				$('.timeline' + data.typeId + ' .heartCount').text(response.heartCount + ' Heart')
 			}
 			else{
-				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Hearts')
+				$('.timeline' + data.typeId + ' .heartCount').text(response.heartCount + ' Hearts')
 			}
 		}
 		else{
 		if(response.revert){
-			$('.timeline' + data.activityId + ' .heart i').addClass('fa-heart-o');
-			$('.timeline' + data.activityId + ' .heart i').removeClass('fa-heart');
+			$('.timeline' + data.typeId + ' .heart i').addClass('fa-heart-o');
+			$('.timeline' + data.typeId + ' .heart i').removeClass('fa-heart');
 			if(response.heartCount < 2){
-				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Heart')
+				$('.timeline' + data.typeId + ' .heartCount').text(response.heartCount + ' Heart')
 			}
 			else{
-				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Hearts')
+				$('.timeline' + data.typeId + ' .heartCount').text(response.heartCount + ' Hearts')
 			}
 		}
 		
-		$('.timeline' + data.activityId + ' .heartBreak div').replaceWith('<i class="mdi mdi-heart-broken"></i>');
+		$('.timeline' + data.typeId + ' .heartBreak div').replaceWith('<i class="mdi mdi-heart-broken"></i>');
 	
 			if(response.brokenCount < 2){
-				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
+				$('.timeline' + data.typeId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
 			}
 			else{
-				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
+				$('.timeline' + data.typeId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
 			}
 		}
 		}
 	else{
 		if(!data.broken){
 			
-			$('.timeline' + data.activityId + ' .heart i').addClass('fa-heart-o');
-			$('.timeline' + data.activityId + ' .heart i').removeClass('fa-heart');
+			$('.timeline' + data.typeId + ' .heart i').addClass('fa-heart-o');
+			$('.timeline' + data.typeId + ' .heart i').removeClass('fa-heart');
 			if(response.heartCount < 2){
-				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Heart')
+				$('.timeline' + data.typeId + ' .heartCount').text(response.heartCount + ' Heart')
 			}
 			else{
-				$('.timeline' + data.activityId + ' .heartCount').text(response.heartCount + ' Hearts')
+				$('.timeline' + data.typeId + ' .heartCount').text(response.heartCount + ' Hearts')
 			}
 		}
 		else{
-			$('.timeline' + data.activityId + ' .heartBreak i').replaceWith('<div data-icon="X" class="linea-icon linea-basic"></div>');
+			$('.timeline' + data.typeId + ' .heartBreak i').replaceWith('<div data-icon="X" class="linea-icon linea-basic"></div>');
 			if(response.brokenCount < 2){
-				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
+				$('.timeline' + data.typeId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreak')
 			}
 			else{
-				$('.timeline' + data.activityId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
+				$('.timeline' + data.typeId + ' .heartBreakCount').text(response.brokenCount + ' Heartbreaks')
 			}
 		}
 		}
@@ -361,7 +339,7 @@ function commentBox(data, extraInfo, response){
 			if($('.allfriends .showMore').length>0)
 			$('.allfriends .showMore').remove();
 			if(response.showMore){
-			$('.allfriends').append('<li class="list-group-item showMore" style="background-color:#E5E7EA;margin-bottom:5px"><a href="#" onclick="ajaxRequest(\'showcomments\',\'POST\', {activityId:\''+data.activityId+'\', skip:\''+response.skip+'\'},{dataType:\'json\',callback:heartFriend})">Show More</a></li>');
+			$('.allfriends').append('<li class="list-group-item showMore" style="background-color:#E5E7EA;margin-bottom:5px"><a href="#" onclick="ajaxRequest(\'showcomments\',\'POST\', {typeId:\''+data.typeId+'\', skip:\''+response.skip+'\'},{dataType:\'json\',callback:heartFriend})">Show More</a></li>');
 			}
 	}
 	$('.close').click(function(){
@@ -428,7 +406,7 @@ $(document).ready(function(){
 
   window.fbAsyncInit = function() {
     FB.init({
-      appId      : '1826749880963024',
+      appId      : '656727884666308',
        // enable cookies to allow the server to access 
        // cookies:true,                  // the session
       xfbml      : true,  // parse social plugins on this page

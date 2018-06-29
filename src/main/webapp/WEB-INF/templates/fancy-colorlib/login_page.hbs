@@ -1,10 +1,10 @@
 {{>head}}
 
  <section id="wrapper">
- <p>{{message}}</p>
+ {{#message}}<p>{{{.}}}</p>{{/message}}
         <div class="login-register" style="background-image:url(img/connect2.jpg);padding:2rem;"">
             <div class="login-box card">
-                <div class="card-body" style="padding:2rem;">
+                <div class="card-body p-20" >
                     <form class="form-horizontal form-material" id="loginform" action="signin" method="post">
                         <h3 class="box-title m-b-20 font-weight-bold">Frenz4</h3>
                         <div class="form-group ">

@@ -2,14 +2,14 @@
 
 
  <section id="wrapper">
- <p>{{message}}</p>
-        <div class="row" style="background-image:url(img/connect1.jpg);background-size: cover;background-repeat:no-repeat;
+ {{#message}}<p>{{{.}}}</p>{{/message}}
+        <div class="row" style="background-image:url(img/connect2.jpg);background-size: cover;background-repeat:no-repeat;
   background-position: center center;">
 <div class="col-lg-2">		
 </div>
 <div class="col-lg-8">		
             <div class="card" >
-            <div class="card-body" style="padding:20px">
+            <div class="card-body p-20" >
                 <form class="form-horizontal form-material" id="loginform" action="adduser">
 				 <input type="hidden" id="reference" name="reference">
 				<input type="hidden" id="referenceId" name="referenceId">
