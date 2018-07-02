@@ -60,6 +60,8 @@ public class FriendService {
 		activity.setTypeId(new ObjectId(user.getId()));
 		activity.setDate(requestDate);
 		activity.setType("befriend");
+		activity.setViewfalse(false);
+		activity.setDeleted(false);
 		activityCollection.insert(activity);
 	}
 	public String checkStatus(ObjectId uid, ObjectId objectId) {
@@ -215,7 +217,9 @@ public class FriendService {
 		pipeline.add(new BasicDBObject("$lookup",activityFields));
 		DBObject unwindActivity = new BasicDBObject("$unwind","$activity");
 		pipeline.add(unwindActivity);
-
+		DBObject matchactivity = new BasicDBObject("$match",
+				new BasicDBObject("activity.deleted" , false));		
+		pipeline.add(matchactivity);
 		DBObject uploadpicFields = new BasicDBObject("from", "uploadpic");
 		uploadpicFields.put("localField","activity.typeId");
 		uploadpicFields.put("foreignField","_id");
@@ -263,7 +267,7 @@ public class FriendService {
 		
 		pipeline.add(sort);
 
-		//System.out.println(pipeline);
+		System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
 		

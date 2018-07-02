@@ -14,7 +14,21 @@ private ObjectId typeId;
 private long hearts;
 private long heartBreaks;
 private long comments;
+private Boolean viewfalse;
+private Boolean deleted;
 
+public Boolean getViewfalse() {
+	return viewfalse;
+}
+public void setViewfalse(Boolean viewfalse) {
+	this.viewfalse = viewfalse;
+}
+public Boolean getDeleted() {
+	return deleted;
+}
+public void setDeleted(Boolean deleted) {
+	this.deleted = deleted;
+}
 public long getHearts() {
 	return hearts;
 }

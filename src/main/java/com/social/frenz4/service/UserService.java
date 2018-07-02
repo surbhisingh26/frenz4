@@ -63,11 +63,14 @@ import com.social.scframework.highchart.YAxis;
 
 public class UserService {
 
-	public Boolean registerUser(String fname, String lname, String mname, String country, String city, String mobile,
+	public String registerUser(String fname, String lname, String mname, String country, String city, String mobile,
 			String password, String gender, String dob, String bgcolor, String filePath, String email, String reference,
 			String referenceId) {
 		UserDAO userdao = new UserDAO();
 		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
+		Date joiningDate = new Date();
+		FriendDAO frienddao = new FriendDAO();
+		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
 		if(!mname.equals(""))
 			mname = mname + " ";
 		User registration = new User();
@@ -86,7 +89,7 @@ public class UserService {
 		DBCursor<User> cursor = userCollection.find(query);
 
 		if (cursor.hasNext()) {
-			return false;
+			return null;
 		}
 		registration.setuType("User");
 		registration.setName(fname,mname,lname);
@@ -101,9 +104,11 @@ public class UserService {
 		registration.setLastLoggedInAt(null);
 		registration.setImagepath(filePath);
 		registration.setLoggedIn(false);
+		registration.setJoiningDate(joiningDate);
 		registration.setReference(reference);
 		registration.setReferenceId(referenceId);
 		registration.setPoints(50);
+		registration.setConfirmMail(false);
 
 		WriteResult<User, String> reg = userCollection.insert(registration);
 		registration = reg.getSavedObject();
@@ -172,9 +177,15 @@ public class UserService {
 		pointCollection.insert(points);
 		notificationservice.sendNotification(new ObjectId(registration.getId()), "img/logo-icon.png", "Welcome "+fname+" "+lname+"\n You have been rewarded by 50 points in your account", link, "Welcome");
 
+		/*making user friend of himself*/
+		Friend friend = new Friend();
+		friend.setFid(new ObjectId(registration.getId()));
+		friend.setUid(new ObjectId(registration.getId()));
+		friend.setFriends(true);
+		friendCollection.insert(friend);
+		// user made friend of himself
 
-
-		return true;
+		return registration.getId();
 	}
 	public String checkValid(String email, String password, String reference, String referenceId) {
 		UserDAO userdao = new UserDAO();
@@ -376,6 +387,8 @@ public class UserService {
 		activity.setHeartBreaks(0);
 		activity.setHearts(0);
 		activity.setComments(0);
+		activity.setViewfalse(false);
+		activity.setDeleted(false);
 		activityCollection.insert(activity);
 
 
@@ -420,6 +433,8 @@ public class UserService {
 		activity.setHeartBreaks(0);
 		activity.setHearts(0);
 		activity.setComments(0);
+		activity.setViewfalse(false);
+		activity.setDeleted(false);
 		activityCollection.insert(activity);
 
 	}
@@ -451,7 +466,7 @@ public class UserService {
 		List<Object> myActivityList = new ArrayList<Object>();
 		List<DBObject> pipeline = new ArrayList<DBObject>();
 
-		DBObject match = new BasicDBObject("$match",new BasicDBObject("uid" , uid));
+		DBObject match = new BasicDBObject("$match",new BasicDBObject("uid" , uid).append("viewfalse",false));
 		pipeline.add(match);
 
 		DBObject lookupFields = new BasicDBObject("from", "uploadpic");
@@ -776,6 +791,8 @@ public class UserService {
 		activity.setHearts(0);
 		activity.setType("status");
 		activity.setUid(uid);
+		activity.setViewfalse(false);
+		activity.setDeleted(false);
 		activityCollection.insert(activity);
 
 	}
@@ -806,49 +823,52 @@ public class UserService {
 
 			while(cursor1.hasNext()){
 				Friend friend = cursor1.next();
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(friend.getRequestDate());
-				int requestMonth = cal.get(Calendar.MONTH);
-				String status = friend.getStatus();
-				if(requestMonth==i){
-					if(status.equalsIgnoreCase("Request Sent")){
-						oucount += 1;
-						//graph.add(1);
-					}
-					else if(status.equalsIgnoreCase("Pending Request")){
-						iucount += 1;
-						//graph.add(1);
-					}
-					else if(friend.getResponseDate()!=null){
-						cal.setTime(friend.getResponseDate());
-						int responseMonth = cal.get(Calendar.MONTH);
-						System.out.println("Month..........." + requestMonth);
+				if(friend.getRequestDate()!=null){
+					Calendar cal = Calendar.getInstance();
 
-						if(status.equalsIgnoreCase("My Request Accepted")){
-							if(requestMonth!=responseMonth){
-								oucount += 1;
+					cal.setTime(friend.getRequestDate());
+					int requestMonth = cal.get(Calendar.MONTH);
+
+					String status = friend.getStatus();
+					if(requestMonth==i){
+						if(status.equalsIgnoreCase("Request Sent")){
+							oucount += 1;
+							//graph.add(1);
+						}
+						else if(status.equalsIgnoreCase("Pending Request")){
+							iucount += 1;
+							//graph.add(1);
+						}
+						else if(friend.getResponseDate()!=null){
+							cal.setTime(friend.getResponseDate());
+							int responseMonth = cal.get(Calendar.MONTH);
+							System.out.println("Month..........." + requestMonth);
+
+							if(status.equalsIgnoreCase("My Request Accepted")){
+								if(requestMonth!=responseMonth){
+									oucount += 1;
+
+								}
+								oacount += 1;
 
 							}
-							oacount += 1;
-
-						}
-						else if(status.equalsIgnoreCase("My Request Rejected")){
-							orcount += 1;
-						}
-
-						if(status.equalsIgnoreCase("I Accepted Request")){
-							if(requestMonth!=responseMonth){
-								iucount += 1;
+							else if(status.equalsIgnoreCase("My Request Rejected")){
+								orcount += 1;
 							}
-							iacount += 1;
 
-						}
-						else if(status.equalsIgnoreCase("I Rejected Request")){
-							ircount += 1;
+							if(status.equalsIgnoreCase("I Accepted Request")){
+								if(requestMonth!=responseMonth){
+									iucount += 1;
+								}
+								iacount += 1;
+
+							}
+							else if(status.equalsIgnoreCase("I Rejected Request")){
+								ircount += 1;
+							}
 						}
 					}
 				}
-
 			}
 			Data d = new Data();
 			d.setY(oacount);
@@ -1390,6 +1410,21 @@ public class UserService {
 		userCollection.updateById(user.getId(),user);
 
 
+	}
+	public void confirmMail(String id) {
+		UserDAO userdao = new UserDAO();
+		JacksonDBCollection<User, String> userCollection = userdao.userDAO();
+		User user = userCollection.findOneById(id);
+		user.setConfirmMail(true);
+		userCollection.updateById(id, user);
+
+	}
+	public void setviewfalse(ObjectId typeId) {
+		ActivityDAO activityDAO = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection = activityDAO.activityDAO();
+		Activity activity = activityCollection.findOne(new BasicDBObject("typeId" , typeId));
+		activity.setViewfalse(true);
+		activityCollection.updateById(activity.getId(), activity);
 	}
 
 

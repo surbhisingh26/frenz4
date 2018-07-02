@@ -16,7 +16,6 @@ import org.bson.types.ObjectId;
 import com.google.gson.Gson;
 import com.social.frenz4.app.RequestResponseUtility;
 import com.social.frenz4.service.EmailService;
-import com.social.frenz4.service.FriendService;
 import com.social.frenz4.service.UserService;
 import com.social.scframework.App.Utility;
 
@@ -362,7 +361,7 @@ public class AdminActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 		}
@@ -400,7 +399,7 @@ public class AdminActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 			
 

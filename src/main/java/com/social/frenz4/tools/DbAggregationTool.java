@@ -10,8 +10,8 @@ public static void main(String args[]){
 	String uid = "5b36721b759a7510108e7850";
 	FriendService friendService = new FriendService();
 	UserService userService = new UserService();
-	userService.myActivity(new ObjectId(uid));
-//	friendService.friendsActivity(new ObjectId(uid));
+//	userService.myActivity(new ObjectId(uid));
+	friendService.friendsActivity(new ObjectId(uid));
 	//friendService.heartFriend(new ObjectId(uid));
 	//userService.showComments(new ObjectId(uid),0,5);
 	//friendService.heartFriend(new ObjectId(uid),0,5, false);

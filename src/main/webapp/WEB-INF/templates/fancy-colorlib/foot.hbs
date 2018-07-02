@@ -449,13 +449,14 @@ $(document).ready(function(){
 		
     console.log('Welcome!  Fetching your information.... ');
 	
-    FB.api('/me', {fields: 'first_name,last_name,name,email,gender,picture'},function(response) {
+    FB.api('/me', {fields: 'first_name,last_name,name,email,gender,picture,birthday'},function(response) {
       console.log('Successful login for: ' + response.name , "response ", response);
       var id=response.id;
 	  var fname=response.first_name;
 	  var lname=response.last_name;
 	  var email=response.email;
 	  var gender=response.gender;
+	  var birthday=response.birthday;
 	  var picUrl=response.picture.data.url
 	 
 	  console.log(response.email);
@@ -479,6 +480,7 @@ var request = $.ajax({
 $('#fname').val(fname);
 $('#lname').val(lname);
 $('#email').val(email);
+$('#dob').val(birthday);
 
 $('input[value='+gender+']').prop('checked',true);
 	$('#reference').val('fb');

@@ -33,6 +33,7 @@ import com.social.frenz4.service.NotificationService;
 import com.social.frenz4.service.UserService;
 import com.social.scframework.App.Email;
 import com.social.scframework.App.Utility;
+import com.social.scframework.highchart.HighChart;
 
 /**
  * Servlet implementation class UserActions
@@ -165,9 +166,9 @@ public class UserActions extends HttpServlet {
 				filePath = File.separator +"images/frenz4images" + File.separator + "default.jpg";
 
 			UserService rs = new UserService();
-			Boolean result = rs.registerUser(fname, lname, mname,country,city,mobile,hashedPassword,gender,dob,bgcolor,filePath,email,reference,referenceId);
+			String result = rs.registerUser(fname, lname, mname,country,city,mobile,hashedPassword,gender,dob,bgcolor,filePath,email,reference,referenceId);
 			Map<String, Object> hmap  = new HashMap<String, Object>();
-			if(result == false){
+			if(result == null){
 
 				String msg = "You are already registered with this email";
 				hmap.put("message", msg);
@@ -175,6 +176,18 @@ public class UserActions extends HttpServlet {
 				utility.getHbs(response,"register_page",hmap,templatePath);
 			}
 			else{
+				//sending welcome email
+				Email welcomeEmail = new Email();
+				EmailService emailservice = new EmailService();
+				String subject = "Welcome to frenz4" ;
+				String purpose = "welcome mail";
+				String status = "Pending...";				
+				String id = emailservice.email("frenz4", purpose, email, status, subject);
+				hmap.put("name", fname + lname);
+				hmap.put("id", result);
+				welcomeEmail.send(fname + lname, email, subject, "welcomeEmailTemplate" , templatePath+"/EmailTemplates", hmap);
+				status = "Sent";
+				emailservice.updateEmail(id,status);
 				String registeredMsg = "You are successfully registered!!! Login to Continue";
 				hmap.put("message", registeredMsg);
 
@@ -307,7 +320,7 @@ public class UserActions extends HttpServlet {
 			else{
 				System.out.println("ELSE");
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 		} catch (ServletException e) {
@@ -335,7 +348,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 		} catch (IOException e) {
@@ -378,7 +391,7 @@ public class UserActions extends HttpServlet {
 
 			hmap.putAll(rrutility.getUserDetails(request));
 			UserService userservice = new UserService();
-			
+
 			uid = (ObjectId) hmap.get("uid");
 			System.out.println("uid id ............................." + uid);
 			if(uid!=null){
@@ -394,7 +407,7 @@ public class UserActions extends HttpServlet {
 			else{
 				System.out.println("LOGIN FIRST.................");
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 		}
 		catch(Exception e){
@@ -421,7 +434,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 		}
 		catch(Exception e){
@@ -469,7 +482,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 		}
 		catch(Exception e){
@@ -510,7 +523,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 		}
@@ -562,7 +575,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 
@@ -590,14 +603,16 @@ public class UserActions extends HttpServlet {
 				//Activity activity = userService.findActivityLink(typeId.toString());
 				//String type = activity.getType();
 				userService.addComment(comment,uid,typeId);
-				NotificationService notiService = new NotificationService();
-				if(fid!=uid){
+				
+				if(!fid.equals(uid)){
+					System.out.println("if true");
+					NotificationService notiService = new NotificationService();
 					notiService.sendNotification(fid, user.getImagepath(), user.getName() + " commented on your post","post?typeId="+typeId+"&" , "New comment");
 				}
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 		}
@@ -661,7 +676,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 
@@ -708,7 +723,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 
@@ -737,7 +752,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 
 		}
@@ -752,14 +767,24 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 
 			RequestResponseUtility rrutility = new RequestResponseUtility();
-
+			List<HighChart> highcharts = new ArrayList<HighChart>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 
+			String fidStr = request.getParameter("fid");
+			
+			if(fidStr!=null){
+				uid = new ObjectId(fidStr);
+				
+			}
 			UserService userservice = new UserService();
-			String status = request.getParameter("status");
-			userservice.addStatus(uid, status);
-			response.sendRedirect("friendactivity");
+			highcharts.add(userservice.requestpiechart(uid));
+			highcharts.add(userservice.stackedgraph(uid));
+
+			hmap.put("highcharts",highcharts);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
 
 
 		}
@@ -793,7 +818,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}			
 
 		}
@@ -808,7 +833,15 @@ public class UserActions extends HttpServlet {
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 
 			hmap.putAll(rrutility.getUserDetails(request));
+			String read = request.getParameter("read");
+			if(read==null)
+				read = request.getParameter("?read");
+			String id = request.getParameter("id");
+			NotificationService notificationService = new NotificationService();
 
+			if(read!=null&&read.equals("true")){
+				notificationService.markRead(id);
+			}
 			uid = (ObjectId) hmap.get("uid");
 			if(uid!=null){
 				UserService userService = new UserService();
@@ -818,7 +851,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login",hmap,templatePath);
 			}	
 
 		}
@@ -879,7 +912,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}	
 
 
@@ -903,7 +936,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}	
 
 		}
@@ -948,7 +981,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}	
 
 		}
@@ -977,7 +1010,7 @@ public class UserActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}	
 
 		}
@@ -1045,7 +1078,35 @@ public class UserActions extends HttpServlet {
 
 			Email email = new Email();
 			email.send("", recoveryEmail, "Reset Password", "reset_passTemplate", templatePath+"/EmailTemplates", hmap);
+			
+			hmap.put("message", "Please check your email for new password");
+			utility.getHbs(response,"login_page",hmap,templatePath);
 
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void confirmMail(HttpServletRequest request, HttpServletResponse response){
+		try {
+			String id = request.getParameter("id");
+			System.out.println(id);
+			UserService userService = new UserService();
+			userService.confirmMail(id);
+			Map<String, Object> hmap = new HashMap<String,Object>();
+			hmap.put("message", "Your mail is verified!!! Login to continue..");
+			utility.getHbs(response,"login_page",hmap,templatePath);
+
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void viewfalse(HttpServletRequest request, HttpServletResponse response){
+		try {
+			UserService userService = new UserService();
+			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
+			userService.setviewfalse(typeId);
 		}
 		catch(Exception e){
 			e.printStackTrace();

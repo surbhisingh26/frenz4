@@ -23,10 +23,12 @@ public class User extends BaseObject{
 	private String imagepath;
 	private Date lastLoggedInAt;
 	private Boolean loggedIn;
+	private Date joiningDate;
 	private String reference;
 	private String referenceId;
 	private int points;
 	private Boolean reminder;
+	private Boolean confirmMail;
 	public String getName() {
 		return name;
 	}
@@ -145,6 +147,22 @@ public class User extends BaseObject{
 
 	public void setReminder(Boolean reminder) {
 		this.reminder = reminder;
+	}
+
+	public Date getJoiningDate() {
+		return joiningDate;
+	}
+
+	public void setJoiningDate(Date joiningDate) {
+		this.joiningDate = joiningDate;
+	}
+
+	public Boolean getConfirmMail() {
+		return confirmMail;
+	}
+
+	public void setConfirmMail(Boolean confirmMail) {
+		this.confirmMail = confirmMail;
 	}
 	
 }

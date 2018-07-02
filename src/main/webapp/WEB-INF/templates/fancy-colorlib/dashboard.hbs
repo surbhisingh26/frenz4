@@ -9,7 +9,7 @@
 			<div class="">
                                 <button class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10"><i class="ti-settings text-white"></i></button>
                             </div>
-                         <div class="">
+                         <div>
                                 <button class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10" onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})"><i class="mdi mdi-wechat text-white"></i></button>
                             </div>
                 <!-- ============================================================== -->
@@ -44,8 +44,9 @@
                                 <div class="tab-pane active" id="home" role="tabpanel">
                                     <div class="card-block">
                                         <div class="profiletimeline">
-										
+										<button class="btn d-none undoBtn btn-secondary">Undo</button>
 										{{#myActivityList}}
+										
 										{{#profilepic}}
 										<div class="sl-item">
 										 <button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
@@ -104,7 +105,7 @@
                                             </div>
 										
 										
-										<hr>
+										<hr class="divider{{_id}}">
 										{{/profilepic}}
 										{{#uploadpic}}
 										<div class="sl-item">
@@ -164,12 +165,13 @@
                                             </div>
 										
 										
-										<hr>
+										<hr class="divider{{_id}}">
 										{{/uploadpic}}
 										{{#friend}}
 										<button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
 										 <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
-										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>										 
+										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>	
+																				 
 										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:deletePost})">Cancel Request</button>
                                         
                                     </div>
@@ -182,14 +184,15 @@
                                                 
 												
                                             </div>
-											<hr>
+											<hr class="divider{{_id}}">
 										{{/friend}}
 										{{#status}}
-									<div class="sl-item">
+									<div class="sl-item div{{_id}}">
 									<button type="button" class="close" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">&times;</button>
 										 <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
-										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>										 
-										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:deletePost})">Delete Forever</button>
+										 <button class="dropdown-item" onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't Show on dashboard</button>	
+										<div class="dropdown-divider"></div>										 
+										 <button class="dropdown-item" onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Delete Forever</button>
                                         
                                     </div>
 									<div class="sl-left"> <img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="img-circle"> </div>
@@ -241,7 +244,7 @@
 											</div>
 											</div>
                                         </div>
-									<hr>
+									<hr class="divider{{_id}}">
 									{{/status}}
 										{{/myActivityList}}
                                             
@@ -272,12 +275,12 @@
                                                 <p class="text-muted">London</p>
                                             </div>
                                         </div>
-                                        <hr>
+                                        <hr class="divider{{_id}}">
                                         <p class="m-t-30">Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt.Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim.</p>
                                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries </p>
                                         <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
                                         <h4 class="font-medium m-t-30">Skill Set</h4>
-                                        <hr>
+                                        <hr class="divider{{_id}}">
                                         <h5 class="m-t-30">Wordpress <span class="pull-right">80%</span></h5>
                                         <div class="progress">
                                             <div class="progress-bar bg-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width:80%; height:6px;"> <span class="sr-only">50% Complete</span> </div>
@@ -419,5 +422,16 @@
 
 {{>right_sidebar}}
 {{>foot}}
+<script>
+function viewFalse(data, extraInfo, response){
+$('.div' + data.typeId).hide();
+$('.divider' + data.typeId).hide();
+$('.undoBtn').removeClass("d-none");
 
+}
+
+function deletePost(data, extraInfo, response){
+$('.div' + data.typeId).hide();
+}
+</script>
 {{>end}}

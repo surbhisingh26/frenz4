@@ -134,7 +134,7 @@ public class FriendActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 			
 		}
@@ -300,7 +300,7 @@ public class FriendActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 			
 		}
@@ -353,7 +353,7 @@ public class FriendActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 			
 
@@ -400,7 +400,7 @@ public class FriendActions extends HttpServlet {
 			}
 			else{
 				hmap.put("message","Please login First!!!");
-				response.sendRedirect("login");
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 			
 
