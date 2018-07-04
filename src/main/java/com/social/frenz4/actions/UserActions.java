@@ -94,8 +94,15 @@ public class UserActions extends HttpServlet {
 	public void login(HttpServletRequest request,HttpServletResponse response){
 
 		try {
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String,Object> hmap = new HashMap<String,Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
+			uid = (ObjectId) hmap.get("uid");
 			if(uid==null){
 				utility.getHbs(response,"login_page",null,templatePath);
+			}
+			else{
+				response.sendRedirect("friendactivity");
 			}
 		} catch (ServletException e) {
 
@@ -109,6 +116,10 @@ public class UserActions extends HttpServlet {
 	public void register(HttpServletRequest request,HttpServletResponse response){
 
 		try {
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String,Object> hmap = new HashMap<String,Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
+			uid = (ObjectId) hmap.get("uid");
 			if(uid==null){
 				utility.getHbs(response,"register_page",null,templatePath);
 			}
@@ -1107,6 +1118,26 @@ public class UserActions extends HttpServlet {
 			UserService userService = new UserService();
 			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
 			userService.setviewfalse(typeId);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void removepost(HttpServletRequest request, HttpServletResponse response){
+		try {
+			UserService userService = new UserService();
+			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
+			userService.setDeleted(typeId);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void removepic(HttpServletRequest request, HttpServletResponse response){
+		try {
+			UserService userService = new UserService();
+			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
+			userService.deletePic(typeId);
 		}
 		catch(Exception e){
 			e.printStackTrace();

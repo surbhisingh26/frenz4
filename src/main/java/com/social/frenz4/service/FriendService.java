@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
@@ -267,15 +266,15 @@ public class FriendService {
 		
 		pipeline.add(sort);
 
-		System.out.println(pipeline);
+	//	System.out.println(pipeline);
 
 		AggregationOutput output = coll.aggregate(pipeline);
 		
 		for (DBObject result : output.results()) {
 			//System.out.println(result.get("heart"));
 			@SuppressWarnings("unchecked")
-			List<Object> list = (List<Object>) result.get("heart");
-			List<Object> res = list;
+			List<Object> res = (List<Object>) result.get("heart");
+			
 			if(!res.isEmpty()){
 				
 				result.put("noAction",true);
@@ -296,14 +295,20 @@ public class FriendService {
 			else{
 				result.put("noAction",true);
 				
+			}			
+			Object friend = (Object) result.get("friend");
+			BasicDBObject fr = (BasicDBObject)friend;
+			if(fr.get("fid").equals(fr.get("fid"))){			
+				result.put("myactivity", true);
 			}
+			
 			activityList.add(result);
 			if(count%2==0)
 				result.put("left", false);
 			else
 				result.put("left", true);
 			
-			System.out.println(result);
+			//System.out.println(result);
 			count++;
 		}
 		//System.out.println("SIZE IS ......................" +activityList.size());

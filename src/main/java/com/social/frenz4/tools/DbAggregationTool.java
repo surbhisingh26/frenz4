@@ -7,7 +7,7 @@ import com.social.frenz4.service.UserService;
 
 public class DbAggregationTool {
 public static void main(String args[]){
-	String uid = "5b36721b759a7510108e7850";
+	String uid = "5b3789fb949e3d11643f72c1";
 	FriendService friendService = new FriendService();
 	UserService userService = new UserService();
 //	userService.myActivity(new ObjectId(uid));
