@@ -492,7 +492,14 @@ public class UserService {
 		friendFields.put("foreignField","_id");
 		friendFields.put("as", "friend");
 		pipeline.add(new BasicDBObject("$lookup",friendFields));
+		DBObject unwindFriend = new BasicDBObject("$unwind",new BasicDBObject("path","$friend").append("preserveNullAndEmptyArrays", true));
+		pipeline.add(unwindFriend);
+		
 
+//		 match = new BasicDBObject("$match",new BasicDBObject("uid" , uid).append("viewfalse",false));
+//		pipeline.add(match);
+
+		
 		DBObject userfields = new BasicDBObject("from", "user");
 		userfields.put("localField","friend.fid");
 		userfields.put("foreignField","_id");
@@ -515,6 +522,7 @@ public class UserService {
 		AggregationOutput output = coll.aggregate(pipeline);
 
 		for (DBObject result : output.results()) {
+		//	System.out.println(result.get("userFriend"));
 			@SuppressWarnings("unchecked")
 			List<Object> res = (List<Object>) result.get("heart");
 			if(!res.isEmpty()){
@@ -540,7 +548,21 @@ public class UserService {
 			}
 
 
+			/*List<Object> fr = (List<Object>) result.get("friend");
+			if(!fr.isEmpty()){
 
+				for(Object db:fr){
+					//System.out.println(db);
+					BasicDBObject object = (BasicDBObject) db;
+					object.get("fid");
+					System.out.println("frrrr  " + object.get("fid"));
+					
+				}									
+			}
+			*/
+			
+			
+			
 			myActivityList.add(result);
 			System.out.println("result  ==== " +  result);
 		}
@@ -1437,7 +1459,20 @@ public class UserService {
 	}
 	public void deletePic(ObjectId typeId) {
 		
+		ActivityDAO activityDAO = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection = activityDAO.activityDAO();
+		Activity activity = activityCollection.findOne(new BasicDBObject("typeId" , typeId));
+		activity.setDeleted(true);
+		activity.setViewfalse(true);
+		activityCollection.updateById(activity.getId(), activity);
+	}
+	public void hidePost(ObjectId typeId) {
 		
+		ActivityDAO activityDAO = new ActivityDAO();
+		JacksonDBCollection<Activity, String> activityCollection = activityDAO.activityDAO();
+		Activity activity = activityCollection.findOne(new BasicDBObject("typeId" , typeId));
+		activity.setDeleted(true);
+		activityCollection.updateById(activity.getId(), activity);
 	}
 
 

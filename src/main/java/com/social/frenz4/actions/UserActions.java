@@ -1143,6 +1143,16 @@ public class UserActions extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
+	public void hidepost(HttpServletRequest request, HttpServletResponse response){
+		try {
+			UserService userService = new UserService();
+			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
+			userService.hidePost(typeId);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }
 
 
