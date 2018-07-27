@@ -1,0 +1,18 @@
+<html>
+<body>
+<div style="background-color:#1e88e5;margin:30px;padding:0px;" class="container">
+	<h1><center>Frenz4</center></h1>
+</div>
+<div style="margin:30px;padding:10px; margin-bottom:30px;margin-right:150px">
+<p>Hello {{name}}</p>
+<p>We welcome you to frenz4</p>
+<p>You have to verify your email for security reasons</p>
+<p>Click the link given below to verify your email</p>
+
+<a href="http://localhost:8080/frenz4/confirmMail?id={{id}}" >Verify here</a>
+</div>
+<div style="margin:30px;padding:1px; margin-top:30px;background-color:#1e88e5;">
+<h6>If you don't want to recieve such emails<a href="http://localhost:8080/frenz4/unsubscribe?email={{#reciever}}{{email}}{{/reciever}}">Unsubscribe here</a></h6>
+</div>
+</body>
+</html>
