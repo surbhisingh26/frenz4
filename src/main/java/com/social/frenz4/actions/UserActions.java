@@ -482,7 +482,7 @@ public class UserActions extends HttpServlet {
 				hmap.put("file", file);
 				hmap.put("filename",fileName);
 				file.write(fileSaveDir + File.separator + fileName);
-				String filePath= File.separator +"images/frenz4images/"+uid+"/dp" + File.separator + fileName;
+				String filePath= File.separator +"images/frenz4images/"+uid+"/dp" + "/" + fileName;
 				UserService userService = new UserService();
 				userService.updatePic(filePath,uid);
 
@@ -1148,6 +1148,20 @@ public class UserActions extends HttpServlet {
 			UserService userService = new UserService();
 			ObjectId typeId = new ObjectId(request.getParameter("typeId"));
 			userService.hidePost(typeId);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void msgread(HttpServletRequest request, HttpServletResponse response){
+		try {
+			UserService userService = new UserService();
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
+			uid = (ObjectId) hmap.get("uid");			
+			ObjectId fid = new ObjectId(request.getParameter("fid"));			
+			userService.markMsgRead(uid,fid);
 		}
 		catch(Exception e){
 			e.printStackTrace();

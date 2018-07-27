@@ -393,9 +393,19 @@ public class FriendActions extends HttpServlet {
 				UserService userService = new UserService();
 				User userFriend = userService.findOneById(fid);
 				hmap.putAll(userService.getChat(uid,new ObjectId(fid)));
+				hmap.putAll(userService.getRecentChats(uid));
 				hmap.put("fid", fid);
 				hmap.put("userFriend", userFriend);
+				String window = request.getParameter("window");
+				if(window.equals("true")){
 				utility.getHbs(response, "chat_panel", hmap, templatePath);
+				}
+				else
+				{
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					response.getWriter().write(new Gson().toJson(hmap));
+				}
 
 			}
 			else{

@@ -60,7 +60,7 @@
   -moz-animation-iteration-count: infinite;
   -moz-animation-timing-function: linear;
   animation-name: rotate;
-  animation-duration: 2s;
+  animation-duration: 5s;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   position: absolute;
@@ -83,13 +83,7 @@
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease; }
-  .right-sidebar-chat .rpanel-title-chat {
-    display: block;
-    padding: 24px 20px;
-    color: #ffffff;
-    text-transform: uppercase;
-    font-size: 15px;
-    background: #009efb; }
+  
     .right-sidebar-chat .rpanel-title-chat span {
       float: right;
       cursor: pointer;
@@ -97,7 +91,7 @@
       .right-sidebar-chat .rpanel-title-chat span:hover {
         color: #ffffff; }
   .right-sidebar-chat .r-panel-body-chat {
-    padding: 20px; }
+    padding: 5px; }
     .right-sidebar-chat .r-panel-body-chat ul {
       margin: 0px;
       padding: 0px; }
@@ -109,6 +103,11 @@
   right: 0px;
   width: 240px;
   display: block; }
+  
+
+  
+  
+  
   
   
   
@@ -148,3 +147,10 @@ position:relative;
   right: 0px;
   width: 240px;
   display: block; }
+  
+  .btn .badge{
+	  top: -25px !important;
+  }
+  .box{
+	  word-wrap:break-word;
+  }

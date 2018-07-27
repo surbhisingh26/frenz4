@@ -14,6 +14,20 @@ public class Chat extends BaseObject {
 	private Date sentAt;
 	private Date deliveredAt;
 	private boolean delivered;
+	private boolean read;
+	private Date readAt;
+	public boolean isRead() {
+		return read;
+	}
+	public void setRead(boolean read) {
+		this.read = read;
+	}
+	public Date getReadAt() {
+		return readAt;
+	}
+	public void setReadAt(Date readAt) {
+		this.readAt = readAt;
+	}
 	private boolean me;
 	
 	public ObjectId getSenderId() {

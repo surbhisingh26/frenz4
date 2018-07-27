@@ -96,11 +96,9 @@ a.link:hover, a.link:focus {
 }
 
 .right-sidebar .rpanel-title {
-  background: #95a5ad;
+  background: #95A5A6;
 }
-.right-sidebar-chat .rpanel-title-chat {
-  background: #95a5ad;
-}
+
 
 .stylish-table tbody tr:hover, .stylish-table tbody tr.active {
   border-left: 4px solid #95a5ad;
@@ -170,7 +168,7 @@ a.link:hover, a.link:focus {
 }
 
 .sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
-  color: #26c6da;
+  color: #99abb4;
 }
 
 .sidebar-nav ul li a.active {
@@ -183,7 +181,7 @@ a.link:hover, a.link:focus {
 
 .sidebar-nav > ul > li.active > a, .sidebar-nav > ul > li:hover > a {
   color: #ffffff !important;
-  background: #26c6da !important;
+  background: #99abb4 !important;
 }
 
 .sidebar-nav > ul > li.active > a i, .sidebar-nav > ul > li.active:hover > a i {
@@ -195,7 +193,7 @@ a.link:hover, a.link:focus {
 }
 
 .sidebar-nav > ul > li > a.active i, .sidebar-nav > ul > li > a:hover i {
-  color: #26c6da;
+  color: #99abb4;
 }
 
 .sidebar-nav > ul > li > a i {

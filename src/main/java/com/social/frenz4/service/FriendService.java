@@ -18,10 +18,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.frenz4.DAO.ActivityDAO;
+import com.social.frenz4.DAO.ChatDAO;
 import com.social.frenz4.DAO.FriendDAO;
 import com.social.frenz4.DAO.HeartDAO;
 import com.social.frenz4.DAO.UserDAO;
 import com.social.frenz4.model.Activity;
+import com.social.frenz4.model.Chat;
 import com.social.frenz4.model.Friend;
 import com.social.frenz4.model.Heart;
 import com.social.frenz4.model.User;
@@ -296,19 +298,19 @@ public class FriendService {
 				result.put("noAction",true);
 				
 			}			
-			Object friend = (Object) result.get("friend");
+			/*Object friend = (Object) result.get("friend");
 			BasicDBObject fr = (BasicDBObject)friend;
-			if(fr.get("fid").equals(fr.get("fid"))){			
+			if(fr.get("uid").equals(fr.get("fid"))){			
 				result.put("myactivity", true);
-			}
+			}*/
 			
-			activityList.add(result);
+			
 			if(count%2==0)
 				result.put("left", false);
 			else
 				result.put("left", true);
-			
-			//System.out.println(result);
+			activityList.add(result);
+			System.out.println(result);
 			count++;
 		}
 		//System.out.println("SIZE IS ......................" +activityList.size());
@@ -372,6 +374,8 @@ public class FriendService {
 		JacksonDBCollection<User, String> userCollection =  userdao.userDAO();
 		FriendDAO frienddao = new FriendDAO();
 		JacksonDBCollection<Friend, String> friendCollection = frienddao.friendDAO();
+		ChatDAO chatdao = new ChatDAO();
+		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		List<User> friendList = new ArrayList<User>();
 		BasicDBObject query = new BasicDBObject();
@@ -385,7 +389,21 @@ public class FriendService {
 			User user = userCollection.findOneById(friend.getFid().toString());
 			System.out.println("User " + user.getName() + user.getLoggedIn());
 			if(user.getLoggedIn()){
+				
+				BasicDBObject chatquery = new BasicDBObject();
+				chatquery.put("recieverId", uid);
+				chatquery.put("senderId", new ObjectId(user.getId()));
+				System.out.println("uid "+uid);
+				System.out.println("fid "+user.getId());
+				//db.chat.find({ "$or" : [ { "$and" : [ { "recieverId" : ObjectId("5af547cde2e9a70900b73338") , "senderId" : ObjectId("5af16a61e2e9a708c090917e")}]},{ "$and" : [ { "senderId" : ObjectId("5af547cde2e9a70900b73338") , "recieverId" : ObjectId("5af16a61e2e9a708c090917e")}]}] , "delivered" : true}).pretty()
+				
+				chatquery.put("delivered", true);
+				chatquery.put("read", false);
+				long chats = chatCollection.find(chatquery).count();
+				System.out.println("Counts are " + chats);
+				user.setChat(chats);
 				friendList.add(user);
+				
 			}
 		}
 		

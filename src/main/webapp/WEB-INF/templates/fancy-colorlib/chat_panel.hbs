@@ -1,71 +1,136 @@
 {{>head}}
 {{>header}}
 {{>side_navbar}}
-<div class="page-wrapper">
+<div class="page-wrapper" style="padding:0px!important;">
             <!-- ============================================================== -->
             <!-- Container fluid  -->
             <!-- ============================================================== -->
-            <div class="container-fluid">
-			<div class="">
-                                <button class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10" onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})"><i class="mdi mdi-wechat text-white"></i></button>
-                            </div>
+            <div class="container-fluid p-b-0">
 			
-<div class="card">
-<div class="card-body">
-<div class="chat-right-aside">
+                                <button class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10 chat-btn toggle-btn" onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})" style="opacity:0" onmouseover="opacityincrease()"onmouseout="opacitydecrease()"><i class="mdi mdi-wechat text-white"></i></button>
+                            
+							
+							<div class="row page-titles p-2" style="margin-bottom:10px">
+			<div class="col align-self-center">
+				<h3 class="text-themecolor m-b-0 m-t-0 text-center">{{#userFriend}}{{name}}{{/userFriend}}</h3>
+				
+			</div>
+			
+		</div>
+		
+		
+		
+		<div class="card m-b-0">
+		
+                            <!-- .chat-row -->
+                            <div class="chat-main-box">
+                               
+							   <div class="chat-left-aside">
+							  
+                                    <div class="open-panel"><i class="ti-angle-right"></i></div>
+                                    <div class="chat-left-inner" style="height: 320px;">
+                                        <div class="form-material">
+                                            <input class="form-control p-4" type="text" placeholder="Search Contact" >
+                                        </div>
+                                        
+										<div class="slimscrollright">
+										<ul class="chatonline style-none list-group list-group-flush">
+										{{#friendList}}
+                                            <li class="list-group-item p-0" >
+                                                <a href="friendchatwindow?fid={{id}}&window=true" id="{{id}}" class="p-2"><img src="{{imagepath}}" alt="user-img" class="img-circle"> <span>{{name}} {{#if loggedIn}}<small class="text-success">online</small>{{else}}<small class="text-muted">offline</small>{{/if}}</span></a>
+                                            </li>
+											{{/friendList}}
+                                            
+                                        </ul>
+										</div></div>
+										
+										</div>
+                                    
+                                
+							   
+							   
+							   
+                                <!-- .chat-right-panel -->
+                                <div class="chat-right-aside">
 
-
-       <div class="chat-main-header">
-            <div class="p-20 b-b">
-                <h3 class="box-title">{{#userFriend}}{{name}}{{/userFriend}}</h3>
-				<input type="hidden" value="{{fid}}">
-            </div>
-        </div>
-		<div class="slimscrollright">
-            <div class="chat-rbox">
-                <ul class="chat-list p-20 textlist">
-				{{#mychat}}
+                                    <div class="chat-rbox" style="height:320px">
+									
+                                         <div class="slimscrollright">
+										<ul class="chat-list p-20 textlist">
+                                           
+                                            
+                                           {{#mychat}}
 					{{#if me}}
-						<li class="mytext">
-							<div class="chat-img"><img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" /></div>
-							<div class="chat-content">
-								<h5>{{#loggedInUser}}{{name}}{{/loggedInUser}}</h5>
-								<div class="box bg-light-info">{{text}}</div>
+						<li class="mytext m-0">
+						<div class="row">
+						<div class="pull-left mb-0"><img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;left:50px;z-index:999999;"/></div>
+						
+							
+							<div class="chat-content m-0 mb-1">
+								<div class="box bg-light-info m-0" style="margin-right:100px;border-radius:20px 0px 0px 0px;max-width: 470px">
+								<span class="small" style="padding-left:30px">{{text}}</span>
 								</div>
-							<div class="chat-time">{{sentAt}}</div>
+								<div class="chat-time mb-2">{{sentAt}}</div>
+								</div>
+								
+								</div>
+							
+							
 						 </li>
 						 
 					 {{else}}
 					 	<li class="reverse">
-							<div class="chat-time">{{deliveredAt}}</div>
-								<div class="chat-content">
-									<h5>{{#userFriend}}{{name}}{{/userFriend}}</h5>
-									<div class="box bg-light-inverse">{{text}}</div>
+							<div class="row">
+							
+								<div class="chat-content m-0 mb-1">
+								<div class="chat-time m-0" style="position:relative;right:-50px">{{deliveredAt}}</div>
+									<div class="box bg-light-inverse m-0" style="margin-left:100px;background-color:#E4D8F2;position:relative;left:50px;max-width:470px;border-radius:0px 20px 0px 0px">
+									<span class="small pt-0 m-0" style="padding-right:30px">{{text}}</span>
 								</div>
-								<div class="chat-img"><img src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="user" /></div>
+								
+								</div>
+								<div class="pull-right pr-0 m-0"><img src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="friend" class="rounded-circle p-1" style="width:35px;height:35px;position:relative"/></div>
+								</div>
 						</li>
 
 					 {{/if}}
 					 
 				 {{/mychat}}
-					
-                               
-                </ul>
-            </div>
-		</div>
-        <div class="card-body b-t">
-             <div class="row">
-                <div class="col-8">
-                    <textarea placeholder="Type your message here" class="form-control b-0 chat-area"></textarea>
-                </div>
-                <div class="col-4 text-right">
-                    <button type="button" class="btn btn-info btn-circle btn-lg" onclick="ajaxRequest('sendmessage','POST', {fid:'{{#userFriend}}{{id}}{{/userFriend}}',text:$('.chat-area').val()}, {dataType:'json', callback:messageSent})"><i class="fa fa-paper-plane-o"></i> </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
+					{{^mychat}}
+                              <p class="text-center"> Star new chat with <a href="friendprofile?fid={{#userFriend}}{{id}}{{/userFriend}}">{{#userFriend}}{{name}}{{/userFriend}}</a></p>
+							  {{/mychat}}
+                                            
+                                        </ul></div></div>
+                                   
+                                    <div class="card-body">
+                                        <div class="row wave-effect m-0">
+                                            <div class="col-11">
+                                                <textarea placeholder="Type your message here" class="form-control b-t chat-area m-0"></textarea>
+                                            </div>
+                                            <div class="col-1 center p-0 mt-2">
+                                                <button type="button" class="btn btn-info btn-circle btn-lg waves-effect p-r-1 p-l-0" onclick="ajaxRequest('sendmessage','POST', {fid:'{{#userFriend}}{{id}}{{/userFriend}}',text:$('.chat-area').val()}, {dataType:'json', callback:messageSent})"><i class="fa fa-paper-plane-o"></i> </button>
+                                            </div>
+                                        </div>
+                                    </div>
+									
+									
+									
+
+                                </div>
+                                <!-- .chat-right-panel -->
+                            </div>
+                            <!-- /.chat-row -->
+                        </div>
+                        
+		
+		
+		
+		
+		
+		
+		
+			
+
 </div>
 </div>
 {{>right_sidebar}}
@@ -81,8 +146,16 @@ $(me).text(oldValue.format('hh:mm a'));
 }
 
 });
-
+$(document).ready(function(){
+$('#{{#userFriend}}{{id}}{{/userFriend}}').addClass('active');
+});
+function opacityincrease(){
+$('.toggle-btn').css('opacity','1');
+}
+function opacitydecrease(){
+$('.toggle-btn').css('opacity','0');
+}
 </script>
 {{>end}}							
                                 <!-- .chat-right-panel -->
-                            
+                        

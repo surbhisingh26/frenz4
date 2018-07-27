@@ -139,7 +139,7 @@ var request = $.ajax({
 	url:url,
 	method:method,
 	data:data,
-	//dataType: (typeof (extraInfo.dataType) != 'undefined')? extraInfo.dataType : 'json'
+	//dataType: (typeof (extraInfo.dataType) != 'undefined')? extraInfo.dataType : 'json', append:true, prepend : true, html:true, boxIdentifier:'box id or class along with # or .'
 	});
 	request.done(function(response){
 	
@@ -147,6 +147,16 @@ var request = $.ajax({
 	
 		extraInfo.callback(data, extraInfo, response);
 		return false;
+	} else if(typeof extraInfo.boxIdentifier != 'undefined') {
+		if(typeof extraInfo.append != 'undefined' && extraInfo.append) {
+			$(extraInfo.boxIdentifier).append(response);
+		} else if(typeof extraInfo.prepend != 'undefined' && extraInfo.prepend) {
+			$(extraInfo.boxIdentifier).prepend(response);
+		} else if(typeof extraInfo.html != 'undefined' && extraInfo.html) {
+			$(extraInfo.boxIdentifier).html(response);
+		} else {
+			$(extraInfo.boxIdentifier).html(response);
+		}
 	}
 	
 	});
@@ -351,19 +361,86 @@ function commentBox(data, extraInfo, response){
 	
 	$.each(response.friendList, function(k, v){
 	console.log(v)
-	$('.chatonline').append('<li class="chat-panel-open" id='+v.id+'><a href="friendchatwindow?fid='+v.id+'"><img src="'+v.imagepath+'" alt="user-img" class="img-circle"> <span>'+v.name+' <small class="text-success">online</small></span></a></li>');
+	var i = 1;
+	$('.rightbarchat').append('<div class="col p-0 card m-0 waves-effect waves-dark" id="card'+v.id+'" style="width:230px"><div class="col  card-header waves-effect" id="friend'+v.id+'" style="padding-right:8px"> <a class="card-link" data-toggle="collapse" href="#collapse'+v.id+'" id="online'+v.id+'" onclick="ajaxRequest(\'friendchatwindow\', \'POST\', {fid:\''+v.id+'\',window:\'false\'}, {dataType:\'json\', callback:chatOpen})"><img src="'+v.imagepath+'" alt="user-img" class="img-circle"> <span>'+v.name+'</span></a><a href="friendchatwindow?fid='+v.id+'&window=true"><i class="mdi mdi-arrow-expand pull-right" style="color:black"></i></a></div><div id="collapse'+v.id+'" class="collapse chatcard p-0 m-0" data-parent="#accordion" style="width:230px;word-wrap:break-word"><div class="card-body p-0 body'+v.id+'" style="max-height:210px;width:230px;word-wrap:break-word"><div class="chat-rbox"><div class="slimscrollright" style="word-wrap:break-word"><ul class="chat-list p-20 textlist'+v.id+'"></ul></div></div></div><div class="card-body b-t mb-0" style="width:200px"><div class="row"><div class="col-10 pr-0 mr-0"><textarea placeholder="Type your message here" class="form-control b-t chat-area'+v.id+'" onclick="ajaxRequest(\'msgread\',\'POST\', {fid:\''+v.id+'\'}, {dataType:\'json\', callback:msgRead})" rows=2></textarea></div><div class="col-2 text-right p-0 m-0"><button type="button" class="btn btn-info btn-circle btn-sm mt-2 p-1 pt-2 pb-2" onclick="ajaxRequest(\'sendmessage\',\'POST\', {fid:\''+v.id+'\',text:$(\'.chat-area'+v.id+'\').val()}, {dataType:\'json\', callback:messageSentFromSidebar})"><i class="fa fa-paper-plane-o"></i> </button></div></div></div></div></div>');
+	
+	if(v.chat>0){
+	$('#friend'+v.id).append('<span class="badge badge-danger pull-right">'+v.chat+'</span>');
+	$('#card'+v.id).css("box-shadow","-5px -5px 15px 5px #ccc");
+	}
+	$('.textlist'+v.id).slimScroll({
+		height: '210px'
+		
+	});	
 	});
-
 	}
 	$('.close-chat').click(function(){
-	$('.chatonline').empty();
+	$('.rightbarchat').empty();
 	});
 	
+	$(".rightbarchat").click(function(){	
+	$('.rightbarchat .card-header').each(function(){
+	$(this).css('background-color','#fff');
+	});
+	});
+	
+	function chatOpen(data,extraInfo,response){
+	console.log(data,response);
+	
+	$('#friend'+response.fid+' .badge').remove();
+	$('#card'+response.fid).css("box-shadow","0px 0px 0px 0px");
+	
+	if(!($('#online'+response.fid).hasClass("collapsed"))){
+	$('#friend'+response.fid).css('background-color','gray');
+	}
+	else{
+	$('#friend'+response.fid).css('background-color','#fff');
+	}
+	
+	if(response.mychat.length==0){
+	$('.textlist'+response.fid).append('<p class="small">Start chat with <a href="friendprofile?fid='+response.fid+'">'+response.userFriend.name+'</a></p>');
+	}
+	$.each(response.mychat, function(k, v){
+	//if($(".body"+response.fid).height()<200){
+	
+	if(v.me==true){
+	$('.textlist'+response.fid).append('<li class="mytext m-0"><div class="row" style="word-wrap:break-word"><div class="pull-left mb-0"><img src='+response.loggedInUser.imagepath+' alt="user" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;left:20px;z-index:999999;"/></div>'+
+	'<div class="chat-content m-0 mb-1"><div class="box bg-light-info m-0" style="border-radius:20px 0px 0px 0px;max-width: 150px;position:relative;right:40px"><span class="small" style="padding-left:30px">'+v.text+'</span></div><div class="chat-time m-0 p-0">'+moment(v.sentAt).format('hh:mm a')+'</div></div></div>'+
+	'</li>')
+	}
+	else{
+	
+	$('.textlist'+response.fid).append('<li class="reverse"><div class="row" style="word-wrap:break-word"><div class="chat-content m-0 mb-1" style="word-wrap:break-word"><div class="chat-time m-0" style="position:relative;right:-40px">'+moment(v.deliveredAt).format('hh:mm a')+'</div><div class="box bg-light-inverse m-0" style="background-color:#E4D8F2;position:relative;left:130px;max-width:150px;border-radius:0px 20px 0px 0px;word-wrap:break-word"><span class="small pt-0 m-0 pull-left" style="padding-right:30px;word-wrap:break-word">'+v.text+'</span></div></div><div class="pull-right pr-0 m-0"><img src="'+response.userFriend.imagepath+'" alt="friend" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;top:25px;left:80px"/></div></div></li>');
+	}
+	
+	});
+	
+	//alert($(".body"+response.fid).height());
+	$('.chat-time').each(function(){
+var me = $(this);
+var oldValue = moment($(me).text(),'ddd MMM DD hh:mm:ss IST yyyy');
+
+if(moment(oldValue,'ddd MMM DD hh:mm:ss IST yyyy').isValid()){
+$(me).text(oldValue.format('hh:mm a'));
+}
+
+});
+
+	}
+	function msgRead(data,extraInfo,response){
+	$('#card'+data.fid).css("box-shadow","0px 0px 0px 0px");
+	}
 	function messageSent(data,extraInfo,response){
 	console.log(data);
 	console.log(response);
 		$('.chat-area').val('');
-		$('.textlist').append('<li><div class="chat-img"><img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" /></div><div class="chat-content"><h5>{{#loggedInUser}}{{name}}{{/loggedInUser}}</h5><div class="box bg-light-info">'+data.text+'</div></div><div class="chat-time">'+moment().format('hh:mm a')+'</div></li>')
+		$('.textlist').append('<li class="p-0 m-0"><div class="chat-img"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" /></div><div class="box bg-light-info" style="margin-right:100px;border-radius:20px 10px 10px 0px"><div class="chat-content"><span class="small">'+data.text+'</span></div></div><div class="chat-time">'+moment().format('hh:mm a')+'</div></li>')
+	}
+	function messageSentFromSidebar(data,extraInfo,response){
+	console.log(data);
+	console.log(response);
+		$('.chat-area'+data.fid).val('');
+		$('.textlist'+data.fid).append('<li class="mytext m-0 p-0"><div class="chat-content"><div class="chat-time">'+moment().format('hh:mm a')+'</div><div class="box bg-light-info small"><span class="small">'+data.text+'</span></div></div></li>')
 	}
 	
 
@@ -557,7 +634,7 @@ $('input[value='+gender+']').prop('checked',true);
  $(document).ready(function() {
                
                     longPolling.stop = false;
-                   //longPolling.poll();
+                   longPolling.poll();
                 
                 $("#stopPolling").click(function(event) {
                     event.preventDefault();
@@ -587,26 +664,60 @@ $('input[value='+gender+']').prop('checked',true);
 					console.log("data ",data);
 					
 					
-					if(data.chatList.length > 0){
 					
+					if(data.chatList.length > 0){
+					if($('.chat-btn .badge').length==0){
+					i=2;
+					$('.chat-btn').append('<div class="badge badge-info">1</div>');
+					}
+					else{
+					
+					$('.chat-btn .badge').text(i);
+					i++;
+					}
 					$.each(data.chatList,function(k,v){
 					
-							if(v.friend[0].email=="{{#userFriend}}{{email}}{{/userFriend}}"){
-								$('.textlist').append('<li class="reverse"><divclass="chat-time">'+moment.utc(v.sentAt, 'MMM d, yyyy hh:mm:ss A').format('hh:mm a')+'</div><div class="chat-content"><h5>'+v.friend[0].name+'</h5><div class="box bg-light-inverse">'+v.text+'</div></div><div class="chat-img"><img src="'+v.friend[0].imagepath+'" alt="user" /></div></li>');
-							}
-							else{
-							var count = $('.badge-pill'+v.friend[0].id).text();
-							var intCount
-							if(count==''){
-							intCount = 0;
-							}
-							else{
-							intCount = parseInt(count)+1;
-							}
-							alert(count);
-							$('.'+v.friend[0].email).append('<span class="badge badge-pill'+v.friend[0].id+' badge-default">'+parseInt($('.badge-pill'+v.friend[0].email).text())+1+'</span>')
+					console.log(k,v);
+					
+							if(v.sender=="{{#userFriend}}{{id}}{{/userFriend}}"){
+						
+
+								$('.textlist').append('<li class="reverse"><div class="chat-time">'+moment(v.sentAt, 'MMM DD, YYYY hh:mm:ss A').format('hh:mm a')+'</div><div class="box bg-light-inverse" style="margin-left:100px;border-radius:10px 0px 10px 10px;background-color:#E4D8F2"><div class="chat-content"><span class="small">'+v.text+'</span></div></div><div class="chat-img"><img src="'+v.friend[0].imagepath+'" alt="user" /></div></li>');
 							
 							}
+							else if(!$('#online'+v.sender).hasClass("collapsed")) {
+							
+							
+							$('#card'+v.sender).css("box-shadow","-5px -5px 15px 5px #ccc");
+							$('.textlist'+v.sender).append('<li class="reverse m-0 p-0"><div class="chat-time">'+moment(v.deliveredAt).format('hh:mm a')+'</div><div class="box bg-light-inverse small" style="margin-left:100px;border-radius:10px 0px 20px 10px;background-color:#E4D8F2"><div class="chat-content"><span class="small">'+v.text+'</span></div></div></li>');
+	
+							}
+							else{
+							
+							count = $('#friend'+v.sender+' .badge').text();
+							//console.log('ggg',count)
+							if(count!=''){
+							count = parseInt(count);
+							count = count + 1;
+							}
+							else{
+							count = 1;
+							}
+							//console.log('bb',$('#friend'+v.sender+' a .badge').text());
+							console.log('ff',$('#friend'+v.sender+' .badge'))
+							console.log($('#friend'+v.sender+' .badge').length)
+							if($('#friend'+v.sender+' .badge').length==0){
+							$('#friend'+v.sender).append('<span class = "badge l badge-danger pull-right" style="z-index:999999">'+count+'</span>');
+						//	$('#friend'+v.sender).prepend('<i class="mdi mdi-message pull-left"></i>');
+								var count = $('#card'+v.sender+' .badge').text();
+								$('#card'+v.sender).css("box-shadow","-5px -5px 15px 5px #ccc");
+							}
+							else{
+							$('#friend'+v.sender+' .badge').text(count);
+							}
+							
+							
+	}
                      });
 					}
 						
@@ -619,5 +730,8 @@ $('input[value='+gender+']').prop('checked',true);
                     }).always(longPolling.poll);
                 }
             };
+			
+			
+			
 </script>
 <script src="js/myjs.js"></script>

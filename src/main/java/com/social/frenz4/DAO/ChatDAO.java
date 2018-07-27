@@ -60,6 +60,7 @@ System.out.println("Step1 service");
 	System.out.println("Step5 service");
 	for (DBObject result : output.results()) {
 		
+		result.put("sender" , result.get("senderId").toString());
 		chatList.add(result);
 		System.out.println(result);
 

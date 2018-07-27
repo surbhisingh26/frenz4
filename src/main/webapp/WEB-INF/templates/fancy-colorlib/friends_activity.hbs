@@ -4,18 +4,12 @@
 	<!-- Container fluid  -->
 	<!-- ============================================================== -->
 	<div class="container-fluid">
-		<div>
-			<button
-				class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10"
-				onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})">
-				<i class="mdi mdi-wechat text-white"></i>
-			</button>
-		</div>
+		
 		<div class="">
 			<button
-				class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10"
+				class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10 chat-btn"
 				onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})">
-				<i class="mdi mdi-wechat text-white"></i>
+				<i class="fa fa-superpowers text-white"></i>
 			</button>
 		</div>
 		<!-- ============================================================== -->
@@ -43,7 +37,7 @@
 					<div class="card-body" style="padding: 30px">
 						<form action="addstatus">
 							<textarea class="form-control" placeholder="Share Your Status..."
-								rows="5" style="margin-top: 5px; border-radius: 25px;"
+								rows="5" style="margin-top: 5px; border-radius: 5px;"
 								id="statusMessage" name="status"></textarea>
 							<button class="btn btn-info btn-oval" type="submit"
 								style="border-radius: none;">Share</button>
@@ -56,7 +50,7 @@
 
 								{{#uploadpic}}
 
-								<div class="timeline-badge success">
+								<div class="timeline-badge success badge{{_id}}">
 									<a href="friendprofile?fid={{uid}}"> <img
 										class="img-responsive" alt="user"
 										src="{{#friendInfo}}{{imagepath}}{{/friendInfo}}" alt="img"></a>
@@ -68,10 +62,10 @@
 									<div class="dropdown-menu" x-placement="top-start"
 										style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
 										<button class="dropdown-item"
-											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from friends</button>
+											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
 										<div class="dropdown-divider"></div>
-										<button class="dropdown-item"
-											onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
+										<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning"
+											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
 											to trash</button>
 
 									</div>
@@ -151,7 +145,7 @@
 									</div>
 								</div> {{/uploadpic}} {{#profilepic}}
 
-								<div class="timeline-badge success">
+								<div class="timeline-badge success badge{{_id}}">
 									<a href="friendprofile?fid={{uid}}"> <img
 										class="img-responsive" alt="user"
 										src="{{#friendInfo}}{{imagepath}}{{/friendInfo}}" alt="img"></a>
@@ -163,10 +157,10 @@
 									<div class="dropdown-menu" x-placement="top-start"
 										style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
 										<button class="dropdown-item"
-											onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Hide from friends</button>
+											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
 										<div class="dropdown-divider"></div>
-										<button class="dropdown-item"
-											onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
+										<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning"
+											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Send
 											to trash</button>
 
 									</div>
@@ -247,7 +241,7 @@
 								</div>
 							</li> {{/profilepic}} {{#status}}
 
-							<div class="timeline-badge success">
+							<div class="timeline-badge success badge{{_id}}">
 								<a href="friendprofile?fid={{uid}}"> <img
 									class="img-responsive" alt="user"
 									src="{{#friendInfo}}{{imagepath}}{{/friendInfo}}" alt="img"></a>
@@ -260,7 +254,7 @@
 								<div class="dropdown-menu" x-placement="top-start"
 										style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
 										<button class="dropdown-item"
-											onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Hide from friends</button>
+											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
 										<div class="dropdown-divider"></div>
 										<button class="dropdown-item"
 											onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
@@ -360,8 +354,13 @@
 
 {{>right_sidebar}} {{>foot}}
 <script>
-	function hidePost() {
-
+	function deletePost(data, extraInfo, response) {
+	$('.typeId').val(data.typeId);
+	}
+	function hidePost(data, extraInfo, response) {
+	
+	$('.timeline' + data.typeId).hide();
+	$('.badge' + data.typeId).hide();
 	}
 </script>
 {{>end}}

@@ -98,9 +98,6 @@ a.link:hover, a.link:focus {
 .right-sidebar .rpanel-title {
   background: #1e88e5;
 }
-.right-sidebar-chat .rpanel-title-chat {
-  background: #1e88e5;
-}
 
 .stylish-table tbody tr:hover, .stylish-table tbody tr.active {
   border-left: 4px solid #1e88e5;

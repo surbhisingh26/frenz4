@@ -29,6 +29,7 @@ public class User extends BaseObject{
 	private int points;
 	private Boolean reminder;
 	private Boolean confirmMail;
+	private long chat;
 	public String getName() {
 		return name;
 	}
@@ -163,6 +164,14 @@ public class User extends BaseObject{
 
 	public void setConfirmMail(Boolean confirmMail) {
 		this.confirmMail = confirmMail;
+	}
+
+	public long getChat() {
+		return chat;
+	}
+
+	public void setChat(long chat) {
+		this.chat = chat;
 	}
 	
 }

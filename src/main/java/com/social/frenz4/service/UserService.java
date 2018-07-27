@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
@@ -1358,6 +1359,8 @@ public class UserService {
 		chat.setSentAt(sentAt);
 		chat.setDeliveredAt(null);
 		chat.setText(text);
+		chat.setRead(false);
+		chat.setReadAt(null);
 		chatCollection.insert(chat);
 
 	}
@@ -1388,34 +1391,32 @@ public class UserService {
 	}
 	public Map<String,Object> getChat(ObjectId uid, ObjectId fid) {
 
-		List<Chat> mychat = new ArrayList<Chat>();
+		List<Chat> mychat = new ArrayList<>();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		ChatDAO chatdao = new ChatDAO();
 		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
-
-
-
+		
 		BasicDBObject query = new BasicDBObject("$or",Arrays.asList(new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",uid)
-				.append("senderId", fid))),new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",fid)
+				.append("senderId", fid).append("delivered", true))),new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",fid)
 						.append("senderId", uid)))));
 		//db.chat.find({ "$or" : [ { "$and" : [ { "recieverId" : ObjectId("5af547cde2e9a70900b73338") , "senderId" : ObjectId("5af16a61e2e9a708c090917e")}]},{ "$and" : [ { "senderId" : ObjectId("5af547cde2e9a70900b73338") , "recieverId" : ObjectId("5af16a61e2e9a708c090917e")}]}] , "delivered" : true}).pretty()
 
-
-		query.put("delivered", true);
-
-		DBCursor<Chat> cursor = chatCollection.find(query).limit(30);
+		
+		
+		int totalchats = chatCollection.find(query).count();
+		DBCursor<Chat> cursor = chatCollection.find(query).limit(30).sort(new BasicDBObject("_id",1)).skip(totalchats-30);
 		while(cursor.hasNext()){
 			Chat chat = cursor.next();
 
-			if(chat.getRecieverId().equals(uid)) {
+			if(chat.getSenderId().equals(uid)) {
 				chat.setMe(true);
 			}
 
 			mychat.add(chat);
 		}
-
-
-
+		markMsgRead(uid,fid);
+		
+		//mychat.forEach(System.out::println);
 		hmap.put("mychat", mychat);
 		//hmap.put("friendchat", friendchat);
 		return hmap;
@@ -1474,6 +1475,68 @@ public class UserService {
 		activity.setDeleted(true);
 		activityCollection.updateById(activity.getId(), activity);
 	}
+	public void markMsgRead(ObjectId uid,ObjectId fid){
+		
+		ChatDAO chatdao = new ChatDAO();
+		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+		Date date = new Date();
+		BasicDBObject query = new BasicDBObject();
+		query.put("recieverId", uid);
+		query.put("senderId", fid);
+		query.put("delivered",true);
+		query.put("read", false);
+		DBCursor<Chat> cursor1 = chatCollection.find(query);
+		while(cursor1.hasNext()){
+			Chat chat = cursor1.next();
+			chat.setRead(true);
+			chat.setReadAt(date);
+			chatCollection.updateById(chat.getId(), chat);
+		}
+	}
+	public Map<String,Object> getRecentChats(ObjectId uid) {
+		Map<String,Object> hmap = new HashMap<>();
+		List<Object> friendList = new ArrayList<>();
+		UserDAO userdao = new UserDAO();
+		ChatDAO chatdao = new ChatDAO();
+		/*DBCollection chatCollection = chatdao.chatCollectionDAO();
+		List<DBObject> pipeline = new ArrayList<DBObject>();
+		DBObject match = new BasicDBObject("$match",
+				new BasicDBObject("recieverId" , uid));
 
+		pipeline.add(match);
+		//DBCollection sb = chatCollection.distinct("senderId");
+		DBObject friendFields = new BasicDBObject("from", "user");
+		friendFields.put("localField","senderId");
+		friendFields.put("foreignField","_id");
+		friendFields.put("as", "friend");
+		pipeline.add(new BasicDBObject("$lookup",friendFields));
+		DBObject unwindFriend = new BasicDBObject("$unwind","$senderId");
+		pipeline.add(unwindFriend);
+		AggregationOutput output = chatCollection.aggregate(pipeline);
+		
+		
+		for (DBObject result : output.results()) {
+			
+		friendList.add(result);
+		System.out.println(result);		
+	}*/
+		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+		JacksonDBCollection<User, String> userCollection = userdao.userDAO();
+		BasicDBObject query = new BasicDBObject();
+		query.put("recieverId", uid);
+		query.clear();
+		//@SuppressWarnings("unchecked")
+		List<String> friendIds = chatCollection.distinct("senderId",query);
+		/*for(Object id : friendIds){
+			query.put("_id", id);
+			friendList.add(userCollection.findOne(query));
+		}*/
+		friendIds.forEach(fId -> {
+			query.put("_id", fId);
+			friendList.add(userCollection.findOne(query));
+		});
+		hmap.put("friendList", friendList);
+		return hmap;
+	}
 
 }
