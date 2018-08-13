@@ -27,7 +27,7 @@ public class FriendActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
 	ObjectId uid;
-	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/frenz4/WEB-INF/templates/fancy-colorlib";
+	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	Map<String, Object> hmap = new HashMap<String, Object>();
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -383,7 +383,7 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendchatwindow(HttpServletRequest request,HttpServletResponse response){
 		try{
-			
+			System.out.println("FRIEND CHAT WINDOW.......");
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
@@ -402,6 +402,7 @@ public class FriendActions extends HttpServlet {
 				}
 				else
 				{
+					System.out.println("Window false");
 					response.setContentType("application/json");
 					response.setCharacterEncoding("UTF-8");
 					response.getWriter().write(new Gson().toJson(hmap));

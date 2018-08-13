@@ -44,7 +44,7 @@ public class UserActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
 	ObjectId uid;
-	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/frenz4/WEB-INF/templates/fancy-colorlib";
+	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	public static final String SALT = "my-salt-text";
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -75,7 +75,7 @@ public class UserActions extends HttpServlet {
 		if(path==null||path.equals("/")){
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			//hmap = utility.checkSession(request);
-			utility.getHbs(response,"friend_activity",hmap,templatePath);
+			utility.getHbs(response,"friends_activity",hmap,templatePath);
 		}
 
 		else{
@@ -387,7 +387,7 @@ public class UserActions extends HttpServlet {
 			//request.getRequestDispatcher("").forward(request, response);
 			if(reference==null)
 				response.sendRedirect("login");
-			return;
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();

@@ -54,7 +54,7 @@
                                     </button>
                                     <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
                                         
-                                        <button class="dropdown-item" onclick="ajaxRequest('removefriend', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:afterRemove})">Remove as Friend</button>
+                                        <button class="dropdown-item animated pulse" onclick="ajaxRequest('removefriend', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:afterRemove})">Remove as Friend</button>
                                         
                                     </div>
                                 </div>
@@ -66,8 +66,7 @@
 					{{/friend}}
 					{{/friendList}}
                     <!-- /.col -->
-                    
-                </div>
+                   
 
 </div>
 </div>

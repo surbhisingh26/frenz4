@@ -27,7 +27,7 @@ public class AdminActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
 	ObjectId uid;
-	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/frenz4/WEB-INF/templates/fancy-colorlib";
+	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	Map<String, Object> hmap = new HashMap<String, Object>();
 	/**
 	 * @see HttpServlet#HttpServlet()

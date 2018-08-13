@@ -51,6 +51,7 @@
 										<button class="btn btn-info m-b-20" type="submit"
 											style="border-radius: none;">Share</button>
 									</form>
+									<hr>
 								<div class="profiletimeline">
 									
 									<div class="text-center">
@@ -59,24 +60,25 @@
 									<p class="text-center d-none instruct"></p>
 									{{#myActivityList}} {{#profilepic}}
 									<div class="sl-item div{{_id}}">
-										<button type="button" class="close" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="true">&times;</button>
-										<div class="dropdown-menu" x-placement="top-start"
-											style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+									<div class="dropdown">
+									<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&times;</button>
+										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
 											<button class="dropdown-item"
 												onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't
 												Show on dashboard</button>
-											<div class="dropdown-divider"></div>
+											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item"
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Hide
 												from timeline and dashboard</button>
-											<div class="dropdown-divider"></div>
-											<button class="dropdown-item"
-												onclick="ajaxRequest('removepic', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Send
+											<div class="dropdown-divider m-0"></div>
+											
+											<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning" 
+												onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Send
 												to trash</button>
-
-
+											
 										</div>
+									</div>
+										
 										<div>
 											<div class="sl-left">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
@@ -163,18 +165,17 @@
 									<hr class="divider{{_id}}">
 									{{/profilepic}} {{#uploadpic}}
 									<div class="sl-item div{{_id}}">
-										<button type="button" class="close" data-toggle="dropdown"
+										<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown"
 											aria-haspopup="true" aria-expanded="true">&times;</button>
-										<div class="dropdown-menu" x-placement="top-start"
-											style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
 											<button class="dropdown-item"
 												onclick="ajaxRequest('viewfalse','POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't
 												Show on dashboard</button>
-											<div class="dropdown-divider"></div>
+											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item"
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Hide
 												from timeline and dashboard</button>
-											<div class="dropdown-divider"></div>
+											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning" 
 												onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Send
 												to trash</button>
@@ -292,14 +293,13 @@
 									<hr class="divider{{_id}}">
 									{{/friend}} {{#status}}
 									<div class="sl-item div{{_id}}">
-										<button type="button" class="close" data-toggle="dropdown"
+										<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown"
 											aria-haspopup="true" aria-expanded="true">&times;</button>
-										<div class="dropdown-menu" x-placement="top-start"
-											style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
 											<button class="dropdown-item"
 												onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't
 												Show on dashboard</button>
-											<div class="dropdown-divider"></div>
+											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item"
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
 												to trash</button>

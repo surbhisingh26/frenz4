@@ -1390,7 +1390,7 @@ public class UserService {
 		return chatList;
 	}
 	public Map<String,Object> getChat(ObjectId uid, ObjectId fid) {
-
+		System.out.println("GET CHAT");
 		List<Chat> mychat = new ArrayList<>();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		ChatDAO chatdao = new ChatDAO();
@@ -1524,13 +1524,14 @@ public class UserService {
 		JacksonDBCollection<User, String> userCollection = userdao.userDAO();
 		BasicDBObject query = new BasicDBObject();
 		query.put("recieverId", uid);
-		query.clear();
+		
 		//@SuppressWarnings("unchecked")
-		List<String> friendIds = chatCollection.distinct("senderId",query);
+		List<ObjectId> friendIds = chatCollection.distinct("senderId",query);
 		/*for(Object id : friendIds){
 			query.put("_id", id);
 			friendList.add(userCollection.findOne(query));
 		}*/
+		query.clear();
 		friendIds.forEach(fId -> {
 			query.put("_id", fId);
 			friendList.add(userCollection.findOne(query));
