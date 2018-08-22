@@ -12,7 +12,8 @@ public static void main(String args[]){
 	UserService userService = new UserService();
 	//userService.myActivity(new ObjectId(uid));
 //	friendService.friendsActivity(new ObjectId(uid));
-	userService.getRecentChats(new ObjectId(uid));
+	//userService.getRecentChats(new ObjectId(uid));
+	userService.getChat(new ObjectId(uid),new ObjectId("5b7c07a85854610ac8ec4cf6"));
 	//friendService.heartFriend(new ObjectId(uid));
 	//userService.showComments(new ObjectId(uid),0,5);
 	//friendService.heartFriend(new ObjectId(uid),0,5, false);

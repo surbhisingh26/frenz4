@@ -84,5 +84,18 @@ public class NotificationService {
 		return hmap;
 	}
 
+	public void notiReadUnread(String notiId) {
+		NotificationDAO notificationdao = new NotificationDAO();
+		JacksonDBCollection<Notification,String> notifyCollection = notificationdao.notificationDAO();
+		System.out.println(notiId);
+		Notification notification = notifyCollection.findOneById(notiId);
+		System.out.println(notification);
+		System.out.println("---------------------------------------------------------"+notification.getRead()+"-------------------------------------------------------------------");
+		System.out.println(!(notification.getRead()));
+		notification.setRead(!notification.getRead());
+		notifyCollection.updateById(notiId, notification);
+		
+	}
+
 	
 }

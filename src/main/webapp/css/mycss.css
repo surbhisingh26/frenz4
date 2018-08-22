@@ -151,12 +151,59 @@ position:relative;
   .btn .badge{
 	  top: -25px !important;
   }
-  .box{
-	  word-wrap:break-word;
+  
+  .msgtext img{
+	  margin-left:4px;
+	  margin-right:4px;
   }
  .smiles{
-	 height:100%;
-	 width:100%;
+	 
 	 border-radius:0px;
-	padding:3px;
+	padding:0px;
  }
+ 
+	 
+	.custom-scroll::-webkit-scrollbar {
+    width: 5px !important;
+	opacity:0.5 !important;
+}
+.custom-scroll::-webkit-scrollbar-track {
+    background: #fff; 
+	opacity:0.5 !important;
+}
+ 
+/* Handle */
+.custom-scroll::-webkit-scrollbar-thumb {
+   background: #eee  !important;
+    border-radius: 7px !important;
+}
+.chat-area:focus{
+	box-shadow:1px 1px 5px -3px #ccc;
+	border-right:0px;
+}
+ .sendBtn{
+	 font-size:25px;
+	 color:#9ecaef;
+ }
+ .sendBtn:hover{
+	 
+	 color:#2e60ea;
+ }
+ .popover{
+	 max-width:100%;
+ }
+.fix-header::-webkit-scrollbar {
+    width: 8px !important;
+	opacity:0.5 !important;
+	border-radius: 7px !important;
+}
+.fix-header::-webkit-scrollbar-track {
+    background: #fff; 
+	opacity:0.5 !important;
+	
+}
+ 
+/* Handle */
+.fix-header::-webkit-scrollbar-thumb {
+   background: #eee  !important;
+    border-radius: 7px !important;

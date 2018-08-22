@@ -1,126 +1,34 @@
-<div class="right-sidebar" style="overflow: visible">
-	<div class="slimscrollright">
-		<div class="rpanel-title">
-			Service Panel <span><i class="ti-close right-side-toggle"></i></span>
-		</div>
-		<div class="r-panel-body">
-			<ul id="themecolors" class="m-t-20">
-				<li><b>With Light sidebar</b></li>
-				<li><a href="javascript:void(0)" data-theme="default"
-					class="default-theme">1</a></li>
-				<li><a href="javascript:void(0)" data-theme="green"
-					class="green-theme">2</a></li>
-				<li><a href="javascript:void(0)" data-theme="red"
-					class="red-theme">3</a></li>
-				<li><a href="javascript:void(0)" data-theme="blue"
-					class="blue-theme working">4</a></li>
-				<li><a href="javascript:void(0)" data-theme="purple"
-					class="purple-theme">5</a></li>
-				<li><a href="javascript:void(0)" data-theme="megna"
-					class="megna-theme">6</a></li>
-				<li class="d-block m-t-30"><b>With Dark sidebar</b></li>
-				<li><a href="javascript:void(0)" data-theme="default-dark"
-					class="default-dark-theme">7</a></li>
-				<li><a href="javascript:void(0)" data-theme="green-dark"
-					class="green-dark-theme">8</a></li>
-				<li><a href="javascript:void(0)" data-theme="red-dark"
-					class="red-dark-theme">9</a></li>
-				<li><a href="javascript:void(0)" data-theme="blue-dark"
-					class="blue-dark-theme">10</a></li>
-				<li><a href="javascript:void(0)" data-theme="purple-dark"
-					class="purple-dark-theme">11</a></li>
-				<li><a href="javascript:void(0)" data-theme="megna-dark"
-					class="megna-dark-theme ">12</a></li>
-			</ul>
-
-		</div>
-	</div>
-</div>
-<div class="right-sidebar-chat">
-
-
-
-
-
-	<div class="slimscrollright">
-		<div class="rpanel-title-chat">
-			Online Friends <span><i
-				class="ti-close close-chat right-side-toggle-chat"></i></span>
-		</div>
-		<div class="r-panel-body-chat">
-
-
-			<ul class="m-t-20 chatonline list-group list-group-flush"
-				id="accordian">
-
-
-				<div id="collapseOne" class="collapse show" data-parent="#accordion">
-					<div class="card-body">
-
-
-
-						<div class="dropdown-menu dropdown-menu-left scale-up"
-							style="position: absolute" aria-labelledby="dropdownMenuButton">
-							<div class="slimscrollright">
-								<div class="chat-rbox">
-									<ul class="chat-list p-20 textlist">
-
-										<li class="mytext">
-											<div class="chat-img">
-												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" />
-											</div>
-											<div class="chat-content">
-												<h5>Surbhi</h5>
-												<div class="box bg-light-info">{{text}}</div>
-											</div>
-											<div class="chat-time">{{sentAt}}</div>
-										</li>
-
-
-										<li class="reverse">
-											<div class="chat-time">{{deliveredAt}}</div>
-											<div class="chat-content">
-												<h5>Viveka</h5>
-												<div class="box bg-light-inverse">{{text}}</div>
-											</div>
-											<div class="chat-img">
-												<img src="{{#userFriend}}{{imagepath}}{{/userFriend}}"
-													alt="user" />
-											</div>
-										</li>
-
-
-
-
-									</ul>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-sm-9">
-									<textarea placeholder="Type your message here"
-										class="form-control"></textarea>
-								</div>
-
-								<div class="col-sm-3 text-right">
-									<button type="button" class="btn btn-info btn-sm"
-										onclick="ajaxRequest('sendmessage','POST', {fid:'{{#userFriend}}{{id}}{{/userFriend}}',text:$('.chat-area').val()}, {dataType:'json', callback:messageSent})">
-										<i class="fa fa-paper-plane-o"></i>
-									</button>
-								</div>
-							</div>
-
-
-
-
-						</div>
-					</div>
-
-				</div>
-
-			</ul>
-
-
-		</div>
-	</div>
-</div>
+<table class="showSmiliesTable" style="z-index: 9999">
+	<tr>
+		<td><img src="img/emojis/afraid.jpg" class="smiles"
+			aria-label="afraid" onclick="sendSmiley($(this))" /></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/allthebest.png" class="smiles"
+				aria-label="allthebest" onclick="sendSmiley()"></a></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/angel.png" class="smiles" aria-label="angel"
+				onclick="sendSmiley()"></a></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/anger.jpg" class="smiles" aria-label="anger"
+				onclick="sendSmiley()"></a></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/angry.png" class="smiles" aria-label="angry"
+				onclick="sendSmiley()"></a></td>
+	</tr>
+	<tr>
+		<td><img src="img/emojis/afraid.jpg" class="smiles"
+			aria-label="afraid" onclick="sendSmiley($(this))" /></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/allthebest.png" class="smiles"
+				aria-label="allthebest" onclick="sendSmiley()"></a></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/angel.png" class="smiles" aria-label="angel"
+				onclick="sendSmiley()"></a></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/anger.jpg" class="smiles" aria-label="anger"
+				onclick="sendSmiley()"></a></td>
+		<td><a href="javascript:void(0)"><img
+				src="img/emojis/angry.png" class="smiles" aria-label="angry"
+				onclick="sendSmiley()"></a></td>
+	</tr>
+</table>

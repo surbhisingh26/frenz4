@@ -6,11 +6,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
@@ -1348,7 +1348,7 @@ public class UserService {
 		return userInfo;
 
 	}
-	public void storeChat(ObjectId uid, ObjectId fid, String text) {
+	public String storeChat(ObjectId uid, ObjectId fid, String text) {
 		ChatDAO chatdao = new ChatDAO();
 		Date sentAt = new Date();
 		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
@@ -1361,36 +1361,43 @@ public class UserService {
 		chat.setText(text);
 		chat.setRead(false);
 		chat.setReadAt(null);
-		chatCollection.insert(chat);
+		WriteResult<Chat, String> ch = chatCollection.insert(chat);
+		
+		chat = ch.getSavedObject();
+		String chatId = chat.getId();
+		return chatId;
 
 	}
-	public List<Object> getmessage(ObjectId recieverId) {
+	public Map<String,Object> getmessage(ObjectId recieverId) {
 
 		ChatDAO chatdao = new ChatDAO();
 		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
 		List<Object> chatList = new ArrayList<Object>();
-		System.out.println("Step1 dao");
+		Map<String,Object> hmap = new HashMap<>();
+		//System.out.println("Step1 dao");
 		chatList = chatdao.singleAggregation("user", 30, recieverId, "recieverId");
-		System.out.println("Step2 dao");
+		//System.out.println("Step2 dao");
 		Date deliveredAt = new Date();
 		BasicDBObject query = new BasicDBObject();
-		System.out.println("Step3 dao");
+		//System.out.println("Step3 dao");
 		query.put("recieverId", recieverId);
 		query.put("delivered", false);
 		DBCursor<Chat> cursor = chatCollection.find(query);
+		
 		while(cursor.hasNext()){
 			Chat chat = cursor.next();
 			System.out.println("Step4 dao");
 			chat.setDeliveredAt(deliveredAt);
 			chat.setDelivered(true);
 			chatCollection.updateById(chat.getId(), chat);
+			
 		}
-
-		System.out.println("Step5 dao");
-		return chatList;
+		
+		hmap.put("chatList", chatList);
+		return hmap;
 	}
 	public Map<String,Object> getChat(ObjectId uid, ObjectId fid) {
-		System.out.println("GET CHAT");
+		//System.out.println("GET CHAT");
 		List<Chat> mychat = new ArrayList<>();
 		Map<String,Object> hmap = new HashMap<String, Object>();
 		ChatDAO chatdao = new ChatDAO();
@@ -1407,13 +1414,15 @@ public class UserService {
 		DBCursor<Chat> cursor = chatCollection.find(query).limit(30).sort(new BasicDBObject("_id",1)).skip(totalchats-30);
 		while(cursor.hasNext()){
 			Chat chat = cursor.next();
-
+			System.out.println(chat.getText());
+			
 			if(chat.getSenderId().equals(uid)) {
 				chat.setMe(true);
 			}
 
 			mychat.add(chat);
 		}
+		Collections.reverse(mychat);
 		markMsgRead(uid,fid);
 		
 		//mychat.forEach(System.out::println);
@@ -1537,6 +1546,29 @@ public class UserService {
 			friendList.add(userCollection.findOne(query));
 		});
 		hmap.put("friendList", friendList);
+		return hmap;
+	}
+	public Map<String,Object> getMessageStatus(ObjectId uid) {
+		ChatDAO chatdao = new ChatDAO();
+		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+		List<String> chatIds = new ArrayList<>();
+		Map<String,Object> hmap = new HashMap<>();
+		//System.out.println("Step2 dao");
+		Date deliveredAt = new Date();
+		BasicDBObject query = new BasicDBObject();
+		//System.out.println("Step3 dao");
+		query.put("senderId", uid);
+		query.put("delivered", false);
+		
+		DBCursor<Chat> cursor = chatCollection.find(query);
+		
+		while(cursor.hasNext()){
+			Chat chat = cursor.next();		
+			chatIds.add(chat.getId().toString());
+			
+		}
+		
+		hmap.put("chatIds", chatIds);
 		return hmap;
 	}
 

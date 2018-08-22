@@ -54,8 +54,13 @@
 	var now = moment();
 
 	for(var count = 0;count<response.count;count++){
-	console.log(response.notifyList[count].purpose);
-	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc">'+response.notifyList[count].notification+'</span><small class="time notiTime'+response.notifyList[count].id+'"></small> </div></a>')
+	console.log('res',response);
+	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc">'+response.notifyList[count].notification+'</span><div class="row"><small class="time col-7 notiTime'+response.notifyList[count].id+'"></small><small class="col-5"><div class="custom-control custom-checkbox small"><input id="checkbox-read'+response.notifyList[count].id+'" type="checkbox" onclick="ajaxRequest(\'notireadunread\',\'POST\', {notiId:\''+response.notifyList[count].id+'\'},{dataType:\'json\'})"><label for="checkbox-read'+response.notifyList[count].id+'"><small> Seen </small></label></div></small></div></div></a>')
+	
+	if(response.notifyList[count].read==true){
+	$('#checkbox-read'+response.notifyList[count].id).attr('checked','true');
+	}
+	
 	
 	var time = moment(response.notifyList[count].date,'MMM DD,YYYY HH:mm:ss A');
 	if(time.isValid()) {
@@ -225,7 +230,7 @@ function commentBox(data, extraInfo, response){
 			
 			//console.log("k = " , k , "v = ", v)	;
 						
-			$('.timeline' + data.typeId + ' .divBox ul').prepend('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
+			$('.timeline' + data.typeId + ' .divBox ul').append('<li class="list-group-item" style="background-color:#E5E7EA;margin-bottom:5px"><img src="'+v.friend.imagepath+'" width="30px" height="30px" style="margin-right:5px" class="img-circle"><h6 style="margin-right:5px"><strong>'+v.friend.name+' </strong></h6><i> '+v.comments.comment+'</i></li>')	
 			});
 			
 			if(response.showMore){
@@ -362,7 +367,29 @@ function commentBox(data, extraInfo, response){
 	$.each(response.friendList, function(k, v){
 	console.log(v)
 	var i = 1;
-	$('.rightbarchat').append('<div class="col p-0 card m-0 waves-effect waves-dark" id="card'+v.id+'" style="width:230px"><div class="col  card-header waves-effect" id="friend'+v.id+'" style="padding-right:8px"> <a class="card-link" data-toggle="collapse" href="#collapse'+v.id+'" id="online'+v.id+'" onclick="ajaxRequest(\'friendchatwindow\', \'POST\', {fid:\''+v.id+'\',window:\'false\'}, {dataType:\'json\', callback:chatOpen})"><img src="'+v.imagepath+'" alt="user-img" class="img-circle"> <span>'+v.name+'</span></a><a href="friendchatwindow?fid='+v.id+'&window=true"><i class="mdi mdi-arrow-expand pull-right" style="color:black"></i></a></div><div id="collapse'+v.id+'" class="collapse chatcard p-0 m-0" data-parent="#accordion" style="width:230px;word-wrap:break-word">  <div class="card-body b-t mb-0" style="width:200px"><div class="row"><div class="col-10 pr-0 mr-0"><textarea placeholder="Type your message here" class="form-control b-t chat-area'+v.id+'" onclick="ajaxRequest(\'msgread\',\'POST\', {fid:\''+v.id+'\'}, {dataType:\'json\', callback:msgRead})" rows=2></textarea></div><div class="col-2 text-right p-0 m-0"><button type="button" class="btn btn-info btn-circle btn-sm mt-2 p-1 pt-2 pb-2" onclick="ajaxRequest(\'sendmessage\',\'POST\', {fid:\''+v.id+'\',text:$(\'.chat-area'+v.id+'\').val()}, {dataType:\'json\', callback:messageSentFromSidebar})"><i class="fa fa-paper-plane-o"></i> </button></div></div></div>  <div class="card-body p-0 body'+v.id+'" style="max-height:210px;width:230px;word-wrap:break-word"><div class="chat-rbox"><div class="slimscrollright" style="word-wrap:break-word"><ul class="chat-list p-20 textlist'+v.id+'"></ul></div></div></div></div></div>');
+	$('.rightbarchat').append('<div class="col p-0 card m-0 waves-effect waves-dark" id="card'+v.id+'" style="width:230px">'+'<div class="col card-header waves-effect" id="friend'+v.id+'" style="padding-right:8px">'+
+		'<a class="card-link" data-toggle="collapse" href="#collapse'+v.id+'" id="online'+v.id+'" onclick="ajaxRequest(\'friendchatwindow\', \'POST\', {fid:\''+v.id+'\',window:\'false\'}, {dataType:\'json\', callback:chatOpen})">'+
+			'<img src="'+v.imagepath+'" alt="user-img" class="img-circle">'+
+			'<span>'+v.name+'</span>'+
+		'</a>'+
+		'<a href="friendchatwindow?fid='+v.id+'&window=true">'+
+			'<i class="mdi mdi-arrow-expand pull-right" style="color:black"></i>'+
+		'</a></div><div id="collapse'+v.id+'" class="collapse chatcard p-0 m-0" data-parent="#accordion" style="width:228px;word-wrap:break-word">'+
+		'<div class="card-body mt-0 m-0">'+
+            '<div class="row wave-effect m-0">'+
+                '<div class="form-control chat-area'+v.id+' m-0 p-2 textBox b-1 custom-scroll col-10" contentEditable=true style="height:45px;overflow:auto;border-radius:0px;" onclick="ajaxRequest(\'msgread\',\'POST\', {fid:\''+v.id+'\'}, {dataType:\'json\', callback:msgRead})"></div>'+
+				'<div class="col-2 text-right p-0 m-0" style="border:1px solid #9ecaef;box-shadow:1px 1px 5px 0px #ccc;border-right:1.4px solid #9ecaef">'+
+					'<i class="fa fa-paper-plane m-2 waves-effect sendBtn" onclick="ajaxRequest(\'sendmessage\',\'POST\', {fid:\''+v.id+'\',text:$(\'.chat-area'+v.id+'\').html()}, {dataType:\'json\', callback:messageSentFromSidebar})" style="font-size:20px;color:#9ecaef"></i>'+
+                '</div><div style="width:100%">'+
+				'<a class="text-muted showSmiliesBtn">'+
+					'<i class="mdi mdi-face p-0 m-1"></i></a>'+
+				'<div class="dropdown-menu dropdown-menu-left animated fadeIn p-1 m-1 smilestable" style="left:100px;z-index:999999">'+
+					'aa</div></div></div></div>'+
+		'<div class="card-body p-0 body'+v.id+'" style="max-height:210px;width:230px;word-wrap:break-word">'+
+			'<div class="chat-rbox">'+
+				'<div class="slimscrollright" style="word-wrap:break-word">'+
+					'<ul class="chat-list pt-2 textlist'+v.id+'">'+
+	'</ul></div></div></div></div></div>');
 	
 	if(v.chat>0){
 	$('#friend'+v.id).append('<span class="badge badge-danger pull-right">'+v.chat+'</span>');
@@ -404,19 +431,18 @@ function commentBox(data, extraInfo, response){
 	//if($(".body"+response.fid).height()<200){
 	
 	if(v.me==true){
-	$('.textlist'+response.fid).prepend('<li class="mytext m-0"><div class="row" style="word-wrap:break-word;"><div class="pull-left mb-0"><img src='+response.loggedInUser.imagepath+' alt="user" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;left:20px;z-index:999999;"/></div>'+
-	'<div class="chat-content m-0 mb-1"><div class="box bg-light-info m-0" style="border-radius:20px 0px 0px 0px;max-width: 170px;position:relative;right:40px"><span class="small" style="padding-left:30px">'+v.text+'</span></div><div class="chat-time m-0 p-0">'+moment(v.sentAt).format('hh:mm a')+'</div></div></div>'+
-	'</li>')
+	$('.textlist'+response.fid).append('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content" style="width:100%"><div class="box bg-light-info m-0 p-1" style="border-radius:15px 0px 0px 0px;max-width:180px"><span class="pull-left mb-0"><img src='+response.loggedInUser.imagepath+' alt="user" class="rounded-circle" style="width:20px;height:20px;"/></span><div class="chattime text-muted pull-right m-0 p-0 mr-1" style="font-size:50%">'+moment(v.sentAt).format('hh:mm a')+'</div><div style="clear:both;"></div><div class="small text-left pl-1 ml-2 pr-1 msgtext" style="font-size:70%;word-break:break-word">'+v.text+'</div></div></div></div>'+
+	'<span class="msgmark" style="position:relative;font-size:20px;color:#9B5BED;bottom:20px"> ... </span></li>')
 	}
 	else{
 	
-	$('.textlist'+response.fid).prepend('<li class="reverse m-0 p-0"><div class="row"><div class="chat-content m-0"><div class="chat-time m-0" style="position:relative;right:-40px">'+moment(v.deliveredAt).format('hh:mm a')+'</div><div class="box bg-light-inverse m-0" style="background-color:#E4D8F2;max-width:170px;position:relative;left:130px;border-radius:0px 20px 0px 0px"><span class="small pull-right" style="padding-right:30px;word-wrap:break-word;word-break:break-all;min-height:25px;">'+v.text+'</span></div></div><div class="pull-right pr-0 m-0"><img src="'+response.userFriend.imagepath+'" alt="friend" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;top:25px;left:80px"/></div></div></li>');
+	$('.textlist'+response.fid).append('<li class="reverse m-0 p-0"><div class="row"><div class="chat-content mr-1 mb-1" style="width:100%"><div class="box bg-light-inverse m-0 p-1" style="background-color:#E4D8F2;max-width:180px;position:relative;border-radius:0px 15px 0px 0px"><span class="pull-right mb-0"><img src="'+response.userFriend.imagepath+'" alt="friend" class="rounded-circle" style="width:20px;height:20px;position:relative;left:10px"/></span><div class="chattime m-0 pull-left p-0 pl-1 mr-2" style="font-size:50%">'+moment(v.deliveredAt).format('hh:mm a')+'</div><div style="clear:both;"><div class="small msgtext mr-1 pr-1 pl-1 text-left" style="font-size:70%;word-break:break-word;">'+v.text+'</div></div></div></div></li>');
 	}
 	
 	});
 	
 	//alert($(".body"+response.fid).height());
-	$('.chat-time').each(function(){
+	$('.chattime').each(function(){
 var me = $(this);
 var oldValue = moment($(me).text(),'ddd MMM DD hh:mm:ss IST yyyy');
 
@@ -429,26 +455,29 @@ $(me).text(oldValue.format('hh:mm a'));
 	}
 	function msgRead(data,extraInfo,response){
 	$('#card'+data.fid).css("box-shadow","0px 0px 0px 0px");
+	
+	//$('.msgmark'+data.fid).append('<span style="color:#49abed">.</span>');
+	
 	}
 	function messageSent(data,extraInfo,response){
-	console.log(data);
-	console.log(response);
-		$('.chat-area').val('');
-		$('.textlist').prepend('<li class="mytext m-0"><div class="row" style="word-wrap:break-word;"><div class="pull-left mb-0"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;left:50px;z-index:999999;"/></div>'+
-	'<div class="chat-content m-0 mb-1"><div class="box bg-light-info m-0" style="border-radius:20px 0px 0px 0px;max-width: 450px;position:relative"><span class="small" style="padding-left:30px">'+data.text+'</span></div><div class="chat-time m-0 p-0">'+moment(data.sentAt).format('hh:mm a')+'</div></div></div>'+
-	'</li>')
+	console.log('data',data);
+	console.log('res',response);
+		$('.chat-area').text('');
+		$('.textlist').prepend('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content mb-1" style="width:100%;"><div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width: 450px;word-break:break-word"><span class="pull-left mb-0 mr-1"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:25px;height:25px;position:relative"/></span><span class="chattime text-muted text-right p-0 m-0 align-top" style="font-size:9px;">'+moment(data.sentAt).format('hh:mm a')+'</span>'+
+	'<div class="small msgtext text-left">'+data.text+'</div></div></div></div>'+
+	'<div class="msgmark animated slideInRight" style="position:relative;font-size:25px;line-height:0px;bottom:9px"><span style="color:#97ebf4">.</span><span class="undelivered" style="color:#49abed"><input type="hidden" value="'+response.chatId+'"></span></div></li>')
 		
 		
 		
 		
 	}
 	function messageSentFromSidebar(data,extraInfo,response){
-	console.log(data);
+	console.log('dataaa',data);
 	console.log('res',response);
-		$('.chat-area'+data.fid).val('');
-		$('.textlist'+data.fid).prepend('<li class="mytext m-0"><div class="row" style="word-wrap:break-word;"><div class="pull-left mb-0"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;left:20px;z-index:999999;"/></div>'+
-	'<div class="chat-content m-0 mb-1"><div class="box bg-light-info m-0" style="border-radius:20px 0px 0px 0px;max-width: 170px;position:relative;right:40px;"><span class="small" style="padding-left:30px;min-height:24px">'+data.text+'</span></div><div class="chat-time m-0 p-0">'+moment(data.sentAt).format('hh:mm a')+'</div></div></div>'+
-	'</li>')
+	console.log(data);
+		$('.chat-area'+data.fid).text('');
+		$('.textlist'+data.fid).prepend('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content" style="width:100%"><div class="box bg-light-info m-0 p-1" style="border-radius:15px 0px 0px 0px;max-width:180px"><span class="pull-left mb-0"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:20px;height:20px;"/></span><div class="chattime text-muted pull-right m-0 p-0 mr-1" style="font-size:50%">'+moment(data.sentAt).format('hh:mm a')+'</div><div style="clear:both;"></div><div class="small text-left pl-1 ml-2 pr-1 msgtext" style="font-size:70%;word-break:break-word">'+data.text+'</div></div></div></div>'+
+	'<div class="msgmark animated slideInRight" style="position:relative;font-size:20px;bottom:20px"><span style="color:#97ebf4">.</span></div></li>')
 	}
 	
 
@@ -670,9 +699,24 @@ $('input[value='+gender+']').prop('checked',true);
                             }
                     ).done(function(data, textStatus, jqXHR,a) {
 					console.log("data ",data);
-					
-					
-					
+						
+						if($('.msgmark').length != $('.msgmark .delivered').length){
+						
+						
+								
+								$.each($('.msgmark .undelivered'),function(id,value){
+							if(data.chatIds.indexOf($(this).find('input').val())<0){
+							$(this).text('.').addClass('delivered').removeClass('undelivered');
+						}
+								});
+								
+								if(data.chatIds.length==0){
+								$('.msgmark .undelivered').text('.').addClass('delivered').removeClass('undelivered');
+								}
+					//$('.msgmark .undelivered').text('.').addClass('delivered').removeClass('undelivered');
+				}
+						
+						
 					if(data.chatList.length > 0){
 					if($('.chat-btn .badge').length==0){
 					i=2;
@@ -688,17 +732,21 @@ $('input[value='+gender+']').prop('checked',true);
 					console.log(k,v);
 					
 							if(v.sender=="{{#userFriend}}{{id}}{{/userFriend}}"){
-						
+								
 
-								$('.textlist').prepend('<li class="reverse m-0 p-0"><div class="row"><div class="chat-content m-0 mb-1"><div class="chat-time m-0" style="position:relative;right:-50px">'+moment(v.sentAt, 'MMM DD, YYYY hh:mm:ss A').format('hh:mm a')+'</div><div class="box bg-light-inverse m-0" style="margin-left:100px;background-color:#E4D8F2;position:relative;left:50px;max-width:450px;border-radius:0px 20px 0px 0px"><span class="small pt-0 m-0" style="padding-right:30px">'+v.text+'</span></div></div><div class="pull-right pr-0 m-0"><img src="'+v.friend[0].imagepath+'" alt="friend" class="rounded-circle p-1" style="width:35px;height:35px;position:relative"/></div></div></li>');
+								$('.textlist').prepend('<li class="reverse m-0"><div class="row"><div class="chat-content m-0 mb-1" style="width:100%"><div class="box bg-light-inverse m-0 p-2" style="background-color:#E4D8F2;position:relative;max-width:450px;border-radius:0px 20px 0px 0px"><div class="chattime text-muted text-left" style="font-size:9px;">'+moment().format('hh:mm a')+'</div><span class="pull-right mb-0 ml-1"><img src="'+v.friend[0].imagepath+'" alt="friend" class="rounded-circle" style="width:25px;height:25px;position:relative;bottom:17px;left:3px"/></span><div class="small mr-1 msgtext text-left" style="word-break:break-word;">'+v.text+'</div></div></div></div></li>');
+								//if($('.msgmark').length!=0){
+								
+								//}
 							
 							}
 							else if(!$('#online'+v.sender).hasClass("collapsed")) {
 							
 							
 							$('#card'+v.sender).css("box-shadow","-5px -5px 15px 5px #ccc");
-							$('.textlist'+v.sender).prepend('<li class="reverse m-0 p-0"><div class="row" style="word-wrap:break-word;word-break: break-all;"><div class="chat-content m-0" style="word-wrap:break-word"><div class="chat-time m-0" style="position:relative;right:-40px">'+moment(v.sentAt, 'MMM DD, YYYY hh:mm:ss A').format('hh:mm a')+'</div><div class="box bg-light-inverse m-0" style="background-color:#E4D8F2;position:relative;left:130px;max-width:170px;border-radius:0px 20px 0px 0px;word-wrap:break-word"><span class="small pt-0 m-0 pull-left" style="padding-right:30px;word-wrap:break-word;min-height:25px">'+v.text+'</span></div></div><div class="pull-right pr-0 m-0"><img src="'+v.friend[0].imagepath+'" alt="friend" class="rounded-circle p-1" style="width:35px;height:35px;position:relative;top:25px;left:80px"/></div></div></li>');
-	
+							$('.textlist'+v.sender).prepend('<li class="reverse m-0 p-0"><div class="row"><div class="chat-content mr-1 mb-1" style="width:100%"><div class="box bg-light-inverse m-0 p-1" style="background-color:#E4D8F2;max-width:180px;position:relative;border-radius:0px 15px 0px 0px"><span class="pull-right mb-0"><img src="'+v.friend[0].imagepath+'" alt="friend" class="rounded-circle" style="width:20px;height:20px;position:relative;left:10px"/></span><div class="chattime m-0 pull-left p-0 pl-1 mr-2" style="font-size:50%">'+moment().format('hh:mm a')+'</div><div style="clear:both;"><div class="small msgtext mr-1 pr-1 pl-1 text-left" style="font-size:70%;word-break:break-word;">'+v.text+'</div></div></div></div></li>');
+							//$('.msgmark'+v.sender).append('<span style="color:#49abed">.</span>');
+							
 							}
 							else{
 							

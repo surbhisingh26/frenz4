@@ -44,20 +44,20 @@ System.out.println("Step1 service");
 			new BasicDBObject("delivered" , false)
 
 			);
-	System.out.println("Step2 service");
+	//System.out.println("Step2 service");
 	pipeline.add(matchRecieverId);
 	pipeline.add(matchDelivered);
-	System.out.println("Step3 service");
+	//System.out.println("Step3 service");
 	DBObject lookupFields = new BasicDBObject("from", "user");
 	lookupFields.put("localField","senderId");
 	lookupFields.put("foreignField","_id");
 	lookupFields.put("as", "friend");  
 	pipeline.add(new BasicDBObject("$lookup",lookupFields));
-	System.out.println("Step4 service");
+	//System.out.println("Step4 service");
 	//DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
 	//pipeline.add(unwindFriend);
 	AggregationOutput output = chatCollectionDAO().aggregate(pipeline);
-	System.out.println("Step5 service");
+	//System.out.println("Step5 service");
 	for (DBObject result : output.results()) {
 		
 		result.put("sender" , result.get("senderId").toString());

@@ -1040,7 +1040,11 @@ public class UserActions extends HttpServlet {
 			ObjectId fid = new ObjectId(request.getParameter("fid"));
 			UserService userservice = new UserService();
 
-			userservice.storeChat(uid,fid,text);
+			String chatId = userservice.storeChat(uid,fid,text);
+			hmap.put("chatId", chatId);
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(new Gson().toJson(hmap));
 
 		}
 		catch(Exception e){
@@ -1162,6 +1166,20 @@ public class UserActions extends HttpServlet {
 			uid = (ObjectId) hmap.get("uid");			
 			ObjectId fid = new ObjectId(request.getParameter("fid"));			
 			userService.markMsgRead(uid,fid);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void notireadunread(HttpServletRequest request, HttpServletResponse response){
+		try {
+			NotificationService notiService = new NotificationService();
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
+			//String notiId = hmap.get("notiId");			
+			String notiId = request.getParameter("notiId");			
+			notiService.notiReadUnread(notiId);
 		}
 		catch(Exception e){
 			e.printStackTrace();
