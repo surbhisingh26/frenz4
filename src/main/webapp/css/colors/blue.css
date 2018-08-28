@@ -109,7 +109,7 @@ a.link:hover, a.link:focus {
   .sidebar-nav ul li a {
     color: #607d8b; }
     .sidebar-nav ul li a.active, .sidebar-nav ul li a:hover {
-      color: #26c6da; }
+      color: #2d8fe5; }
     .sidebar-nav ul li a.active {
       color: #263238; }
   .sidebar-nav ul li.nav-small-cap {
@@ -117,7 +117,7 @@ a.link:hover, a.link:focus {
   .sidebar-nav > ul > li.active > a,
   .sidebar-nav > ul > li:hover > a {
     color: #ffffff;
-    background: #26c6da; }
+    background: #2d8fe5!important; }
     .sidebar-nav > ul > li.active > a i,
     .sidebar-nav > ul > li.active:hover > a i {
       color: #ffffff; }
@@ -125,7 +125,7 @@ a.link:hover, a.link:focus {
     .sidebar-nav > ul > li.active:hover > a:after {
       border-color: #ffffff; }
   .sidebar-nav > ul > li > a.active i, .sidebar-nav > ul > li > a:hover i {
-    color: #26c6da; }
+    color: #2d8fe5; }
   .sidebar-nav > ul > li > a i {
     color: #99abb4; }
   .sidebar-nav > ul > li > a.active {
@@ -135,7 +135,7 @@ a.link:hover, a.link:focus {
 
 .card-no-border .sidebar-nav > ul > li > a.active {
   color: #ffffff;
-  background: #26c6da; }
+  background: #2d8fe5; }
   .card-no-border .sidebar-nav > ul > li > a.active i {
     color: #ffffff; }
   .card-no-border .sidebar-nav > ul > li > a.active:after {
@@ -144,3 +144,27 @@ a.link:hover, a.link:focus {
 		background-color:#1e88e5;
 		color:#ffffff;
 	}
+	.page-wrapper{
+	
+	background-position: center;
+	/*background-image: linear-gradient(#3b92dd,#479be5,#57a7ed,#65b0f2,#75bcf9,#c7e3fc);*/
+	background-image: linear-gradient(#c7e3fc,#75bcf9,#65b0f2,#57a7ed,#479be5,#3b92dd);
+}
+.bg-info {
+    background-color: #c4dcf2 !important;
+}
+.bg-info h4, .bg-info h6{
+	color:black !important;
+}
+.timeline-panel{
+	background:transparent url(../img/black-blur.jpg);
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-shadow:1px 1px 5px 1px black !important;
+	background-image:linear-gradient(white,#8db8dd,#bedcf7,#bedcf7,#8db8dd,white);
+	
+}
+.timeline-title{
+	color:black!important;
+}

@@ -187,3 +187,24 @@ a.link:hover, a.link:focus {
 		background-color:#f62d51;
 		color:#ffffff;
 	}
+	.page-wrapper{
+	
+	background-position: center;
+	/*background-image: linear-gradient(#b8207c,#bf3387,#d64d9f,#db59a7,#ea6eb8,#fcb0de);*/
+	background-image: linear-gradient(#fcb0de,#ea6eb8,#db59a7,#d64d9f,#bf3387,#b8207c);
+}
+.bg-info {
+    background-color: #9b8197 !important;
+}
+.bg-info h4, .bg-info h6{
+	color:black !important;
+}
+.timeline-panel{
+	background:transparent url(../img/black-blur.jpg);
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-shadow:1px 1px 5px 1px black !important;
+	background-image:linear-gradient(white,#c97a9e,#ce9ab2,#ce9ab2,#c97a9e,white);
+	
+}

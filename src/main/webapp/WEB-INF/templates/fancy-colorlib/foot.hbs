@@ -432,7 +432,7 @@ function commentBox(data, extraInfo, response){
 	
 	if(v.me==true){
 	$('.textlist'+response.fid).append('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content" style="width:100%"><div class="box bg-light-info m-0 p-1" style="border-radius:15px 0px 0px 0px;max-width:180px"><span class="pull-left mb-0"><img src='+response.loggedInUser.imagepath+' alt="user" class="rounded-circle" style="width:20px;height:20px;"/></span><div class="chattime text-muted pull-right m-0 p-0 mr-1" style="font-size:50%">'+moment(v.sentAt).format('hh:mm a')+'</div><div style="clear:both;"></div><div class="small text-left pl-1 ml-2 pr-1 msgtext" style="font-size:70%;word-break:break-word">'+v.text+'</div></div></div></div>'+
-	'<span class="msgmark" style="position:relative;font-size:20px;color:#9B5BED;bottom:20px"> ... </span></li>')
+	'<div class="msgmark" style="position:relative;font-size:20px;color:#9B5BED;bottom:6px;line-height:3px"><span style="color:#97ebf4">.</span>'+(v.delivered?'<span class="delivered" style="color:#49abed">.</span>':'<span class="undelivered" style="color:#49abed"><input type="hidden" value="'+v.id+'"></span>')+(v.read?'<span class="read" style="color:#0062bf">.</span>':'<span class="unread" style="color:#0062bf"><input type="hidden" value="'+v.id+'"></span>')+'</div></li>')
 	}
 	else{
 	
@@ -463,13 +463,9 @@ $(me).text(oldValue.format('hh:mm a'));
 	console.log('data',data);
 	console.log('res',response);
 		$('.chat-area').text('');
-		$('.textlist').prepend('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content mb-1" style="width:100%;"><div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width: 450px;word-break:break-word"><span class="pull-left mb-0 mr-1"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:25px;height:25px;position:relative"/></span><span class="chattime text-muted text-right p-0 m-0 align-top" style="font-size:9px;">'+moment(data.sentAt).format('hh:mm a')+'</span>'+
+		$('.textlist'+data.fid).prepend('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content mb-1" style="width:100%;"><div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width: 450px;word-break:break-word"><span class="pull-left mb-0 mr-1"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:25px;height:25px;position:relative"/></span><span class="chattime text-muted text-right p-0 m-0 align-top" style="font-size:9px;">'+moment(data.sentAt).format('hh:mm a')+'</span>'+
 	'<div class="small msgtext text-left">'+data.text+'</div></div></div></div>'+
-	'<div class="msgmark animated slideInRight" style="position:relative;font-size:25px;line-height:0px;bottom:9px"><span style="color:#97ebf4">.</span><span class="undelivered" style="color:#49abed"><input type="hidden" value="'+response.chatId+'"></span></div></li>')
-		
-		
-		
-		
+	'<div class="msgmark animated slideInRight" style="position:relative;font-size:25px;line-height:0px;bottom:9px"><span style="color:#97ebf4">.</span><span class="undelivered" style="color:#49abed"><input type="hidden" value="'+response.chatId+'"></span><span class="unread" style="color:#49abed"><input type="hidden" value="'+response.chatId+'"></span></div></li>')	
 	}
 	function messageSentFromSidebar(data,extraInfo,response){
 	console.log('dataaa',data);
@@ -477,10 +473,26 @@ $(me).text(oldValue.format('hh:mm a'));
 	console.log(data);
 		$('.chat-area'+data.fid).text('');
 		$('.textlist'+data.fid).prepend('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content" style="width:100%"><div class="box bg-light-info m-0 p-1" style="border-radius:15px 0px 0px 0px;max-width:180px"><span class="pull-left mb-0"><img src="/{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:20px;height:20px;"/></span><div class="chattime text-muted pull-right m-0 p-0 mr-1" style="font-size:50%">'+moment(data.sentAt).format('hh:mm a')+'</div><div style="clear:both;"></div><div class="small text-left pl-1 ml-2 pr-1 msgtext" style="font-size:70%;word-break:break-word">'+data.text+'</div></div></div></div>'+
-	'<div class="msgmark animated slideInRight" style="position:relative;font-size:20px;bottom:20px"><span style="color:#97ebf4">.</span></div></li>')
+	'</div><div class="msgmark animated slideInRight" style="position:relative;font-size:20px;color:#9B5BED;bottom:5px;line-height:3px"><span style="color:#97ebf4">.</span><span class="undelivered" style="color:#49abed"><input type="hidden" value="'+response.chatId+'"></span><span class="unread" style="color:#49abed"><input type="hidden" value="'+response.chatId+'"></span></div></li>')
 	}
 	
-
+	function moreChat(data,extraInfo,response){
+	console.log('response',response,data)
+	$.each(response.mychat, function(k, v){
+	//console.log('kk',k,v);
+	if(v.me){
+	$('.textlist'+response.fid).append('<li class="mytext m-0 p-0"><div class="row"><div class="chat-content mb-1" style="width:100%"><div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width:450px;word-break:break-word"><span class="pull-left mb-0 mr-1"><img src='+response.loggedInUser.imagepath+' alt="user" class="rounded-circle" style="width:25px;height:25px;"/></span><span class="chattime text-muted text-right m-0 p-0 align-top" style="font-size:9px">'+moment(v.sentAt).format('hh:mm a')+'</span><div class="small text-left msgtext" style="word-break:break-word">'+v.text+'</div></div></div></div>'+
+	'<div class="msgmark" style="position:relative;font-size:25px;line-height:0px;bottom:9px"><span style="color:#97ebf4">.</span>'+(v.delivered?'<span class="delivered" style="color:#49abed">.</span>':'<span class="undelivered" style="color:#49abed"><input type="hidden" value="'+v.id+'"></span>')+(v.read?'<span class="read" style="color:#0062bf">.</span>':'<span class="unread" style="color:#0062bf"><input type="hidden" value="'+v.id+'"></span>')+'</div></li>')
+	}
+	else{
+	
+	$('.textlist'+response.fid).append('<li class="reverse m-0"><div class="row"><div class="chat-content m-0 mb-1" style="width:100%"><div class="box bg-light-inverse m-0 p-2" style="background-color:#E4D8F2;max-width:450px;position:relative;border-radius:0px 20px 0px 0px"><div class="chattime text-muted text-left m-0 pr-3 mr-2" style="font-size:9px;position:relative;">'+moment(v.deliveredAt).format('hh:mm a')+'</div><span class="pull-right mb-0 ml-1"><img src="'+response.userFriend.imagepath+'" alt="friend" class="rounded-circle" style="width:25px;height:25px;position:relative;bottom:17px;left:3px"/></span><div class="small msgtext mr-1 text-left" style="word-break:break-word;">'+v.text+'</div></div></div></div></li>');
+	}
+	$('.morechatbtn').css('display','none');
+	//$('.textlist'+response.fid).remove($('.morechatbtn'));
+	$('.textlist'+response.fid).append('<div><button class="btn btn-block btn-secondary text-align-center p-2 mt-2 morechatbtn" style="border-radius:0px" onclick="ajaxRequest(\'morechat\',\'POST\', {fid:\''+response.fid+'\',skip:\''+response.skip+'\'}, {dataType:\'json\', callback:moreChat})"><i class="mdi mdi-unfold-more"></i></button></div>');
+	});
+	}
 </script>
 
 
@@ -705,15 +717,22 @@ $('input[value='+gender+']').prop('checked',true);
 						
 								
 								$.each($('.msgmark .undelivered'),function(id,value){
-							if(data.chatIds.indexOf($(this).find('input').val())<0){
+							if(data.undeliveredChatIds.indexOf($(this).find('input').val())<0){
 							$(this).text('.').addClass('delivered').removeClass('undelivered');
 						}
 								});
 								
-								if(data.chatIds.length==0){
-								$('.msgmark .undelivered').text('.').addClass('delivered').removeClass('undelivered');
-								}
-					//$('.msgmark .undelivered').text('.').addClass('delivered').removeClass('undelivered');
+								
+				}
+				if($('.msgmark').length != $('.msgmark .read').length){
+						
+						
+								
+								$.each($('.msgmark .unread'),function(id,value){
+							if(data.unreadChatIds.indexOf($(this).find('input').val())<0){
+							$(this).text('.').addClass('read').removeClass('unread');
+						}
+								});				
 				}
 						
 						

@@ -7,7 +7,7 @@
 		
 		<div class="">
 			<button
-				class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10 chat-btn"
+				class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right chat-btn"
 				onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})">
 				<i class="fa fa-superpowers text-white"></i>
 			</button>
@@ -16,9 +16,9 @@
 		<!-- Bread crumb and right sidebar toggle -->
 		<!-- ============================================================== -->
 		<div class="row page-titles">
-			<div class="col-md-5 col-8 align-self-center">
-				<h3 class="text-themecolor m-b-0 m-t-0">Timeline</h3>
-				<ol class="breadcrumb">
+			<div class="col-md-5 col-8 align-self-center m-0">
+				<h4 class="text-themecolor mb-0 mt-0">Timeline</h4>
+				<ol class="breadcrumb m-0">
 					<li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
 					<li class="breadcrumb-item active">Timeline</li>
 				</ol>
@@ -33,10 +33,10 @@
 		<!-- ============================================================== -->
 		<div class="row">
 			<div class="col-12">
-				<div class="card">
+				<div class="card card-style">
 					<div class="card-body" style="padding: 30px">
 						<form action="addstatus">
-							<textarea class="form-control" placeholder="Share Your Status..."
+							<textarea class="form-control custom-scroll" placeholder="Share Your Status..."
 								rows="5" style="margin-top: 5px; border-radius: 5px;"
 								id="statusMessage" name="status"></textarea>
 							<button class="btn btn-info btn-oval" type="submit"
@@ -57,13 +57,12 @@
 								</div>
 								<div class="timeline-panel timeline{{_id}}">
 									{{#if myactivity}}
-									<button type="button" class="close" data-toggle="dropdown"
+									<button type="button" class="close pl-1 pr-1" data-toggle="dropdown"
 										aria-haspopup="true" aria-expanded="true">&times;</button>
-									<div class="dropdown-menu" x-placement="top-start"
-										style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+									<div class="dropdown-menu animated fadeIn p-0">
 										<button class="dropdown-item"
 											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
-										<div class="dropdown-divider"></div>
+										<div class="dropdown-divider m-0"></div>
 										<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning"
 											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
 											to trash</button>
@@ -71,18 +70,20 @@
 									</div>
 									{{/if}}
 									<div class="timeline-heading">
-										<h4 class="timeline-title">
-											<strong>{{#friendInfo}}{{name}}{{/friendInfo}}</strong>
-										</h4>
-										<h6>Uploaded new Picture</h6>
+									
+										<h6 class="timeline-title" style="color:black">
+											<strong>{{#friendInfo}}{{name}}{{/friendInfo}} </strong>
+										Shared new image</h6>
+										
 										<p>
-											<i class="fa fa-clock-o"></i> <small
+											<i class="fa fa-clock-o text-muted p-0" style="position:relative;top:2px"></i> <small
 												class="text-muted timeAgo">{{#activity}}{{date}}{{/activity}}</small>
 										</p>
 									</div>
-									<div class="timeline-body">
-										<img class="img-thumbnail img-fluid" src="{{path}}"
+									<div class="timeline-body text-center">
+										<img class="img-thumbnail img-fluid " src="{{path}}"
 											width="350" height="350">
+											<div class="text-center">
 										<div class="like-comm btn-group" style="margin-top: 5px">
 
 											<button type="button" class="btn btn-secondary comment"
@@ -122,6 +123,7 @@
 												class="model_img img-responsive">{{#activity}}{{heartBreaks}}{{/activity}}
 												Heartbreak</button>
 
+										</div>
 										</div>
 										<div style="display: none;" class="divBox">
 											<ul class="list-group" style="margin-top: 5px">
@@ -152,13 +154,12 @@
 								</div>
 								<div class="timeline-panel timeline{{_id}}">
 									{{#if myactivity}}
-									<button type="button" class="close" data-toggle="dropdown"
+									<button type="button" class="close pl-1 pr-1" data-toggle="dropdown"
 										aria-haspopup="true" aria-expanded="true">&times;</button>
-									<div class="dropdown-menu" x-placement="top-start"
-										style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+									<div class="dropdown-menu animated fadeIn p-0">
 										<button class="dropdown-item"
 											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
-										<div class="dropdown-divider"></div>
+										<div class="dropdown-divider m-0"></div>
 										<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning"
 											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Send
 											to trash</button>
@@ -166,18 +167,19 @@
 									</div>
 									{{/if}}
 									<div class="timeline-heading">
-										<h4 class="timeline-title">
-											<strong>{{#friendInfo}}{{name}}{{/friendInfo}}</strong>
-										</h4>
-										<h6>Changed Display picture</h6>
+										<h6 class="timeline-title" style="color:black">
+											<strong>{{#friendInfo}}{{name}}{{/friendInfo}}</strong> says
+										
+										My new DP <img src="img/emojis/happy.png" style="height:20px"></h6>
 										<p>
-											<i class="fa fa-clock-o"></i> <small
+											<i class="fa fa-clock-o text-muted" style="position:relative;top:2px"></i> <small
 												class="text-muted timeAgo">{{#activity}}{{date}}{{/activity}}</small>
 										</p>
 									</div>
-									<div class="timeline-body">
+									<div class="timeline-body text-center">
 										<img class="img-thumbnail img-fluid" src="{{path}}"
 											width="350" height="350">
+											<div class="text-center">
 										<div class="like-comm btn-group" style="margin-top: 5px">
 
 											<button type="button" class="btn btn-secondary comment"
@@ -217,6 +219,7 @@
 												class="model_img img-responsive">{{#activity}}{{heartBreaks}}{{/activity}}
 												Heartbreak</button>
 
+										</div>
 										</div>
 										<div style="display: none;" class="divBox">
 											<ul class="list-group" style="margin-top: 5px">
@@ -249,13 +252,12 @@
 
 							<div class="timeline-panel timeline{{_id}}">
 								{{#if myactivity}}
-								<button type="button" class="close" data-toggle="dropdown"
+								<button type="button" class="close pl-1 pr-1" data-toggle="dropdown"
 									aria-haspopup="true" aria-expanded="true">&times;</button>
-								<div class="dropdown-menu" x-placement="top-start"
-										style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
+								<div class="dropdown-menu animated fadeIn p-0">
 										<button class="dropdown-item"
 											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
-										<div class="dropdown-divider"></div>
+										<div class="dropdown-divider m-0"></div>
 										<button class="dropdown-item"
 											onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
 											to trash</button>
@@ -263,11 +265,11 @@
 									</div>
 								{{/if}}
 								<div class="timeline-heading">
-									<h4 class="timeline-title">
-										<strong>{{#friendInfo}}{{name}}{{/friendInfo}}</strong>
-									</h4>
+									<h6 class="timeline-title" style="color:black">
+										<strong>{{#friendInfo}}{{name}}{{/friendInfo}}</strong> says
+									</h6>
 									<p>
-										<i class="fa fa-clock-o"></i> <small
+										<i class="fa fa-clock-o text-muted" style="position:relative;top:2px"></i> <small
 											class="text-muted timeAgo">{{#activity}}{{date}}{{/activity}}</small>
 									</p>
 								</div>
@@ -275,11 +277,12 @@
 									<div class="note-editable">
 
 										<div class="card card-body"
-											style="padding-top: 1.25rem; padding: 1.25rem">
+											style="padding: 1.25rem;margin-bottom:20px">
 											<p style="font-family: courier; font-size: 15px">{{statusText}}</p>
 										</div>
 									</div>
-									<div class="like-comm btn-group" style="margin-top: 5px">
+									<div class="text-center">
+									<div class="like-comm btn-group" style="margin-top:5px">
 
 										<button type="button" class="btn btn-secondary comment"
 											data-container="body"
@@ -319,8 +322,9 @@
 											Heartbreak</button>
 
 									</div>
+									</div>
 									<div style="display: none;" class="divBox">
-										<ul class="list-group" style="margin-top: 5px">
+										<ul class="list-group" style="margin-top:5px">
 											<li class="list-group-item viewAll"
 												style="display: none; background-color: #E5E7EA"><a
 												href="javascript:void(0)"

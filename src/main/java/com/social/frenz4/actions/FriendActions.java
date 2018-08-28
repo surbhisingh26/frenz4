@@ -338,7 +338,7 @@ public class FriendActions extends HttpServlet {
 	public void friendactivity(HttpServletRequest request,HttpServletResponse response){
 		try{
 		
-			System.out.println("Friends Activity");
+			//System.out.println("Friends Activity");
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
@@ -383,11 +383,12 @@ public class FriendActions extends HttpServlet {
 	}
 	public void friendchatwindow(HttpServletRequest request,HttpServletResponse response){
 		try{
-			System.out.println("FRIEND CHAT WINDOW.......");
+			//System.out.println("FRIEND CHAT WINDOW.......");
 			RequestResponseUtility rrutility = new RequestResponseUtility();
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
+			
 			if(uid!=null){
 				String fid = request.getParameter("fid");
 				UserService userService = new UserService();

@@ -181,3 +181,23 @@ a.link:hover, a.link:focus {
 		background-color:#26c6da;
 		color:#ffffff;
 	}
+	.page-wrapper{
+	background-position: center;
+	/*background-image: linear-gradient(#02bace,#06c3d8,#10d0e5,#37dff2,#64e6f4,#a6ecf4);*/
+	background-image: linear-gradient(#a6ecf4,#64e6f4,#37dff2,#10d0e5,#06c3d8,#02bace);
+}
+.bg-info {
+    background-color: #87b5ba !important;
+}
+.bg-info h4, .bg-info h6{
+	color:black !important;
+}
+.timeline-panel{
+	background:transparent url(../img/black-blur.jpg);
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-shadow:1px 1px 5px 1px black !important;
+	background-image:linear-gradient(white,#89b9bf,#a9cdd1,#a9cdd1,#89b9bf,white);
+	
+}

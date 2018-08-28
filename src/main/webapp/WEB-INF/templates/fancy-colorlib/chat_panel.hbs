@@ -10,7 +10,7 @@
                                 <button class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10 chat-btn toggle-btn" onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})" style="opacity:0" onmouseover="opacityincrease()"onmouseout="opacitydecrease()"><i class="mdi mdi-wechat text-white"></i></button>
                             
 							
-							<div class="row page-titles p-2" style="margin-bottom:10px">
+							<div class="row page-titles">
 			<div class="col align-self-center">
 				<h3 class="text-themecolor m-b-0 m-t-0 text-center">{{#userFriend}}{{name}}{{/userFriend}}</h3>
 				
@@ -20,7 +20,7 @@
 		
 		
 		
-		<div class="card m-b-0">
+		<div class="card m-b-0 card-style">
 		
                             <!-- .chat-row -->
                             <div class="chat-main-box">
@@ -79,7 +79,7 @@
                                     <div class="chat-rbox" style="height:320px">
 									
                                          <div class="slimscrollright">
-										<ul class="chat-list p-20 textlist list-group">
+										<ul class="chat-list p-20 textlist{{#userFriend}}{{id}}{{/userFriend}} list-group">
                                            
                                             
                                            {{#mychat}}
@@ -90,18 +90,18 @@
 
 							<div class="chat-content mb-1" style="width:100%;">
 							
-								<div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width: 450px;word-break:break-word">
+								<div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width: 450px;">
 								
 								<span class="pull-left mb-0 mr-1"><img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:25px;height:25px;position:relative"/></span>
 								<span class="chattime text-muted text-right p-0 m-0 align-top" style="font-size:9px;">{{sentAt}}</span>
 								
-								<div class="small msgtext text-left">{{{text}}}</div>
+								<div class="small msgtext text-left" style="word-break:break-word">{{{text}}}</div>
 								
 																
 								</div>								
 								</div>
-								</div>							
-							<div class="msgmark{{id}}" style="position:relative;font-size:25px;line-height:0px;bottom:9px"><span style="color:#97ebf4">.</span><span style="color:#49abed">.</span><span style="color:#0062bf">.</span></div>
+								</div>						
+							<div class="msgmark" style="position:relative;font-size:25px;line-height:0px;bottom:9px"><span style="color:#97ebf4">.</span>{{#if delivered}}<span class="delivered" style="color:#49abed">.</span>{{else}}<span class="undelivered" style="color:#49abed"><input type="hidden" value="{{id}}"></span>{{/if}}{{#if read}}<span class="read" style="color:#0062bf">.</span>{{else}}<span class="unread" style="color:#0062bf"><input type="hidden" value="{{id}}"></span>{{/if}}</div>
 						 </li>
 						 
 					 {{else}}
@@ -113,14 +113,9 @@
 									
 									<span class="pull-right mb-0 ml-1"><img src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="friend" class="rounded-circle" style="width:25px;height:25px;position:relative;bottom:17px;left:3px"/></span>
 									
-									<div class="small mr-1 text-left msgtext" style="word-break:break-word;">{{{text}}}</div>
-									
-									
-									
-								</div>
-								
-								</div>
-								
+									<div class="small mr-1 text-left msgtext" style="word-break:break-word;">{{{text}}}</div>									
+								</div>								
+								</div>								
 								</div>
 						</li>
 
@@ -130,7 +125,7 @@
 					{{^mychat}}
                               <p class="text-center"> Star new chat with <a href="friendprofile?fid={{#userFriend}}{{id}}{{/userFriend}}">{{#userFriend}}{{name}}{{/userFriend}}</a></p>
 							  {{/mychat}}
-                                         <div><button class="btn btn-block btn-secondary text-align-center p-2 mt-2" style="border-radius:0px" onclick="ajaxRequest('morechat','POST', {fid:'{{#userFriend}}{{id}}{{/userFriend}}',skip:'30'}, {dataType:'json', callback:moreChat})"><i class="mdi mdi-unfold-more"></i></button></div>  
+                                         <div><button class="btn btn-block btn-secondary text-align-center p-2 mt-2 morechatbtn" style="border-radius:0px" onclick="ajaxRequest('morechat','POST', {fid:'{{#userFriend}}{{id}}{{/userFriend}}',skip:'{{skip}}'}, {dataType:'json', callback:moreChat})"><i class="mdi mdi-unfold-more"></i></button></div>  
                                         </ul>
 										
 										 </div>

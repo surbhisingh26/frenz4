@@ -11,7 +11,7 @@
 			<button
 				class="right-side-toggle-chat waves-effect waves-light btn-danger btn btn-circle btn-sm pull-right m-l-10"
 				onclick="ajaxRequest('onlinefriends','POST',{}, {dataType:'json',callback:onlineFriends})">
-				<i class="mdi mdi-wechat text-white"></i>
+				<i class="fa fa-superpowers text-white"></i>
 			</button>
 		</div>
 		<!-- ============================================================== -->
@@ -28,7 +28,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-8 col-md-7">
-				<div class="card" style="min-height: 1000px">
+				<div class="card card-style" style="min-height: 1000px">
 					<!-- Nav tabs -->
 					<ul class="nav nav-tabs profile-tab" role="tablist">
 						<li class="nav-item"><a class="nav-link active"
@@ -44,9 +44,9 @@
 						<div class="tab-pane active" id="home" role="tabpanel">
 							<div class="card-block">
 							<form action="addstatus">
-										<textarea class="form-control m-b-20"
+										<textarea class="form-control m-b-20 custom-scroll"
 											placeholder="Share Your Status..." rows="5"
-											style="margin-top: 5px; border-radius: 25px;"
+											style="margin-top: 5px; border-radius: 5px;"
 											id="statusMessage" name="status"></textarea>
 										<button class="btn btn-info m-b-20" type="submit"
 											style="border-radius: none;">Share</button>
@@ -85,10 +85,11 @@
 													alt="user" class="img-circle">
 											</div>
 										</div>
-										<h4 style="padding-bottom: 15px">
+										<div class="timeline-panel p-5">
+										<h6 style="padding-bottom:5px;color:black">
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											Changed display image
-										</h4>
+										</h6>
 										<br>
 										<div class="text-center">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
@@ -158,6 +159,7 @@
 
 											</div>
 										</div>
+										</div>
 
 									</div>
 
@@ -188,10 +190,11 @@
 													alt="user" class="img-circle">
 											</div>
 										</div>
-										<h4 style="padding-bottom: 15px">
+										<div class="timeline-panel p-5">
+										<h6 style="padding-bottom:5px;color:black">
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											Uploaded new Image
-										</h4>
+										</h6>
 										<br>
 										<div class="text-center">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
@@ -261,6 +264,7 @@
 
 											</div>
 										</div>
+										</div>
 
 									</div>
 
@@ -274,14 +278,14 @@
 													alt="user" class="img-circle">
 											</div>
 										</div>
-										<h4>
+										<h6>
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											Sent Request to <a
 												href="friendprofile?fid={{#userFriend}}{{id}}{{/userFriend}}"><img
 												src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="user"
 												class="img-circle" width="40" height="40"> <strong>{{#userFriend}}{{name}}{{/userFriend}}</strong>
 											</a>
-										</h4>
+										</h6>
 										<br>
 										<div class="text-center">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
@@ -309,10 +313,11 @@
 											<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
 												alt="user" class="img-circle">
 										</div>
-										<h4 style="padding-bottom: 15px">
+										<div class="timeline-panel p-5">
+										<h6 style="padding-bottom:5px;color:black">
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
-											shared status
-										</h4>
+											says 
+										</h6>
 										<br>
 										<div class="text-center">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
@@ -386,6 +391,7 @@
 
 											</div>
 										</div>
+									</div>
 									</div>
 									<hr class="divider{{_id}}">
 									{{/status}} {{/myActivityList}}
@@ -545,7 +551,7 @@
 
 			<div class="col-lg-4 col-md-5">
 
-				<div class="card">
+				<div class="card card-style">
 					<div class="card-block bg-info">
 						<h4 class="text-white card-title">Recent Contacts</h4>
 						<h6 class="card-subtitle text-white m-b-0 op-5">Checkout my
@@ -577,7 +583,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="card">
+				<div class="card card-style">
 					<div class="card-block">
 						<h3 class="card-title">Our Visitors</h3>
 						<h6 class="card-subtitle">Different Devices Used to Visit</h6>

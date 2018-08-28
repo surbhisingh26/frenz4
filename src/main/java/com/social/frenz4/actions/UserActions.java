@@ -387,7 +387,7 @@ public class UserActions extends HttpServlet {
 			//request.getRequestDispatcher("").forward(request, response);
 			if(reference==null)
 				response.sendRedirect("login");
-			
+
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -614,7 +614,7 @@ public class UserActions extends HttpServlet {
 				//Activity activity = userService.findActivityLink(typeId.toString());
 				//String type = activity.getType();
 				userService.addComment(comment,uid,typeId);
-				
+
 				if(!fid.equals(uid)){
 					System.out.println("if true");
 					NotificationService notiService = new NotificationService();
@@ -783,10 +783,10 @@ public class UserActions extends HttpServlet {
 			uid = (ObjectId) hmap.get("uid");
 
 			String fidStr = request.getParameter("fid");
-			
+
 			if(fidStr!=null){
 				uid = new ObjectId(fidStr);
-				
+
 			}
 			UserService userservice = new UserService();
 			highcharts.add(userservice.requestpiechart(uid));
@@ -1093,7 +1093,7 @@ public class UserActions extends HttpServlet {
 
 			Email email = new Email();
 			email.send("", recoveryEmail, "Reset Password", "reset_passTemplate", templatePath+"/EmailTemplates", hmap);
-			
+
 			hmap.put("message", "Please check your email for new password");
 			utility.getHbs(response,"login_page",hmap,templatePath);
 
@@ -1180,6 +1180,52 @@ public class UserActions extends HttpServlet {
 			//String notiId = hmap.get("notiId");			
 			String notiId = request.getParameter("notiId");			
 			notiService.notiReadUnread(notiId);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void morechat(HttpServletRequest request, HttpServletResponse response){
+		try {
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
+			uid = (ObjectId) hmap.get("uid");
+
+			if(uid!=null){
+				String fid = request.getParameter("fid");
+				String skipstr = request.getParameter("skip");
+				int skip = 0;
+				if(skipstr==""){
+				skip = 60;
+				}else{
+				skip = Integer.parseInt(skipstr)+30;
+				}
+				//System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+skip);
+				UserService userService = new UserService();
+				User userFriend = userService.findOneById(fid);
+				hmap.putAll(userService.getMoreChat(uid,new ObjectId(fid), skip));
+				//hmap.putAll(userService.getRecentChats(uid));
+				hmap.put("fid", fid);
+				hmap.put("userFriend", userFriend);
+				//String window = request.getParameter("window");
+				//if(window.equals("true")){
+				//utility.getHbs(response, "chat_panel", hmap, templatePath);
+				//}
+				//else
+				//{
+				//	System.out.println("Window false");
+				response.setContentType("application/json");
+				response.setCharacterEncoding("UTF-8");
+				response.getWriter().write(new Gson().toJson(hmap));
+				//	}
+
+			}
+			else{
+				hmap.put("message","Please login First!!!");
+				utility.getHbs(response,"login_page",hmap,templatePath);
+			}
+
 		}
 		catch(Exception e){
 			e.printStackTrace();

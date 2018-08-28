@@ -180,7 +180,7 @@ a.link:hover, a.link:focus {
 
 .sidebar-nav > ul > li.active > a, .sidebar-nav > ul > li:hover > a {
   color: #ffffff !important;
-  background: #26c6da !important;
+  background: #2d8fe5 !important;
 }
 
 .sidebar-nav > ul > li.active > a i, .sidebar-nav > ul > li.active:hover > a i {
@@ -216,3 +216,23 @@ a.link:hover, a.link:focus {
 		background-color:#1e88e5;
 		color:#ffffff;
 	}
+	.bg-info {
+    background-color: #0f2e49 !important;
+}
+.page-wrapper{
+	background-position: center;
+	/*background-image: linear-gradient(#3b92dd,#2c7aba,#1d5a8c,#134772,#0d3556,#072238);*/
+	background-image: linear-gradient(#072238,#0d3556,#134772,#1d5a8c,#2c7aba,#3b92dd);
+}
+.timeline-panel{
+	background:transparent url(../img/black-blur.jpg);
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-shadow:1px 1px 5px 1px black !important;
+	background-image:linear-gradient(black,#8db8dd,#bedcf7,#bedcf7,#8db8dd,black);
+	
+}
+.timeline-title{
+	color:white!important;
+}

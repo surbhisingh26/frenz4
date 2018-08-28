@@ -171,7 +171,7 @@ a.link:hover, a.link:focus {
   color: #99abb4;
 }
 
-.sidebar-nav > ul > li.active > a, .sidebar-nav > ul > li.active > a {
+.sidebar-nav > ul > li.active > a, .sidebar-nav > ul > li:hover > a {
   color: #ffffff !important;
   background: #f62d51 !important;
 }
@@ -179,6 +179,7 @@ a.link:hover, a.link:focus {
 .sidebar-nav > ul > li.active > a i, .sidebar-nav > ul > li.active:hover > a i {
   color: #ffffff !important;
 }
+
 
 .sidebar-nav > ul > li.active > a:after, .sidebar-nav > ul > li.active:hover > a:after {
   border-color: #ffffff;
@@ -209,3 +210,24 @@ a.link:hover, a.link:focus {
 		background-color:#f62d51;
 		color:#ffffff;
 	}
+	.page-wrapper{
+	
+	background-position: center;
+	/*background-image: linear-gradient(#b8207c,#991a66,#681045,#6d1349,#592042,#3a0424);*/
+	background-image: linear-gradient(#3a0424,#592042,#6d1349,#681045,#991a66,#b8207c);
+}
+.bg-info {
+    background-color: #35092e !important;
+}
+.timeline-panel{
+	background:transparent url(../img/black-blur.jpg);
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-shadow:1px 1px 5px 1px black !important;
+	background-image:linear-gradient(black,#c97a9e,#ce9ab2,#ce9ab2,#c97a9e,black);
+	
+}
+.timeline-title{
+	color:white!important;
+}

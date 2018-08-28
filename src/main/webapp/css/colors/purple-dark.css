@@ -210,3 +210,24 @@ a.link:hover, a.link:focus {
 		background-color:#7460ee;
 		color:#ffffff;
 	}
+.page-wrapper{
+	
+	background-position: center;
+	/*background-image: linear-gradient(#8f54c9,#764da0,#553277,#321d47,#1f142b,#0f021c);*/
+	background-image: linear-gradient(#0f021c,#1f142b,#321d47,#553277,#764da0,#8f54c9);
+}
+.bg-info {
+    background-color: #2a0944 !important;
+}
+.timeline-panel{
+	background:transparent url(../img/black-blur.jpg);
+	background-repeat:no-repeat;
+	background-position: center;
+	background-size: cover;
+	box-shadow:1px 1px 5px 1px black !important;
+	background-image:linear-gradient(black,#a485bc,#ba9cd3,#ba9cd3,#a485bc,black);
+	
+}
+.timeline-title{
+	color:white!important;
+}

@@ -298,11 +298,11 @@ public class FriendService {
 				result.put("noAction",true);
 				
 			}			
-			/*Object friend = (Object) result.get("friend");
+			Object friend = (Object) result.get("friend");
 			BasicDBObject fr = (BasicDBObject)friend;
 			if(fr.get("uid").equals(fr.get("fid"))){			
 				result.put("myactivity", true);
-			}*/
+			}
 			
 			
 			if(count%2==0)

@@ -1551,12 +1551,13 @@ public class UserService {
 	public Map<String,Object> getMessageStatus(ObjectId uid) {
 		ChatDAO chatdao = new ChatDAO();
 		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
-		List<String> chatIds = new ArrayList<>();
+		List<String> undeliveredChatIds = new ArrayList<>();
+		List<String> unreadChatIds = new ArrayList<>();
 		Map<String,Object> hmap = new HashMap<>();
-		//System.out.println("Step2 dao");
-		Date deliveredAt = new Date();
+		
+		//Date deliveredAt = new Date();
 		BasicDBObject query = new BasicDBObject();
-		//System.out.println("Step3 dao");
+		
 		query.put("senderId", uid);
 		query.put("delivered", false);
 		
@@ -1564,11 +1565,54 @@ public class UserService {
 		
 		while(cursor.hasNext()){
 			Chat chat = cursor.next();		
-			chatIds.add(chat.getId().toString());
+			undeliveredChatIds.add(chat.getId().toString());
 			
 		}
 		
-		hmap.put("chatIds", chatIds);
+		query.clear();
+		query.put("senderId", uid);
+		query.put("read", false);
+		DBCursor<Chat> cursor1 = chatCollection.find(query);
+		
+		while(cursor1.hasNext()){
+			Chat chat = cursor1.next();		
+			unreadChatIds.add(chat.getId().toString());
+			
+		}
+		
+		
+		hmap.put("undeliveredChatIds", undeliveredChatIds);
+		hmap.put("unreadChatIds", unreadChatIds);
+		return hmap;
+	}
+	public Map<String,Object> getMoreChat(ObjectId uid, ObjectId fid ,int skip) {
+		List<Chat> mychat = new ArrayList<>();
+		Map<String,Object> hmap = new HashMap<String, Object>();
+		ChatDAO chatdao = new ChatDAO();
+		JacksonDBCollection<Chat, String> chatCollection = chatdao.chatDAO();
+		
+		BasicDBObject query = new BasicDBObject("$or",Arrays.asList(new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",uid)
+				.append("senderId", fid).append("delivered", true))),new BasicDBObject("$and",Arrays.asList(new BasicDBObject("recieverId",fid)
+						.append("senderId", uid)))));
+		
+		int totalchats = chatCollection.find(query).count();
+		DBCursor<Chat> cursor = chatCollection.find(query).limit(30).sort(new BasicDBObject("_id",1)).skip(totalchats-skip);
+		while(cursor.hasNext()){
+			Chat chat = cursor.next();
+			System.out.println(chat.getText());
+			
+			if(chat.getSenderId().equals(uid)) {
+				chat.setMe(true);
+			}
+
+			mychat.add(chat);
+		}
+		Collections.reverse(mychat);
+		//markMsgRead(uid,fid);
+		hmap.put("skip", skip+30);
+		//mychat.forEach(System.out::println);
+		hmap.put("mychat", mychat);
+		//hmap.put("friendchat", friendchat);
 		return hmap;
 	}
 
