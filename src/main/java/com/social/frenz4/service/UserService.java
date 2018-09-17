@@ -115,7 +115,7 @@ public class UserService {
 		registration = reg.getSavedObject();
 		InvitationDAO invitationdao = new InvitationDAO();
 		JacksonDBCollection<Invite, String> invitationCollection = invitationdao.invitationDAO();
-
+		System.out.println("Registered yuser name " + registration.getName());
 		NotificationService notificationservice = new NotificationService();
 		String link = "earnpoints";
 
@@ -131,8 +131,10 @@ public class UserService {
 			ObjectId userId = invite.getSenderId();
 
 			User user = userCollection.findOneById(userId.toString());
+			System.out.println("Invite user name " + user.getName());
 			EmailService emailservice = new EmailService();
 			String mailStatus = emailservice.checkStatus(email, user.getEmail(),"inviteToJoin");
+			System.out.println(mailStatus);
 			if(mailStatus.equalsIgnoreCase("Sent")){
 				user.setPoints(user.getPoints()+50);
 				String userEmail = user.getEmail();
@@ -1140,7 +1142,9 @@ public class UserService {
 		InvitationDAO invitationDAO = new InvitationDAO();
 
 		JacksonDBCollection<Invite, String> invitationCollection = invitationDAO.invitationDAO();
+		query.clear();
 		query.put("senderId", uid);
+		query.put("recieverEmail", recieverEmail);
 		DBCursor<Invite> cursor1 = invitationCollection.find(query);
 		if(cursor1.hasNext()){
 			return "Already invited";
@@ -1152,7 +1156,7 @@ public class UserService {
 
 
 
-		return user.getName();
+		return user.getEmail();
 
 	}
 	public Map<String, Object> usertable(int limit, int skip,String ascending,String sortBy) {
@@ -1258,6 +1262,7 @@ public class UserService {
 		while(cursor.hasNext()){
 			Points points = cursor.next();
 			pointList.add(points);
+			System.out.println("Points ... " + points.getPointReason());
 		}
 		return pointList;
 	}

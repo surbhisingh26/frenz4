@@ -56,9 +56,9 @@ public class EmailService {
 		query.put("email", email);
 		DBCursor<Unsubscribe> cursor = unsubscribeCollection.find(query);
 		if(cursor.hasNext()){
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 	public void unsubscribe(String email) {
 		UnsubscribeDAO unsubscribedao = new UnsubscribeDAO();
@@ -74,12 +74,14 @@ public class EmailService {
 		EmailDAO emaildao = new EmailDAO();
 		JacksonDBCollection<Email, String> emailCollection = emaildao.emailDAO();
 		BasicDBObject query = new BasicDBObject();
-		query.put("recieverEmails", recieverEmail);
+		query.put("recieverEmail", recieverEmail);
 		query.put("from", username);
 		query.put("purpose",purpose);
-		DBCursor<Email> cursor = emailCollection.find(query);
-		Email email = cursor.next();
+		Email email = emailCollection.findOne(query);
+		
+		//Email email = cursor.next();
 		return email.getStatus();
+		
 
 
 	}

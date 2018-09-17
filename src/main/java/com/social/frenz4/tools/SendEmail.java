@@ -12,12 +12,18 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletException;
 
+import com.social.scframework.App.Email;
 import com.social.scframework.App.Utility;
 
 public class SendEmail {
 	Utility utility = new Utility();
 	public static void main(String args[]) throws ServletException, IOException{  
 		//Get properties object  
+		Email email = new Email();
+		email.send("Surbhi", "surbhi.singh.ss05@gmail.com", "test", "invitationTemplate", "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib/EmailTemplates", null);
+		
+		
+		
 		System.out.println("send email ");
 		final String from = "surbhi.singh.ss05@gmail.com";
 		final String password="as192118020809";

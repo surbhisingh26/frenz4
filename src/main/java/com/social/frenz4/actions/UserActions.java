@@ -75,7 +75,12 @@ public class UserActions extends HttpServlet {
 		if(path==null||path.equals("/")){
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			//hmap = utility.checkSession(request);
-			utility.getHbs(response,"friends_activity",hmap,templatePath);
+			if(uid!=null){
+				utility.getHbs(response,"friends_activity",hmap,templatePath);
+			}
+			else{
+				utility.getHbs(response,"login",hmap,templatePath);
+			}
 		}
 
 		else{
@@ -482,7 +487,7 @@ public class UserActions extends HttpServlet {
 				hmap.put("file", file);
 				hmap.put("filename",fileName);
 				file.write(fileSaveDir + File.separator + fileName);
-				String filePath= File.separator +"images/frenz4images/"+uid+"/dp" + "/" + fileName;
+				String filePath= "/" +"images/frenz4images/"+uid+"/dp" + "/" + fileName;
 				UserService userService = new UserService();
 				userService.updatePic(filePath,uid);
 
@@ -908,7 +913,7 @@ public class UserActions extends HttpServlet {
 					String id = emailservice.email(from, purpose, inviteEmail, status, subject);
 					if(subscription==true){
 
-						email.send(inviteEmail, inviteEmail, subject, "invitationTemplate" , id, hmap);
+						email.send(inviteEmail, inviteEmail, subject, "invitationTemplate" , templatePath+"/EmailTemplates", hmap);
 						status = "Sent";
 					}
 					else{
@@ -1197,9 +1202,9 @@ public class UserActions extends HttpServlet {
 				String skipstr = request.getParameter("skip");
 				int skip = 0;
 				if(skipstr==""){
-				skip = 60;
+					skip = 60;
 				}else{
-				skip = Integer.parseInt(skipstr)+30;
+					skip = Integer.parseInt(skipstr)+30;
 				}
 				//System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"+skip);
 				UserService userService = new UserService();

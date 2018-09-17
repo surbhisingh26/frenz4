@@ -1,19 +1,86 @@
 <html>
+<head>
+<style>
+.card td{
+padding:10px;
+}
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    
+	margin:20px;
+	padding:30px;
+	background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+	
+}
+.container{
+	background-image: linear-gradient(#c7e3fc,#75bcf9,#65b0f2,#57a7ed,#479be5,#3b92dd);
+}
+.header{
+	background-color:#1e88e5;
+	padding-left:20px;
+	
+}
+.btn{
+	background-color:#1e88e5;
+	color:#fff;
+	border-radius:5px;
+	padding:10px;
+	border: 1px solid #1e88e5;
+	box-shadow: 0 2px 2px 0 rgba(66, 165, 245, 0.14), 0 3px 1px -2px rgba(66, 165, 245, 0.2), 0 1px 5px 0 rgba(66, 165, 245, 0.12);
+	transition: 0.2s ease-in;
+	font-size: 14px;
+	cursor: pointer;
+	font-weight: 400;
+    line-height: 1.25;
+	
+}
+.btn:hover{
+background: #1e88e5;
+    border: 1px solid #1e88e5;
+	  box-shadow:  0 14px 26px -12px rgba(23, 105, 255, 0.42), 0 4px 23px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(23, 105, 255, 0.2);
+}
+	.name{
+	float:right;
+	padding:10px;
+	color:black;
+	font-weight:1000;
+	padding-top:25px;
+	vertical-align: middle;
+	box-sizing: inherit;
+	}
+.profilepic{
+height: 35px;
+width: 35px;
+    border-radius: 100%;
+	vertical-align: middle;
+	box-sizing: inherit;
+}
+</style>
+</head>
 <body>
-<div style="background-color:#1e88e5;margin:30px;padding:0px;" class="container">
-	<h1>f4<center>Frenz4</center></h1>
+<div class ="container">
+<div class="header">
+<a href="#"><img src="https://5665e5e6.ngrok.io/img/logo.png"></a><span class="name">{{#loggedInUser}}{{name}}{{/loggedInUser}}</span><img src="https://5665e5e6.ngrok.io{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" class="profilepic" style="float:right;padding:20px">
 </div>
-<div style="margin:30px;padding:10px; margin-bottom:30px;margin-right:150px">
-<p>Hey</p>
-<p>Your friend {{#loggedInUser}}{{name}}{{/loggedInUser}} invited you to join our website</p>
-<p>Make a new friend in just one move</p>
-Join now and get 50 bonus points</p> 
-<p>These points can make you get exciting offers and discounts on your booking</p>
-<p>Click the button below to accept this invitation</p>
-<a href="http://localhost:8080/frenz4/register"><button style="background-color:#1e88e5;color:black;border-radius:10px">Accept Invite</button></a>
-</div>
-<div style="margin:30px;padding:1px; margin-top:30px;background-color:#1e88e5;">
+
+<div class="card">
+<table>
+<tr>
+<td>Hey</td>
+</tr>
+<tr><td>Your friend {{#loggedInUser}}{{name}}{{/loggedInUser}} invited you to join our website</td></tr>
+<tr><td>Make a new friend in just one move</td></tr>
+<tr><td>Join now and get 50 bonus points</td></tr>
+<tr><td>These points can make you get exciting offers and discounts on your booking</td></tr>
+<tr><td>Click the button below to accept this invitation</td></tr>
+<tr><td><a href="http://frenz4.com:8080/register"><button class="btn">Accept Invite</button></a></td></tr>
+</table>
+</div><br>
+<div style="padding:5px; background-color:#1e88e5;padding-left:30px">
 <h6>If you don't want to recieve such emails<a href="http://localhost:8080/frenz4/unsubscribe?email={{#reciever}}{{email}}{{/reciever}}">Unsubscribe here</a></h6>
+</div>
+
 </div>
 </body>
 </html>
