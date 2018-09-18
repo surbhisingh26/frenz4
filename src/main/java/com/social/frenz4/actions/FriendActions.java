@@ -94,8 +94,8 @@ public class FriendActions extends HttpServlet {
 			String status = "Pending";
 			EmailService emailservice = new EmailService();
 			String id = emailservice.email(user.getName(),"FriendRequest",friend.getEmail(),status,"Friend Request");
-			Boolean unsubscription = emailservice.checkSubscription(friend.getEmail());
-			if(unsubscription==true)
+			Boolean subscription = emailservice.checkSubscription(friend.getEmail());
+			if(subscription==false)
 				status = "Failed";
 			else{
 				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","requestTemplate",templatePath+"/EmailTemplates", hmap);
@@ -177,9 +177,9 @@ public class FriendActions extends HttpServlet {
 			String status = "pending";
 			EmailService emailservice = new EmailService();
 			String id = emailservice.email(user.getName(),"FriendResponse",friend.getEmail(),status,"Friend Request");
-			Boolean unsubscription = emailservice.checkSubscription(friend.getEmail());
+			Boolean subscription = emailservice.checkSubscription(friend.getEmail());
 			Email email = new Email();
-			if(unsubscription==true)
+			if(subscription==false)
 				status = "Failed";
 			else{
 

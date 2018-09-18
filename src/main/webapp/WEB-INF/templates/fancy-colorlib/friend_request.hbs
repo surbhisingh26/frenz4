@@ -32,9 +32,13 @@
                 <!-- .row -->
                 <div class="row">
                     <!-- .col -->
+					
+					<p></p>
+					
 					{{#requestList}}
                     <div class="col-md-6 col-lg-6 col-xlg-4">
-                        <div class="card card-body card-style" style="    padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+                        <div class="card card-body card-style" style="padding-top: 1.25rem;  padding-right: 1.25rem;padding-bottom: 1.25rem;padding-left: 1.25rem;">
+						
                             <div class="row">
                                 <div class="col-md-4 col-lg-3 text-center">
                                     <a href="friendprofile?fid={{id}}"><img src="{{imagepath}}" alt="user" class="img-circle img-responsive"></a>
@@ -61,4 +65,11 @@
 </div>
 {{>right_sidebar}}
 {{>foot}}
+<script>
+$(document).ready(function(){
+if('{{requestList}}'=='[]'){
+$('p').text('Nothing to show');
+}
+});
+</script>
 {{>end}}

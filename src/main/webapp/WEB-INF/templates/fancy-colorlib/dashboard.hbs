@@ -33,10 +33,10 @@
 					<ul class="nav nav-tabs profile-tab" role="tablist">
 						<li class="nav-item"><a class="nav-link active"
 							data-toggle="tab" href="#home" role="tab">Activity</a></li>
-						<li class="nav-item"><a class="nav-link" data-toggle="tab"
+						<!--<li class="nav-item"><a class="nav-link" data-toggle="tab"
 							href="#profile" role="tab">Profile</a></li>
 						<li class="nav-item"><a class="nav-link" data-toggle="tab"
-							href="#settings" role="tab">Settings</a></li>
+							href="#settings" role="tab">Settings</a></li>-->
 					</ul>
 
 					<!-- Tab panes -->
@@ -50,6 +50,7 @@
 											id="statusMessage" name="status"></textarea>
 										<button class="btn btn-info m-b-20" type="submit"
 											style="border-radius: none;">Share</button>
+											<input type="hidden" value="dashboard" name="display">
 									</form>
 									<hr>
 								<div class="profiletimeline">
@@ -61,20 +62,19 @@
 									{{#myActivityList}} {{#profilepic}}
 									<div class="sl-item div{{_id}}">
 									<div class="dropdown">
-									<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">&times;</button>
+									<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">...</button>
 										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
-											<button class="dropdown-item"
+											<!--<button class="dropdown-item"
 												onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't
-												Show on dashboard</button>
+												Show on dashboard</button>-->
 											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item"
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Hide
-												from timeline and dashboard</button>
+												from timeline</button>
 											<div class="dropdown-divider m-0"></div>
 											
 											<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning" 
-												onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Send
-												to trash</button>
+												onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Delete</button>
 											
 										</div>
 									</div>
@@ -82,22 +82,21 @@
 										<div>
 											<div class="sl-left">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" class="img-circle">
+													alt="user" class="img-circle" width="40px" height="40px">
 											</div>
 										</div>
-										<div class="timeline-panel p-5">
-										<h6 style="padding-bottom:5px;color:black">
+										<div class="timeline-panel p-3 text-center">
+										<h6 style="color:black" class="timeline-title">
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											Changed display image
 										</h6>
 										<br>
-										<div class="text-center">
+										<div class="text-center text-muted">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
 												class="timeAgo">{{uploadTime}}</small>
 										</div>
 										<div class="sl-right text-center timeline{{_id}}">
-											<img class="img-thumbnail img-fluid" src="{{path}}"
-												width="350" height="350">
+											<img class="img-thumbnail img-fluid" src="{{path}}" width="350px"height="350px">
 											<div class="like-comm btn-group" style="margin-top: 5px">
 
 												<button type="button" class="btn btn-secondary comment"
@@ -168,35 +167,34 @@
 									{{/profilepic}} {{#uploadpic}}
 									<div class="sl-item div{{_id}}">
 										<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown"
-											aria-haspopup="true" aria-expanded="true">&times;</button>
+											aria-haspopup="true" aria-expanded="true">...</button>
 										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
-											<button class="dropdown-item"
+											<!--<button class="dropdown-item"
 												onclick="ajaxRequest('viewfalse','POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't
-												Show on dashboard</button>
+												Show on dashboard</button>-->
 											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item"
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Hide
-												from timeline and dashboard</button>
+												from timeline</button>
 											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning" 
-												onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Send
-												to trash</button>
+												onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePic})">Delete</button>
 
 
 										</div>
 										<div>
 											<div class="sl-left">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" class="img-circle">
+													alt="user" class="img-circle"width="40px" height="40px">
 											</div>
 										</div>
-										<div class="timeline-panel p-5">
-										<h6 style="padding-bottom:5px;color:black">
+										<div class="timeline-panel p-3 text-center">
+										<h6 style="color:black" class="timeline-title">
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											Uploaded new Image
 										</h6>
 										<br>
-										<div class="text-center">
+										<div class="text-center text-muted">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
 												class="timeAgo">{{uploadTime}}</small>
 										</div>
@@ -275,7 +273,7 @@
 										<div>
 											<div class="sl-left">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" class="img-circle">
+													alt="user" class="img-circle" width="40" height="40">
 											</div>
 										</div>
 										<h6>
@@ -287,7 +285,7 @@
 											</a>
 										</h6>
 										<br>
-										<div class="text-center">
+										<div class="text-center text-muted">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
 												class="timeAgo">{{date}}</small>
 										</div>
@@ -300,26 +298,25 @@
 										<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown"
 											aria-haspopup="true" aria-expanded="true">&times;</button>
 										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
-											<button class="dropdown-item"
+											<!--<button class="dropdown-item"
 												onclick="ajaxRequest('viewfalse', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:viewFalse})">Don't
-												Show on dashboard</button>
+												Show on dashboard</button>-->
 											<div class="dropdown-divider m-0"></div>
 											<button class="dropdown-item"
-												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
-												to trash</button>
+												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Delete</button>
 
 										</div>
 										<div class="sl-left">
 											<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-												alt="user" class="img-circle">
+												alt="user" class="img-circle" width="40px"height="40px">
 										</div>
-										<div class="timeline-panel p-5">
-										<h6 style="padding-bottom:5px;color:black">
+										<div class="timeline-panel p-3 text-center">
+										<h6 style="color:black" class="timeline-title">
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											says 
 										</h6>
 										<br>
-										<div class="text-center">
+										<div class="text-center text-muted">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
 												class="timeAgo">{{date}}</small>
 										</div>
@@ -403,7 +400,7 @@
 
 
 						<!--second tab-->
-						<div class="tab-pane" id="profile" role="tabpanel">
+						<!--<div class="tab-pane" id="profile" role="tabpanel">
 							<div class="card-block">
 								<div class="row">
 									<div class="col-md-3 col-xs-6 b-r">
@@ -540,7 +537,7 @@
 									</div>
 								</form>
 							</div>
-						</div>
+						</div>-->
 					</div>
 				</div>
 			</div>
@@ -569,7 +566,7 @@
 								{{#friendList}} {{#friend}} <a href="friendprofile?fid={{id}}">
 
 									<div class="user-img">
-										<img src="{{imagepath}}" alt="user" class="img-circle">
+										<img src="{{imagepath}}" alt="user" class="img-circle" width="45px" height="45px">
 										<span
 											class="profile-status {{#if loggedIn}}online pull-right{{/if}}"></span>
 									</div>
@@ -583,7 +580,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="card card-style">
+				<!--<div class="card card-style">
 					<div class="card-block">
 						<h3 class="card-title">Our Visitors</h3>
 						<h6 class="card-subtitle">Different Devices Used to Visit</h6>
@@ -611,7 +608,7 @@
 							</li>
 						</ul>
 					</div>
-				</div>
+				</div>-->
 			</div>
 
 		</div>
@@ -635,13 +632,13 @@ $('.undoBtn').hide(60000);
 }
 
 function deletePost(data, extraInfo, response){
-$('.div' + data.typeId).hide();
-$('.divider' + data.typeId).hide();
-$('.undoBtn').removeClass("d-none");
+//$('.div' + data.typeId).hide();
+//$('.divider' + data.typeId).hide();
+/*$('.undoBtn').removeClass("d-none");
 $('.instruct').removeClass("d-none");
 $('.instruct').text("You can get it back till a month from trash");
 $('.undoBtn').hide(60000);
-$('.instruct').hide(60000);
+$('.instruct').hide(60000);*/
 }
 function deletePic(data, extraInfo, response){
 $('.typeId').val(data.typeId);

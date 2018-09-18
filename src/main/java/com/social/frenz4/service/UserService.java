@@ -1468,7 +1468,7 @@ public class UserService {
 		ActivityDAO activityDAO = new ActivityDAO();
 		JacksonDBCollection<Activity, String> activityCollection = activityDAO.activityDAO();
 		Activity activity = activityCollection.findOne(new BasicDBObject("typeId" , typeId));
-		activity.setDeleted(true);
+		//activity.setDeleted(true);
 		activity.setViewfalse(true);
 		activityCollection.updateById(activity.getId(), activity);
 	}

@@ -757,14 +757,19 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 
 			RequestResponseUtility rrutility = new RequestResponseUtility();
-
+			String display = request.getParameter("display");
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
 			if(uid!=null){
 				UserService userservice = new UserService();
 				String status = request.getParameter("status");
 				userservice.addStatus(uid, status);
+				if(display.equalsIgnoreCase("dashboard")){
+					response.sendRedirect("dashboard");
+				}
+				else{
 				response.sendRedirect("friendactivity");
+				}
 			}
 			else{
 				hmap.put("message","Please login First!!!");

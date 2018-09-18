@@ -31,6 +31,7 @@
                 <!-- ============================================================== -->
                 <!-- .row -->
                 <div class="row">
+				<p></p>
                     <!-- .col -->
 					{{#friendList}}
 					{{#friend}}
@@ -40,7 +41,7 @@
                                 <div class="col-md-5 col-lg-3">
 								 <div class="message-box contact-box">
 								<div class="message-widget contact-widget">
-                                    <a href="friendprofile?fid={{id}}"><div class="user-img-big"> <img src="{{imagepath}}" alt="user" class="img-circle" style="margin-right:10px;"> <span class="profile-status {{#if loggedIn}}online pull-right{{/if}}" style="position:absolute"></span> </div></a>
+                                    <a href="friendprofile?fid={{id}}"><div class="user-img-big"> <img src="{{imagepath}}" alt="user" class="img-circle" style="margin-right:10px;" width="100px" height="100px"> <span class="profile-status {{#if loggedIn}}online pull-right{{/if}}" style="position:absolute"></span> </div></a>
                                 </div>
 								</div>
 								</div>
@@ -48,13 +49,13 @@
                                     <h3 class="box-title m-b-0">{{name}}</h3> <small>Web Developer</small><br>
                                     <small>{{email}}</small>
 									<div>
-									<div class="btn-group friendBtn" id="{{id}}">
+									<div class="btn-group friendBtn" id="{{_id}}">
                                     <button type="button" class="btn btn-secondary dropdown-toggle friend-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         Friends
                                     </button>
                                     <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -196px, 0px); top: 0px; left: 0px; will-change: transform;">
                                         
-                                        <button class="dropdown-item animated pulse" onclick="ajaxRequest('removefriend', 'POST', {fid:'{{id}}'}, {dataType:'json', callback:afterRemove})">Remove as Friend</button>
+                                        <button class="dropdown-item animated pulse" onclick="ajaxRequest('removefriend', 'POST', {fid:'{{_id}}'}, {dataType:'json', callback:afterRemove})">Remove as Friend</button>
                                         
                                     </div>
                                 </div>
@@ -72,4 +73,11 @@
 </div>
 {{>right_sidebar}}
 {{>foot}}
+<script>
+$(document).ready(function(){
+if('{{friendList}}'=='[]'){
+$('p').text('Nothing to show');
+}
+});
+</script>
 {{>end}}
