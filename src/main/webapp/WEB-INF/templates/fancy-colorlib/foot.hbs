@@ -52,7 +52,12 @@
 	});
 	request.done(function(response) {
 	var now = moment();
-
+	if(!response.unread){
+	$('.readAll input').attr('checked','true');
+	}
+	else{
+	$('.readAll input').remove('checked','false');
+	}
 	for(var count = 0;count<response.count;count++){
 	console.log('res',response);
 	$('.message-center').append('<a href="'+response.notifyList[count].link+'?read=true&id='+response.notifyList[count].id+'"><img src="'+response.notifyList[count].image+'" width="40px" height="40px" style="margin-right:5px" class="img-circle"><div class="mail-content"> <h5>'+response.notifyList[count].purpose+'</h5> <span class="mail-desc">'+response.notifyList[count].notification+'</span><div class="row"><small class="time col-7 notiTime'+response.notifyList[count].id+'"></small><small class="col-5"><div class="custom-control custom-checkbox small"><input id="checkbox-read'+response.notifyList[count].id+'" type="checkbox" onclick="ajaxRequest(\'notireadunread\',\'POST\', {notiId:\''+response.notifyList[count].id+'\'},{dataType:\'json\'})"><label for="checkbox-read'+response.notifyList[count].id+'"><small> Seen </small></label></div></small></div></div></a>')

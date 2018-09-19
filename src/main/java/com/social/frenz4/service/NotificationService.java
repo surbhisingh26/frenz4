@@ -97,5 +97,21 @@ public class NotificationService {
 		
 	}
 
+	public void notiReadAll(ObjectId uid) {
+		NotificationDAO notificationdao = new NotificationDAO();
+		JacksonDBCollection<Notification,String> notifyCollection = notificationdao.notificationDAO();
+		BasicDBObject query = new BasicDBObject();
+		query.put("userId", uid);
+		DBCursor<Notification> cursor = notifyCollection.find(query);
+		while(cursor.hasNext()){
+			Notification notification = cursor.next();
+			notification.setRead(!notification.getRead());
+			notifyCollection.updateById(notification.getId(), notification);
+		}
+		
+		
+		
+	}
+
 	
 }

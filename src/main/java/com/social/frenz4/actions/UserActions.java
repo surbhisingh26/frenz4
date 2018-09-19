@@ -79,7 +79,7 @@ public class UserActions extends HttpServlet {
 				utility.getHbs(response,"friends_activity",hmap,templatePath);
 			}
 			else{
-				utility.getHbs(response,"login",hmap,templatePath);
+				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
 		}
 
@@ -1188,8 +1188,23 @@ public class UserActions extends HttpServlet {
 			Map<String, Object> hmap  = new HashMap<String, Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			//String notiId = hmap.get("notiId");			
-			String notiId = request.getParameter("notiId");			
+			String notiId = request.getParameter("notiId");	
 			notiService.notiReadUnread(notiId);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void notireadall(HttpServletRequest request, HttpServletResponse response){
+		try {
+			NotificationService notiService = new NotificationService();
+			RequestResponseUtility rrutility = new RequestResponseUtility();
+			Map<String, Object> hmap  = new HashMap<String, Object>();
+			hmap.putAll(rrutility.getUserDetails(request));
+			//String notiId = hmap.get("notiId");			
+			
+			uid = (ObjectId) hmap.get("uid");	
+			notiService.notiReadAll(uid);
 		}
 		catch(Exception e){
 			e.printStackTrace();

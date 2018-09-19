@@ -404,7 +404,7 @@ public class UserService {
 		List<ProfilePic> profilePicList = new ArrayList<ProfilePic>();
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
-		DBCursor<ProfilePic> cursor = dpCollection.find(query);
+		DBCursor<ProfilePic> cursor = dpCollection.find(query).sort(new BasicDBObject("uploadTime",-1));
 
 		while(cursor.hasNext()){
 			ProfilePic profilepic = cursor.next();
@@ -448,7 +448,7 @@ public class UserService {
 		BasicDBObject query = new BasicDBObject();
 		BasicDBObject sort = new BasicDBObject();
 		query.put("uid", uid);
-		sort.put("time", -1);
+		sort.put("uploadTime", -1);
 		DBCursor<UploadPic> cursor = uploadCollection.find(query).sort(sort);
 
 		while(cursor.hasNext()){
@@ -695,6 +695,11 @@ public class UserService {
 		uploadFields.put("foreignField","_id");
 		uploadFields.put("as", "uploadpic");  
 		pipeline.add(new BasicDBObject("$lookup",uploadFields));
+		DBObject statusFields = new BasicDBObject("from", "status");
+		statusFields.put("localField","typeId");
+		statusFields.put("foreignField","_id");
+		statusFields.put("as", "status");  
+		pipeline.add(new BasicDBObject("$lookup",statusFields));
 		DBObject heartFields = new BasicDBObject("from", "heart");
 		heartFields.put("localField","typeId");
 		heartFields.put("foreignField","typeId");

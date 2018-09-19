@@ -65,16 +65,20 @@
                                 <ul>
                                     <li>
                                         <div class="drop-title">Notifications</div>
+										<div class="text-right p-0"><div class="custom-control custom-checkbox small text-centerreadAll"><input id="checkbox-read'+response.notifyList[count].id+'" type="checkbox" onclick="ajaxRequest(\'notireadall\',\'POST\', {},{dataType:\'json\'})"  {{^unread}}checked="checked"{{/unread}}><label style="color:green"><small> Mark all as seen </small></label></div></div>
                                     </li>
+        
                                     <li>
                                         <div class="message-center">
                                            
                                             
                                         </div>
                                     </li>
+									
                                     <li>
                                         <a class="nav-link text-center" href="allnotifications"> <strong>Check all notifications</strong> <i class="fa fa-angle-right"></i> </a>
                                     </li>
+									
                                 </ul>
                             </div>
                         </li>

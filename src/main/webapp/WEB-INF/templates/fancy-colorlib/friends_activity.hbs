@@ -64,8 +64,7 @@
 											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
 										<div class="dropdown-divider m-0"></div>
 										<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning"
-											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
-											to trash</button>
+											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Delete</button>
 
 									</div>
 									{{/if}}
@@ -161,8 +160,7 @@
 											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
 										<div class="dropdown-divider m-0"></div>
 										<button class="dropdown-item" data-toggle="modal" data-target=".deleteWarning"
-											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Send
-											to trash</button>
+											onclick="ajaxRequest('#', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Delete</button>
 
 									</div>
 									{{/if}}
@@ -259,8 +257,7 @@
 											onclick="ajaxRequest('hidepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:hidePost})">Hide from timeline</button>
 										<div class="dropdown-divider m-0"></div>
 										<button class="dropdown-item"
-											onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Send
-											to trash</button>
+											onclick="ajaxRequest('deletepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Delete</button>
 
 									</div>
 								{{/if}}
