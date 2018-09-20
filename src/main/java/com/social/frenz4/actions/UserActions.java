@@ -69,7 +69,7 @@ public class UserActions extends HttpServlet {
 
 
 		String path = request.getPathInfo();
-		System.out.println("pa "+ path);
+		System.out.println("path "+ path);
 
 
 		if(path==null||path.equals("/")){
