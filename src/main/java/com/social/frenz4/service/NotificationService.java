@@ -105,7 +105,7 @@ public class NotificationService {
 		DBCursor<Notification> cursor = notifyCollection.find(query);
 		while(cursor.hasNext()){
 			Notification notification = cursor.next();
-			notification.setRead(!notification.getRead());
+			notification.setRead(true);
 			notifyCollection.updateById(notification.getId(), notification);
 		}
 		
