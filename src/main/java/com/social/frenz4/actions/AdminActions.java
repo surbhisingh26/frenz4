@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
+import com.social.frenz4.app.PropertiesApp;
 import com.social.frenz4.app.RequestResponseUtility;
 import com.social.frenz4.service.EmailService;
 import com.social.frenz4.service.UserService;
@@ -27,7 +28,9 @@ public class AdminActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
 	ObjectId uid;
-	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
+	PropertiesApp prop = new PropertiesApp();
+	String templatePath = prop.getProperty("templatePath");
+	//String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	Map<String, Object> hmap = new HashMap<String, Object>();
 	/**
 	 * @see HttpServlet#HttpServlet()

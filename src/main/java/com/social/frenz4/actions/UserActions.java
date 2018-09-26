@@ -21,6 +21,7 @@ import org.bson.types.ObjectId;
 
 import com.google.gson.Gson;
 import com.social.frenz4.app.AsyncRunnable;
+import com.social.frenz4.app.PropertiesApp;
 import com.social.frenz4.app.RequestResponseUtility;
 import com.social.frenz4.model.Points;
 import com.social.frenz4.model.ProfilePic;
@@ -43,8 +44,10 @@ import com.social.scframework.highchart.HighChart;
 public class UserActions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	Utility utility = new Utility();
+	PropertiesApp prop = new PropertiesApp();
+	String templatePath = prop.getProperty("templatePath");
 	ObjectId uid;
-	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
+//	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	public static final String SALT = "my-salt-text";
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -69,7 +72,7 @@ public class UserActions extends HttpServlet {
 
 
 		String path = request.getPathInfo();
-		System.out.println("pat "+ path);
+		System.out.println("path "+ path);
 
 
 		if(path==null||path.equals("/")){
