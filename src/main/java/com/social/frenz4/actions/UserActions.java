@@ -46,6 +46,9 @@ public class UserActions extends HttpServlet {
 	Utility utility = new Utility();
 	PropertiesApp prop = new PropertiesApp();
 	String templatePath = prop.getProperty("templatePath");
+	String sentFrom = prop.getProperty("sentFrom");
+	String fromMail = prop.getProperty("fromMail");
+	String fromPassword = prop.getProperty("fromPassword");
 	ObjectId uid;
 //	String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	public static final String SALT = "my-salt-text";
@@ -197,6 +200,7 @@ public class UserActions extends HttpServlet {
 			else{
 				//sending welcome email
 				Email welcomeEmail = new Email();
+				
 				EmailService emailservice = new EmailService();
 				String subject = "Welcome to frenz4" ;
 				String purpose = "welcome mail";
@@ -204,7 +208,7 @@ public class UserActions extends HttpServlet {
 				String id = emailservice.email("frenz4", purpose, email, status, subject);
 				hmap.put("name", fname + lname);
 				hmap.put("id", result);
-				welcomeEmail.send(fname + lname, email, subject, "welcomeEmailTemplate" , templatePath+"/EmailTemplates", hmap);
+				welcomeEmail.send(sentFrom,fromMail,fromPassword,fname + lname, email, subject, "welcomeEmailTemplate" , templatePath+"/EmailTemplates", hmap);
 				status = "Sent";
 				emailservice.updateEmail(id,status);
 				String registeredMsg = "You are successfully registered!!! Login to Continue";
@@ -921,7 +925,7 @@ public class UserActions extends HttpServlet {
 					String id = emailservice.email(from, purpose, inviteEmail, status, subject);
 					if(subscription==true){
 
-						email.send(inviteEmail, inviteEmail, subject, "invitationTemplate" , templatePath+"/EmailTemplates", hmap);
+						email.send(sentFrom,fromMail,fromPassword,inviteEmail, inviteEmail, subject, "invitationTemplate" , templatePath+"/EmailTemplates", hmap);
 						status = "Sent";
 					}
 					else{
@@ -1105,7 +1109,7 @@ public class UserActions extends HttpServlet {
 			hmap.put("pass", generatedString);
 
 			Email email = new Email();
-			email.send("", recoveryEmail, "Reset Password", "reset_passTemplate", templatePath+"/EmailTemplates", hmap);
+			email.send(sentFrom,fromMail,fromPassword,"", recoveryEmail, "Reset Password", "reset_passTemplate", templatePath+"/EmailTemplates", hmap);
 
 			hmap.put("message", "Please check your email for new password");
 			utility.getHbs(response,"login_page",hmap,templatePath);

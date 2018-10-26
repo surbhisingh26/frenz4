@@ -22,8 +22,8 @@ public class QueryTool {
 		DBConnection conn = new DBConnection();
 
 		for(int i = 0; i<5;i++) {
-			conn.getDB("user");
-			conn.getDB("friend");
+			conn.getDB("user",27017,"localhost");
+			conn.getDB("friend",27017,"localhost");
 
 		}
 	}

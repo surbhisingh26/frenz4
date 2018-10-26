@@ -30,6 +30,9 @@ public class FriendActions extends HttpServlet {
 	ObjectId uid;
 	PropertiesApp prop = new PropertiesApp();
 	String templatePath = prop.getProperty("templatePath");
+	String sentFrom = prop.getProperty("sentFrom");
+	String fromMail = prop.getProperty("fromMail");
+	String fromPassword = prop.getProperty("fromPassword");
 	//String templatePath = "D:/apps/apache-tomcat-8.5.5/webapps/ROOT/WEB-INF/templates/fancy-colorlib";
 	Map<String, Object> hmap = new HashMap<String, Object>();
 	/**
@@ -93,6 +96,7 @@ public class FriendActions extends HttpServlet {
 			User friend = userservice.findOneById(fid.toString());
 			NotificationService  notify = new NotificationService();
 			Email email = new Email();
+			
 			hmap.put("reciever",friend);
 			String status = "Pending";
 			EmailService emailservice = new EmailService();
@@ -101,7 +105,7 @@ public class FriendActions extends HttpServlet {
 			if(subscription==false)
 				status = "Failed";
 			else{
-				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","requestTemplate",templatePath+"/EmailTemplates", hmap);
+				email.send(sentFrom,fromMail,fromPassword,friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","requestTemplate",templatePath+"/EmailTemplates", hmap);
 				status = "Sent";
 			}
 			System.out.println("status " + status);
@@ -186,7 +190,7 @@ public class FriendActions extends HttpServlet {
 				status = "Failed";
 			else{
 
-				email.send(friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","responseTemplate",templatePath+"/EmailTemplates", hmap);
+				email.send(sentFrom,fromMail,fromPassword,friend.getName(),"singh.surabhi.055@gmail.com", "Friend Request","responseTemplate",templatePath+"/EmailTemplates", hmap);
 				status = "Sent";
 			}
 			emailservice.updateEmail(id,status);

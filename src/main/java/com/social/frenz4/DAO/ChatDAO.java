@@ -11,21 +11,28 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.social.frenz4.app.PropertiesApp;
 import com.social.frenz4.model.Chat;
 import com.social.scframework.service.DBConnection;
 
 public class ChatDAO {
-
+	PropertiesApp prop = new PropertiesApp();
+	String DBName = prop.getProperty("DbName");
+	String DBPortStr = prop.getProperty("DbPort");
+	int DBPort = Integer.parseInt(DBPortStr);
+	String DBHost = prop.getProperty("DbHost");
+	
 	public JacksonDBCollection<Chat,String> chatDAO(){
 		DBConnection db = new DBConnection();
-		DB mongo = db.getDB("frenz4");
+		DB mongo = db.getDB(DBName,DBPort,DBHost);
 		DBCollection collec = mongo.getCollection("chat");
 		JacksonDBCollection<Chat, String> coll = JacksonDBCollection.wrap(collec,Chat.class, String.class);
 		return coll;
 	}
+
 	public DBCollection chatCollectionDAO(){
 		DBConnection db = new DBConnection();
-		DB mongo = db.getDB("frenz4");
+		DB mongo = db.getDB(DBName,DBPort,DBHost);
 		DBCollection collec = mongo.getCollection("chat");
 		
 		return collec;
