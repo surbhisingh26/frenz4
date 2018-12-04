@@ -724,7 +724,7 @@ public class UserActions extends HttpServlet {
 				String fidStr = request.getParameter("fid");
 				String brokenStr = request.getParameter("broken");
 				boolean broken = Boolean.parseBoolean(brokenStr);
-				System.out.println("Broken.........." + broken);
+				System.out.println("Broken........." + broken);
 				hmap.putAll(userservice.heartIncrease(typeId,uid,broken));
 				//System.out.println("fid.......... " + fid);
 				if(fidStr!=null&&!fidStr.equals(uid.toString())){
