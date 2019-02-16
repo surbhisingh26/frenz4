@@ -216,9 +216,21 @@ a.link:hover, a.link:focus {
 	background-position: center;
 	background-size: cover;
 	box-shadow:1px 1px 5px 1px black !important;
-	background-image:linear-gradient(black,#8fd3cb,#a9d6d0,#a9d6d0,#8fd3cb,black);
+	background-image:linear-gradient(#272C33,#8fd3cb,#a9d6d0,#a9d6d0,#8fd3cb,#272C33);
 	
 }
 .timeline-title{
 	color:white!important;
+}
+.card, .page-titles, .textarea{
+	background:#272C33;
+}
+.timelinecard {
+    box-shadow: -2px 2px 3px -1px #04f4d4!important;
+}
+.textarea:focus{
+	box-shadow: 1px -1px 1px 0px #04f4d4!important;
+	background:#272C33;
+border-color:#04f4d4!important;
+border-bottom:0px !important;
 }

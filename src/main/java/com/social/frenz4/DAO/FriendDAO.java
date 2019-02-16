@@ -6,8 +6,10 @@ import java.util.List;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonDBCollection;
 
-import com.mongodb.AggregationOutput;
+import com.mongodb.AggregationOptions;
+
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -66,9 +68,16 @@ public class FriendDAO {
 		pipeline.add(new BasicDBObject("$lookup",secondFields));
 		DBObject limitCount = new BasicDBObject("$limit",limit);
 		pipeline.add(limitCount);
-		AggregationOutput output = frndCollectionDAO().aggregate(pipeline);
+		//DBObject explain = new BasicDBObject("$explain",true);
+		//pipeline.add(explain);
+		//AggregationOptions.Builder options  =   AggregationOptions.builder();
+		//AggregationOutput output = frndCollectionDAO().explainAggregate(pipeline, options);
 
-		for (DBObject result : output.results()) {
+		//AggregationOutput output = frndCollectionDAO().aggregate(pipeline);
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor output = frndCollectionDAO().aggregate(pipeline, options);
+		while (output.hasNext()){
+		Object result = output.next();
 			friendList.add(result);
 			System.out.println(result);
 

@@ -37,7 +37,7 @@
 										<ul class="chatonline style-none list-group list-group-flush">
 										{{#friendList}}
                                             <li class="list-group-item p-0" >
-                                                <a href="friendchatwindow?fid={{id}}&window=true" id="{{id}}" class="p-2"><img src="{{imagepath}}" alt="user-img" class="img-circle"> <span>{{name}} {{#if loggedIn}}<small class="text-success">online</small>{{else}}<small class="text-muted">offline</small>{{/if}}</span></a>
+                                                <a href="friendchatwindow?fid={{id}}&window=true" id="{{id}}" class="p-2"><div class="badge-circle float-left mr-2"><img src="{{imagepath}}" alt="user-img" class="badge-img"></div> <span>{{name}} {{#if loggedIn}}<small class="text-success">online</small>{{else}}<small class="text-muted">offline</small>{{/if}}</span></a>
                                             </li>
 											{{/friendList}}
                                             
@@ -92,7 +92,7 @@
 							
 								<div class="box bg-light-info m-0 p-1" style="border-radius:20px 0px 0px 0px;max-width: 450px;">
 								
-								<span class="pull-left mb-0 mr-1"><img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="rounded-circle" style="width:25px;height:25px;position:relative"/></span>
+								<span class="pull-left mb-0 mr-1 badge-circle-xs"><img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}" alt="user" class="badge-img"/></span>
 								<span class="chattime text-muted text-right p-0 m-0 align-top" style="font-size:9px;">{{sentAt}}</span>
 								
 								<div class="small msgtext text-left" style="word-break:break-word">{{{text}}}</div>
@@ -111,7 +111,7 @@
 									<div class="box bg-light-inverse m-0 p-2" style="background-color:#E4D8F2;position:relative;max-width:450px;border-radius:0px 20px 0px 0px">
 									<div class="chattime text-muted text-left m-0 pr-3 mr-2" style="font-size:9px;position:relative;">{{deliveredAt}}</div>
 									
-									<span class="pull-right mb-0 ml-1"><img src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="friend" class="rounded-circle" style="width:25px;height:25px;position:relative;bottom:17px;left:3px"/></span>
+									<div class="pull-right mb-0 ml-1 badge-circle-xs" style="position:relative;bottom:17px;left:3px"><img src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="friend" class="badge-img"/></div>
 									
 									<div class="small mr-1 text-left msgtext" style="word-break:break-word;">{{{text}}}</div>									
 								</div>								
@@ -149,9 +149,9 @@
 
 $('.chattime').each(function(){
 var me = $(this);
-var oldValue = moment($(me).text(),'ddd MMM DD hh:mm:ss IST yyyy');
+var oldValue = moment($(me).text(),'ddd MMM DD hh:mm:ss Z YYYY').add(moment().utcOffset(), 'minute');
 
-if(moment(oldValue,'ddd MMM DD hh:mm:ss IST yyyy').isValid()){
+if(moment(oldValue,'ddd MMM DD hh:mm:ss Z YYYY').isValid()){
 $(me).html(oldValue.format('hh:mm a').replace(/ /g,'&nbsp;'));
 }
 });

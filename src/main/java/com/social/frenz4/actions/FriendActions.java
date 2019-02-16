@@ -343,6 +343,7 @@ public class FriendActions extends HttpServlet {
 		}
 	}
 	public void friendactivity(HttpServletRequest request,HttpServletResponse response){
+		System.out.println("into friendactivity "+  request.getPathInfo());
 		try{
 		
 			//System.out.println("Friends Activity");
@@ -359,6 +360,8 @@ public class FriendActions extends HttpServlet {
 
 			}
 			else{
+				System.out.println("not logged in " + uid);
+
 				hmap.put("message","Please login First!!!");
 				utility.getHbs(response,"login_page",hmap,templatePath);
 			}
@@ -366,7 +369,7 @@ public class FriendActions extends HttpServlet {
 
 		}
 		catch(Exception e){
-
+			e.printStackTrace();
 		}
 	}
 	public void onlinefriends(HttpServletRequest request,HttpServletResponse response){

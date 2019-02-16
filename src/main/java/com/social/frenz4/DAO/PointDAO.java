@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.mongojack.JacksonDBCollection;
 
+import com.mongodb.AggregationOptions;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -61,9 +63,12 @@ public class PointDAO {
 		DBObject limitCount = new BasicDBObject("$limit",limit);
 		pipeline.add(limitCount);
 		
-		AggregationOutput output = pointCollectionDAO().aggregate(pipeline);
+	//	AggregationOutput output = pointCollectionDAO().aggregate(pipeline);
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor output = pointCollectionDAO().aggregate(pipeline, options);
+		while (output.hasNext()){
+		Object result = output.next();
 		
-		for (DBObject result : output.results()) {
 			referralList.add(result);
 		}
 		return referralList;

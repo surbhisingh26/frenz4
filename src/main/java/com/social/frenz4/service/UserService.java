@@ -12,13 +12,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 
+import com.mongodb.AggregationOptions;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.social.frenz4.DAO.ActivityDAO;
@@ -522,12 +525,14 @@ public class UserService {
 
 		System.out.println("pipeline  ==== " + pipeline);
 
-		AggregationOutput output = coll.aggregate(pipeline);
-
-		for (DBObject result : output.results()) {
+		//AggregationOutput output = coll.aggregate(pipeline);
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor output = coll.aggregate(pipeline, options);
+		while(output.hasNext()){
+			HashMap<String, Object> result = (HashMap<String, Object>) output.next();
 		//	System.out.println(result.get("userFriend"));
 			@SuppressWarnings("unchecked")
-			List<Object> res = (List<Object>) result.get("heart");
+			List<Object> res = (List<Object>)((BasicBSONObject)result).get("heart");
 			if(!res.isEmpty()){
 
 				result.put("noAction",true);
@@ -642,9 +647,11 @@ public class UserService {
 
 		System.out.println(pipeline);
 
-		AggregationOutput output = coll.aggregate(pipeline);
-
-		for (DBObject result : output.results()) {
+		//AggregationOutput output = coll.aggregate(pipeline);
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor output = coll.aggregate(pipeline, options);
+		while(output.hasNext()){
+		Object result = output.next();
 			commentList.add(result);
 			System.out.println(result);
 
@@ -706,16 +713,19 @@ public class UserService {
 		heartFields.put("as", "heart");
 		pipeline.add(new BasicDBObject("$lookup",heartFields));
 
-		AggregationOutput output = activityCollection.aggregate(pipeline);
-
-		for (DBObject result : output.results()) {
+		//AggregationOutput output = activityCollection.aggregate(pipeline);
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor output = activityCollection.aggregate(pipeline, options);
+		while (output.hasNext()){
+			HashMap<String, Object> result = (HashMap<String, Object>) output.next();
+		
 			//System.out.println(result.get("heart"));
 			@SuppressWarnings("unchecked")
 			List<Object> list = (List<Object>) result.get("heart");
 			List<Object> res = list;
 			if(!res.isEmpty()){
 
-				result.put("noAction",true);
+				((HashMap<String, Object>) result).put("noAction",true);
 				for(Object db:res){
 					//System.out.println(db);
 					BasicDBObject object = (BasicDBObject) db;
@@ -738,7 +748,7 @@ public class UserService {
 		}
 
 
-		hmap.put("activity",output.results());
+		hmap.put("activity",output);
 
 		return hmap;
 	}

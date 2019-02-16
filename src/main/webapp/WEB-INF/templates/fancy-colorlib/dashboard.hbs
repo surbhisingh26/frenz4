@@ -80,9 +80,9 @@
 									</div>
 										
 										<div>
-											<div class="sl-left">
+											<div class="float-left m-1 badge-circle-lg">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" class="img-circle" width="40px" height="40px">
+													alt="user" class="badge-img">
 											</div>
 										</div>
 										<div class="timeline-panel p-3 text-center">
@@ -183,9 +183,9 @@
 
 										</div>
 										<div>
-											<div class="sl-left">
+											<div class="badge-circle-lg float-left m-1">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" class="img-circle"width="40px" height="40px">
+													alt="user" class="badge-img">
 											</div>
 										</div>
 										<div class="timeline-panel p-3 text-center">
@@ -270,20 +270,20 @@
 									<hr class="divider{{_id}}">
 									{{/uploadpic}} {{#friend}}
 									<div class="sl-item">
-										<div>
-											<div class="sl-left">
+										<div class="d-flex">
+											<div class="badge-circle-lg float-left mr-4">
 												<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-													alt="user" class="img-circle" width="40" height="40">
+													alt="user" class="badge-img">
 											</div>
-										</div>
+										
 										<h6>
 											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
 											Sent Request to <a
-												href="friendprofile?fid={{#userFriend}}{{id}}{{/userFriend}}"><img
+												href="friendprofile?fid={{#userFriend}}{{id}}{{/userFriend}}"><div class="badge-circle float-right ml-4"><img
 												src="{{#userFriend}}{{imagepath}}{{/userFriend}}" alt="user"
-												class="img-circle" width="40" height="40"> <strong>{{#userFriend}}{{name}}{{/userFriend}}</strong>
+												class="badge-img"> <strong>{{#userFriend}}{{name}}{{/userFriend}}</strong></div>
 											</a>
-										</h6>
+										</h6></div>
 										<br>
 										<div class="text-center text-muted">
 											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
@@ -306,9 +306,9 @@
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Delete</button>
 
 										</div>
-										<div class="sl-left">
+										<div class="badge-circle-lg float-left m-1">
 											<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
-												alt="user" class="img-circle" width="40px"height="40px">
+												alt="user" class="badge-img">
 										</div>
 										<div class="timeline-panel p-3 text-center">
 										<h6 style="color:black" class="timeline-title">
@@ -565,8 +565,8 @@
 								<!-- Message -->
 								{{#friendList}} {{#friend}} <a href="friendprofile?fid={{id}}">
 
-									<div class="user-img">
-										<img src="{{imagepath}}" alt="user" class="img-circle" width="45px" height="45px">
+									<div class="badge-circle-lg float-left mr-1">
+										<img src="{{imagepath}}" alt="user" class="badge-img">
 										<span
 											class="profile-status {{#if loggedIn}}online pull-right{{/if}}"></span>
 									</div>

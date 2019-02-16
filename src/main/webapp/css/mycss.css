@@ -209,7 +209,8 @@ position:relative;
 	box-shadow:1px 1px 10px 1px black !important;
 }
 .page-titles{
-	padding:10px !important;
+	padding:10px 10px 10px 30px !important;
+	margin: 0 -5px 5px !important;
 }
 small{
 	font-size:10px;
@@ -233,7 +234,7 @@ textarea:focus{
 	box-shadow:1px 0px 5px 0px #aad6fb !important;
 }
 .container-fluid{
-	padding:0 30px 25px 30px
+	padding:0px 5px 0px; !important
 }
 .custom-scroll-body::-webkit-scrollbar {
     width: 8px !important;
@@ -242,7 +243,7 @@ textarea:focus{
 	
 }
 .custom-scroll-body::-webkit-scrollbar-track {
-    background: transparent !important; 
+   
 	border:2px;
 }
  
@@ -251,7 +252,7 @@ textarea:focus{
    background: #ccc  !important;
    border:1px solid #aaa;
     border-radius: 1px !important;
-	opacity:0.5 !important;
+	
 	
 }
 .custom-scroll-body::-webkit-scrollbar-thumb:hover{
@@ -270,3 +271,76 @@ textarea:focus{
 	top:0px;
 	left:0px;
 }
+.badge-circle {
+  height: 35px;
+    width: 35px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-circle-sm {
+  height: 30px;
+    width: 30px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-circle-xs {
+  height: 25px;
+    width: 25px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-circle-xxs {
+  height: 20px;
+    width: 20px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-circle-lg {
+  height: 45px;
+    width: 45px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-circle-xl {
+  height: 100px;
+    width: 100px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-circle-xxl {
+  height: 200px;
+    width: 200px;
+    background-color: #d2b48c0a;
+    border-radius: 50%;
+    overflow: hidden;
+    }
+	.badge-img{
+	height: auto;
+    width: 100% !important;
+    
+	}
+	.badge-rounded {
+  height: 60px;
+    width: 60px;
+    background-color: #d2b48c0a;
+    border-radius: 25%;
+    overflow: hidden;
+      }
+	  .card-columns {
+		      column-gap: .75rem;
+	  }
+	  
+		  
+	  .timeline-panel{
+		  box-shadow:0px 0px !important;
+		  border:0px !important;
+	  }
+	  .timeline-image{
+		  border:0px !important;
+	  }

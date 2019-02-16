@@ -201,3 +201,11 @@ a.link:hover, a.link:focus {
 	background-image:linear-gradient(white,#89b9bf,#a9cdd1,#a9cdd1,#89b9bf,white);
 	
 }
+.timelinecard {
+    box-shadow: -2px 2px 5px -1px #3f676b!important;
+}
+.textarea:focus{
+	box-shadow: 1px -1px 1px 0px #3f676b!important;
+border-color:#3f676b!important;
+border-bottom:0px !important;
+}

@@ -37,7 +37,7 @@ File: scss
 *******************/
 .topbar {
   background: #99abb4;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  
 }
 .topbar .top-navbar .navbar-header .navbar-brand .dark-logo {
   display: none;
@@ -232,9 +232,21 @@ a.link:hover, a.link:focus {
 	background-position: center;
 	background-size: cover;
 	box-shadow:1px 1px 5px 1px black !important;
-	background-image:linear-gradient(black,#b1b3b5,#cfd2d3,#cfd2d3,#b1b3b5,black);
+	background-image:linear-gradient(#272C33,#b1b3b5,#cfd2d3,#cfd2d3,#b1b3b5,#272C33);
 	
 }
 .timeline-title{
 	color:white!important;
+}
+.card, .page-titles, .textarea{
+	background:#272C33;
+}
+.timelinecard {
+    box-shadow: -2px 2px 3px -1px #c6cdd1 !important;
+}
+.textarea:focus{
+	box-shadow: 1px -1px 1px 0px #c6cdd1!important;
+	background:#272C33;
+border-color:#c6cdd1!important;
+border-bottom:0px !important;
 }

@@ -24,8 +24,10 @@ public class UserDAO {
 }
 	public DBCollection userCollectionDAO(){
 		DBConnection db = new DBConnection();
+		
 		DB mongo = db.getDB(DBName,DBPort,DBHost);
 		DBCollection collec = mongo.getCollection("user");
+	//	collec.addOption(1);
 		
 		return collec;
 	}

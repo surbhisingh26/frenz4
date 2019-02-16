@@ -1,13 +1,17 @@
 package com.social.frenz4.DAO;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
 import org.mongojack.JacksonDBCollection;
 
+import com.mongodb.AggregationOptions;
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -63,12 +67,15 @@ System.out.println("Step1 service");
 	//System.out.println("Step4 service");
 	//DBObject unwindFriend = new BasicDBObject("$unwind","$friend");
 	//pipeline.add(unwindFriend);
-	AggregationOutput output = chatCollectionDAO().aggregate(pipeline);
+	//AggregationOutput output = chatCollectionDAO().aggregate(pipeline);
 	//System.out.println("Step5 service");
-	for (DBObject result : output.results()) {
-		
-		result.put("sender" , result.get("senderId").toString());
-		chatList.add(result);
+	
+	AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+	final Cursor output = chatCollectionDAO().aggregate(pipeline, options);
+	while(output.hasNext()){
+		HashMap<String, Object> result = (HashMap<String, Object>) output.next();
+	result.put("sender" , result.get("senderId").toString());
+	chatList.add(result);
 		System.out.println(result);
 
 	}

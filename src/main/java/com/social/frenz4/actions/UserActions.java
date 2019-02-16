@@ -109,6 +109,7 @@ public class UserActions extends HttpServlet {
 			Map<String,Object> hmap = new HashMap<String,Object>();
 			hmap.putAll(rrutility.getUserDetails(request));
 			uid = (ObjectId) hmap.get("uid");
+			System.out.println(uid);
 			if(uid==null){
 				utility.getHbs(response,"login_page",null,templatePath);
 			}

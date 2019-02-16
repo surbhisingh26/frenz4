@@ -8,15 +8,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bson.BasicBSONObject;
 import org.bson.types.ObjectId;
+
 import org.mongojack.DBCursor;
 import org.mongojack.JacksonDBCollection;
 import org.mongojack.WriteResult;
 
-import com.mongodb.AggregationOutput;
+import com.mongodb.AggregationOptions;
+
+
 import com.mongodb.BasicDBObject;
+import com.mongodb.Cursor;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+
 import com.social.frenz4.DAO.ActivityDAO;
 import com.social.frenz4.DAO.ChatDAO;
 import com.social.frenz4.DAO.FriendDAO;
@@ -181,7 +187,7 @@ public class FriendService {
 		UserDAO userdao = new UserDAO();
 		
 		Map<String,Object> hmap = new HashMap<String, Object>();
-		DBCollection coll = userdao.userCollectionDAO();
+		final DBCollection coll = userdao.userCollectionDAO();
 		int count = 1;
 		
 		List<Object>activityList = new ArrayList<Object>();
@@ -267,12 +273,64 @@ public class FriendService {
 				new BasicDBObject("activity.date",-1));
 		
 		pipeline.add(sort);
-
 	//	System.out.println(pipeline);
-
-		AggregationOutput output = coll.aggregate(pipeline);
+	//  DBObject explain = new BasicDBObject("$explain",true);
+	//	pipeline.add(explain);
+		//AggregateOperation options = null;
+	//	Aggregation output = coll.aggregate(pipeline);
 		
-		for (DBObject result : output.results()) {
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor dbCursor = coll.aggregate(pipeline, options);
+		System.out.println(dbCursor);
+
+		//AggregationOptions ao =  new AggregationOptions();
+		//Cursor output = coll.aggregate(pipeline,ao, ReadPreference.primary());
+		while(dbCursor.hasNext()) {
+			Object result = dbCursor.next();
+			System.out.println("test "+result);	
+			List<Object> res = (List<Object>) ((BasicBSONObject) result).get("heart");
+			if(!res.isEmpty()){
+				
+				((HashMap<String, Object>) result).put("noAction",true);
+				for(Object db:res){
+					//System.out.println(db);
+					BasicDBObject object = (BasicDBObject) db;
+					object.get("fid");
+					
+				if(object.get("fid").toString().equals(uid.toString())){
+					
+					((HashMap<String, Object>) result).put("broken",object.get("broken"));
+					((HashMap<String, Object>) result).put("noAction",false);
+					break;
+				}
+					
+				}									
+			}
+			else{
+				((HashMap<String, Object>) result).put("noAction",true);
+				
+			}			
+			Object friend = (Object) ((BasicBSONObject) result).get("friend");
+			BasicDBObject fr = (BasicDBObject)friend;
+			if(fr.get("uid").equals(fr.get("fid"))){			
+				((HashMap<String, Object>) result).put("myactivity", true);
+			}
+			
+			
+			if(count%2==0)
+				((HashMap<String, Object>) result).put("left", false);
+			else
+				((HashMap<String, Object>) result).put("left", true);
+			activityList.add(result);
+			System.out.println(result);
+			count++;
+		}
+		
+		
+		
+		
+		
+		/*	for (DBObject result : output.results()) {
 			//System.out.println(result.get("heart"));
 			@SuppressWarnings("unchecked")
 			List<Object> res = (List<Object>) result.get("heart");
@@ -312,7 +370,7 @@ public class FriendService {
 			activityList.add(result);
 			System.out.println(result);
 			count++;
-		}
+		}*/
 		//System.out.println("SIZE IS ......................" +activityList.size());
 		
 		
@@ -347,9 +405,11 @@ public class FriendService {
 		pipeline.add(skipTo);
 		DBObject limitCount = new BasicDBObject("$limit",limit);
 		pipeline.add(limitCount);
-		AggregationOutput output = heartCollection.aggregate(pipeline);
-		for (DBObject result : output.results()) {
-		
+		//AggregationOutput output = heartCollection.aggregate(pipeline);
+		AggregationOptions options = AggregationOptions.builder().outputMode(AggregationOptions.OutputMode.CURSOR).allowDiskUse(Boolean.TRUE).batchSize(1000).build();
+		final Cursor output = heartCollection.aggregate(pipeline, options);
+		while(output.hasNext()){
+		Object result = output.next();
 		friendList.add(result);
 		System.out.println(result);		
 	}
