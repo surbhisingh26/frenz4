@@ -1,6 +1,6 @@
 {{>head}} {{>header}} {{>side_navbar}}
 <div class="page-wrapper">
-	<div class="container-fluid">
+	<div class="container-fluid custom-scroll" style="overflow-y:scroll;height:100vh;">
 		<div>
 			<button
 				class="right-side-toggle waves-effect waves-light btn-success btn btn-circle btn-sm pull-right m-l-10">
@@ -44,15 +44,15 @@
 						<div class="tab-pane active" id="home" role="tabpanel">
 							<div class="card-block">
 							<form action="addstatus">
-										<textarea class="form-control m-b-20 custom-scroll"
-											placeholder="Share Your Status..." rows="5"
+										<textarea class="form-control textarea custom-scroll border border-top-0 border-bottom-0"
+											placeholder="Share Your Status..." rows="2"
 											style="margin-top: 5px; border-radius: 5px;"
 											id="statusMessage" name="status"></textarea>
 										<button class="btn btn-info m-b-20" type="submit"
 											style="border-radius: none;">Share</button>
 											<input type="hidden" value="dashboard" name="display">
 									</form>
-									<hr>
+									<hr style="visibility:hidden;">
 								<div class="profiletimeline">
 									
 									<div class="text-center">
@@ -163,7 +163,7 @@
 									</div>
 
 
-									<hr class="divider{{_id}}">
+									<hr class="divider{{_id}}" style="visibility:hidden;">
 									{{/profilepic}} {{#uploadpic}}
 									<div class="sl-item div{{_id}}">
 										<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown"
@@ -267,7 +267,7 @@
 									</div>
 
 
-									<hr class="divider{{_id}}">
+									<hr class="divider{{_id}}" style="visibility:hidden;">
 									{{/uploadpic}} {{#friend}}
 									<div class="sl-item">
 										<div class="d-flex">
@@ -292,9 +292,9 @@
 
 
 									</div>
-									<hr class="divider{{_id}}">
+									<hr class="divider{{_id}}" style="visibility:hidden;">
 									{{/friend}} {{#status}}
-									<div class="sl-item div{{_id}}">
+									<div class="div{{_id}}">
 										<button type="button" class="close text-muted waves-effect waves-dark pl-1 pr-1" data-toggle="dropdown"
 											aria-haspopup="true" aria-expanded="true">&times;</button>
 										<div class="dropdown-menu dropdown-menu-left animated fadeIn p-0">
@@ -306,29 +306,25 @@
 												onclick="ajaxRequest('removepost', 'POST', {typeId:'{{_id}}'}, {dataType:'json', callback:deletePost})">Delete</button>
 
 										</div>
-										<div class="badge-circle-lg float-left m-1">
+										<div class="badge-circle-xs float-left m-1">
 											<img src="{{#loggedInUser}}{{imagepath}}{{/loggedInUser}}"
 												alt="user" class="badge-img">
 										</div>
-										<div class="timeline-panel p-3 text-center">
-										<h6 style="color:black" class="timeline-title">
-											<strong>{{#loggedInUser}}{{name}}{{/loggedInUser}}</strong>
-											says 
-										</h6>
-										<br>
-										<div class="text-center text-muted">
-											<i class="fa fa-clock-o" style="margin-right: 5px"></i><small
-												class="timeAgo">{{date}}</small>
-										</div>
-										<div class="sl-right timeline{{_id}}">
-											<div class="note-editable">
+										<div class="text-center d-flex">
+										
+										
+										
+										<div class="timeline{{_id}}">
+											
 
-												<div class="card card-body"
-													style="padding-top: 1.25rem; margin-right: 2.25rem; padding: 1.25rem">
-													<p style="font-family: courier; font-size: 15px">{{statusText}}</p>
+												<div class="card card-body p-1 m-0">
+													<p style="font-family: courier; font-size: 8px;margin-bottom:1px">{{statusText}}</p>
 												</div>
-											</div>
-											<div class="like-comm btn-group mr-2" style="margin-top: 5px">
+											<div class="text-center text-muted" style="font-size: 10px">
+											<i class="fa fa-clock-o" style="margin-right: 3px"></i><small
+												class="timeAgo" style="font-size: 8px">{{date}}</small>
+										</div>
+										<!--	<div class="like-comm btn-group mr-2" style="margin-top: 5px">
 												<button type="button" class="btn btn-secondary comment"
 													data-container="body"
 													onclick="ajaxRequest('showcomments','POST',  {typeId:'{{_id}}' }, {dataType:'json', callback:commentBox})">
@@ -367,7 +363,7 @@
 													class="model_img img-responsive">{{heartBreaks}}
 													Heartbreak</button>
 
-											</div>
+											</div>-->
 											<div style="display: none;" class="divBox">
 												<ul class="list-group" style="margin-top: 5px">
 													<li class="list-group-item viewAll"
